@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; overflow-x: hidden; color: #3b190f; }
+}
+
+@keyframes tick {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track { animation: tick 28s linear infinite; }
+
+/* Fruit float animations */
+@keyframes ff0 { 0%,100%{transform:translate(0,0) rotate(-6deg)} 40%{transform:translate(22px,-20px) rotate(-1deg)} 70%{transform:translate(-11px,12px) rotate(-9deg)} }
+@keyframes ff1 { 0%,100%{transform:translate(0,0) rotate(5deg)}  40%{transform:translate(-18px,-20px) rotate(10deg)} 70%{transform:translate(9px,12px) rotate(2deg)} }
+@keyframes ff2 { 0%,100%{transform:translate(0,0) rotate(-4deg)} 40%{transform:translate(16px,-20px) rotate(1deg)}  70%{transform:translate(-8px,12px) rotate(-7deg)} }
+@keyframes ff3 { 0%,100%{transform:translate(0,0) rotate(7deg)}  40%{transform:translate(-20px,-20px) rotate(12deg)} 70%{transform:translate(10px,12px) rotate(4deg)} }
+@keyframes ff4 { 0%,100%{transform:translate(0,0) rotate(-8deg)} 40%{transform:translate(14px,-20px) rotate(-3deg)} 70%{transform:translate(-7px,12px) rotate(-11deg)} }
+@keyframes ff5 { 0%,100%{transform:translate(0,0) rotate(5deg)}  40%{transform:translate(-14px,-20px) rotate(10deg)} 70%{transform:translate(7px,12px) rotate(2deg)} }
+@keyframes wf0 { 0%,100%{transform:translate(0,0) rotate(-5deg)} 40%{transform:translate(18px,-18px) rotate(0deg)}  70%{transform:translate(-9px,10px) rotate(-8deg)} }
+@keyframes wf1 { 0%,100%{transform:translate(0,0) rotate(6deg)}  40%{transform:translate(-16px,-18px) rotate(11deg)} 70%{transform:translate(8px,10px) rotate(3deg)} }
+@keyframes wf2 { 0%,100%{transform:translate(0,0) rotate(-4deg)} 40%{transform:translate(14px,-18px) rotate(1deg)}  70%{transform:translate(-7px,10px) rotate(-7deg)} }
+@keyframes wf3 { 0%,100%{transform:translate(0,0) rotate(7deg)}  40%{transform:translate(20px,-18px) rotate(12deg)} 70%{transform:translate(-10px,10px) rotate(4deg)} }
+@keyframes wf4 { 0%,100%{transform:translate(0,0) rotate(-6deg)} 40%{transform:translate(-12px,-18px) rotate(-1deg)} 70%{transform:translate(6px,10px) rotate(-9deg)} }
+@keyframes wf5 { 0%,100%{transform:translate(0,0) rotate(4deg)}  40%{transform:translate(-16px,-18px) rotate(9deg)}  70%{transform:translate(8px,10px) rotate(1deg)} }
+
+.fruit-ff0{animation:ff0 8s   ease-in-out infinite 0s}
+.fruit-ff1{animation:ff1 10s  ease-in-out infinite -3s}
+.fruit-ff2{animation:ff2 9s   ease-in-out infinite -5s}
+.fruit-ff3{animation:ff3 11s  ease-in-out infinite -2s}
+.fruit-ff4{animation:ff4 7.5s ease-in-out infinite -4s}
+.fruit-ff5{animation:ff5 9.5s ease-in-out infinite -1s}
+.fruit-wf0{animation:wf0 8s   ease-in-out infinite 0s}
+.fruit-wf1{animation:wf1 10s  ease-in-out infinite -3s}
+.fruit-wf2{animation:wf2 9s   ease-in-out infinite -5s}
+.fruit-wf3{animation:wf3 11s  ease-in-out infinite -2s}
+.fruit-wf4{animation:wf4 7.5s ease-in-out infinite -4s}
+.fruit-wf5{animation:wf5 9.5s ease-in-out infinite -1s}
+
+/* Fade-in au scroll */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+/* Shimmer sur les cards produits au hover */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.card:hover .cimg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  background-size: 400px 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+/* Pulse sur les boutons WhatsApp */
+@keyframes pulse-wa {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(37,211,102,0); }
+}
+.btn-whatsapp {
+  animation: pulse-wa 2s infinite;
+}
+
+/* Parallax léger sur le hero — ajouter au scroll JS */
