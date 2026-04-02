@@ -6,3 +6,11 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[build.environment]
+  SECRETS_SCAN_ENABLED = "false"
+
+REACT_APP_SUPABASE_URL         = https://ftvfvnqrvoqnbixiaqud.supabase.co
+REACT_APP_SUPABASE_ANON_KEY    = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ0dmZ2bnFydm9xbmJpeGlhcXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNTA4NTUsImV4cCI6MjA4OTkyNjg1NX0.ecH4-2Yn9-7jN9lC0L31c8zfBWxopw_8AxehDWpGMyM
+REACT_APP_WHATSAPP_NUMBER      = 2290148654200
+REACT_APP_SHOPIFY_CHECKOUT_URL = https://eolekare.myshopify.com/cart
