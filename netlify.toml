@@ -6,8 +6,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-```
-
-**2. Vérifie que `public/_redirects`** contient :
-```
-/*    /index.html   200
