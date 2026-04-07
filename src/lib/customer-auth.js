@@ -1,10 +1,10 @@
 // lib/customer-auth.js
-const STORE_DOMAIN = process.env.REACT_APP_SHOPIFY_STORE_DOMAIN || 'https://eolekare.myshopify.com';
-const CLIENT_ID = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID || 'ef7d00a7-a0c2-49df-9deb-765f48329049';
-const AUTH_ENDPOINT = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_AUTH_ENDPOINT || 'https://shopify.com/authentication/97484996903/oauth/authorize';
-const TOKEN_ENDPOINT = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_TOKEN_ENDPOINT || 'https://shopify.com/authentication/97484996903/oauth/token';
-const LOGOUT_ENDPOINT = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_LOGOUT_ENDPOINT || 'https://shopify.com/authentication/97484996903/logout';
-const API_VERSION = process.env.REACT_APP_SHOPIFY_API_VERSION || '2024-01';
+const STORE_DOMAIN = process.env.REACT_APP_SHOPIFY_STORE_DOMAIN
+const CLIENT_ID = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID
+const AUTH_ENDPOINT = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_AUTH_ENDPOINT
+const TOKEN_ENDPOINT = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_TOKEN_ENDPOINT
+const LOGOUT_ENDPOINT = process.env.REACT_APP_SHOPIFY_CUSTOMER_ACCOUNT_LOGOUT_ENDPOINT
+const API_VERSION = process.env.REACT_APP_SHOPIFY_API_VERSION
 
 // URL de redirection après connexion
 const REDIRECT_URI = `${window.location.origin}/auth/callback`;
