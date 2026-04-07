@@ -1,14 +1,15 @@
+// src/pages/admin/LoginPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext'; // Assurez-vous du bon chemin
 
-export default function LoginPage() {
+export default function LoginPage() {  // ← Assurez-vous que c'est 'export default'
   const { signIn } = useAuth();
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
 
-  const [email, setEmail]     = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError]     = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
 
@@ -36,7 +37,6 @@ export default function LoginPage() {
       padding: '2rem',
       fontFamily: 'Jost, sans-serif',
     }}>
-      {/* Card */}
       <div style={{
         background: '#fdf6ec',
         width: '100%',
@@ -44,7 +44,6 @@ export default function LoginPage() {
         padding: '3rem',
         boxShadow: '0 32px 80px rgba(0,0,0,0.35)',
       }}>
-        {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 36, fontWeight: 300, letterSpacing: '0.25em', color: '#3b190f', lineHeight: 1 }}>
             EOLEKARE
@@ -55,9 +54,7 @@ export default function LoginPage() {
           <div style={{ width: 32, height: '0.5px', background: '#f8cb78', margin: '1rem auto 0' }} />
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* Email */}
           <div style={{ marginBottom: '1.2rem' }}>
             <label style={{ display: 'block', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 6 }}>
               Email
@@ -82,7 +79,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password */}
           <div style={{ marginBottom: '1.8rem' }}>
             <label style={{ display: 'block', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 6 }}>
               Mot de passe
@@ -116,14 +112,12 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Error */}
           {error && (
             <div style={{ background: 'rgba(192,57,43,0.08)', border: '0.5px solid rgba(192,57,43,0.3)', padding: '10px 14px', marginBottom: '1.2rem' }}>
               <p style={{ fontSize: 11, color: '#c0392b', letterSpacing: '0.05em' }}>⚠ {error}</p>
             </div>
           )}
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}

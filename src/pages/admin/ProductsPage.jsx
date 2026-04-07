@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts, updateProduct, deleteProduct } from '../../lib/supabase';
+import { getAllProducts, updateProduct, deleteProduct } from '../../lib/shopify';
 
 const CATEGORIES = ['Tous', 'Corps', 'Capillaire', 'Mixte', 'Visage'];
 
@@ -17,9 +17,14 @@ export default function ProductsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    try { setProducts(await getAllProducts()); }
-    catch(e) { console.error(e); }
-    finally { setLoading(false); }
+    try { 
+      const data = await getAllProducts();
+      setProducts(data);
+    } catch(e) { 
+      console.error('Erreur chargement produits:', e); 
+    } finally { 
+      setLoading(false); 
+    }
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -27,19 +32,46 @@ export default function ProductsPage() {
   // Filtres
   useEffect(() => {
     let list = [...products];
-    if (search.trim()) list = list.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.description?.toLowerCase().includes(search.toLowerCase()));
-    if (catFilter !== 'Tous') list = list.filter(p => p.category === catFilter);
-    if (statusFilter === 'actif') list = list.filter(p => p.active);
-    if (statusFilter === 'inactif') list = list.filter(p => !p.active);
-    if (statusFilter === 'stock') list = list.filter(p => p.stock <= 5);
+    if (search.trim()) {
+      list = list.filter(p => 
+        p.name?.toLowerCase().includes(search.toLowerCase()) || 
+        p.description?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    if (catFilter !== 'Tous') {
+      list = list.filter(p => p.category === catFilter);
+    }
+    if (statusFilter === 'actif') {
+      list = list.filter(p => p.active);
+    }
+    if (statusFilter === 'inactif') {
+      list = list.filter(p => !p.active);
+    }
+    if (statusFilter === 'stock') {
+      list = list.filter(p => p.stock <= 5 && p.stock > 0);
+    }
     setFiltered(list);
   }, [products, search, catFilter, statusFilter]);
 
   const toggleActive = async (id, current) => {
     try {
-      await updateProduct(id, { active: !current });
-      setProducts(ps => ps.map(p => p.id === id ? { ...p, active: !current } : p));
-    } catch(e) { console.error(e); }
+      // Récupérer le produit complet d'abord
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      
+      // Mettre à jour seulement le statut actif
+      await updateProduct(id, { 
+        ...product, 
+        active: !current 
+      });
+      
+      // Mettre à jour l'état local
+      setProducts(ps => ps.map(p => 
+        p.id === id ? { ...p, active: !current } : p
+      ));
+    } catch(e) { 
+      console.error('Erreur mise à jour statut:', e); 
+    }
   };
 
   const confirmDelete = async () => {
@@ -49,14 +81,21 @@ export default function ProductsPage() {
       await deleteProduct(deleteId);
       setProducts(ps => ps.filter(p => p.id !== deleteId));
       setDeleteId(null);
-    } catch(e) { console.error(e); }
-    finally { setDeleting(false); }
+    } catch(e) { 
+      console.error('Erreur suppression:', e); 
+    } finally { 
+      setDeleting(false); 
+    }
   };
 
   const inputStyle = {
-    padding: '9px 14px', border: '0.5px solid rgba(59,25,15,0.15)',
-    background: '#fff', fontSize: 12, color: '#3b190f',
-    outline: 'none', fontFamily: 'Jost, sans-serif',
+    padding: '9px 14px', 
+    border: '0.5px solid rgba(59,25,15,0.15)',
+    background: '#fff', 
+    fontSize: 12, 
+    color: '#3b190f',
+    outline: 'none', 
+    fontFamily: 'Jost, sans-serif',
   };
 
   return (
@@ -191,7 +230,7 @@ export default function ProductsPage() {
               Supprimer ce produit ?
             </p>
             <p style={{ fontSize: 12, color: '#7a4f2d', lineHeight: 1.7, marginBottom: '2rem' }}>
-              Cette action est irréversible. Le produit et ses images seront définitivement supprimés.
+              Cette action est irréversible. Le produit sera définitivement supprimé de Shopify.
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
               <button onClick={() => setDeleteId(null)}

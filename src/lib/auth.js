@@ -1,4 +1,4 @@
-// AuthContext.jsx
+// lib/auth.js
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 const STORAGE_KEYS = {
@@ -40,6 +40,8 @@ function createSession(user) {
   localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
   localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(user));
   localStorage.setItem(STORAGE_KEYS.SESSION_EXPIRY, (Date.now() + SESSION_DURATION).toString());
+  
+  return { token, user };
 }
 
 function getValidSession() {

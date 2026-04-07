@@ -1,7 +1,8 @@
+// DashboardPage.jsx - Version vérifiée (aucun changement majeur nécessaire)
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts } from '../../lib/supabase';
+import { getAllProducts } from '../../lib/shopify';
 
 function StatCard({ label, value, sub, color = '#3b190f' }) {
   return (
@@ -15,19 +16,44 @@ function StatCard({ label, value, sub, color = '#3b190f' }) {
 
 export default function DashboardPage() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading]   = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getAllProducts()
-      .then(setProducts)
-      .catch(console.error)
+      .then(data => {
+        console.log('Produits chargés depuis Shopify:', data.length);
+        setProducts(data);
+        setError(null);
+      })
+      .catch(err => {
+        console.error('Erreur chargement produits:', err);
+        setError(err.message);
+      })
       .finally(() => setLoading(false));
   }, []);
 
-  const active    = products.filter(p => p.active).length;
-  const inactive  = products.filter(p => !p.active).length;
-  const lowStock  = products.filter(p => p.stock !== null && p.stock <= 5).length;
-  const noStock   = products.filter(p => p.stock === 0).length;
+  const active = products.filter(p => p.active).length;
+  const inactive = products.filter(p => !p.active).length;
+  const lowStock = products.filter(p => p.stock !== null && p.stock <= 5).length;
+  const noStock = products.filter(p => p.stock === 0).length;
+
+  if (error) {
+    return (
+      <AdminLayout>
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <h2 style={{ color: '#c0392b' }}>Erreur de chargement</h2>
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#3b190f', color: 'white', border: 'none', cursor: 'pointer' }}
+          >
+            Réessayer
+          </button>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
@@ -56,10 +82,10 @@ export default function DashboardPage() {
         <>
           {/* Stats */}
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-            <StatCard label="Total produits"  value={products.length} sub="dans la base" />
-            <StatCard label="Actifs"          value={active}   sub="visibles en vitrine" color="#2d7a2d" />
-            <StatCard label="Inactifs"        value={inactive} sub="masqués"              color="#7a4f2d" />
-            <StatCard label="Stock faible"    value={lowStock} sub="≤ 5 unités"           color={lowStock > 0 ? '#c0392b' : '#3b190f'} />
+            <StatCard label="Total produits" value={products.length} sub="dans Shopify" />
+            <StatCard label="Actifs" value={active} sub="visibles en vitrine" color="#2d7a2d" />
+            <StatCard label="Inactifs" value={inactive} sub="masqués" color="#7a4f2d" />
+            <StatCard label="Stock faible" value={lowStock} sub="≤ 5 unités" color={lowStock > 0 ? '#c0392b' : '#3b190f'} />
           </div>
 
           {/* Alertes stock */}

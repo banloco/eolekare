@@ -1,16 +1,15 @@
-export function formatFCFA(amount) {
-  if (!amount && amount !== 0) return '—';
-  return `${Math.round(Number(amount)).toLocaleString('fr-FR')} FCFA`;
-}
-
+// lib/format.js
 export function formatEUR(amount) {
-  if (!amount && amount !== 0) return '—';
-  return new Intl.NumberFormat('fr-FR', { style:'currency', currency:'EUR' }).format(Number(amount));
+  if (amount === null || amount === undefined) return '— €';
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
 }
 
-export function formatStock(qty) {
-  if (qty === null || qty === undefined) return '—';
-  if (qty === 0) return 'Épuisé';
-  if (qty <= 5) return `${qty} restants`;
-  return `${qty} en stock`;
+export function formatFCFA(amount) {
+  if (amount === null || amount === undefined) return '— FCFA';
+  return new Intl.NumberFormat('fr-FR').format(amount) + ' FCFA';
 }
