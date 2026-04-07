@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FloatingFruits from '../components/FloatingFruits';
 import { useProducts } from '../hooks/useProducts';
 import { formatEUR } from '../lib/format';
-import { CheckoutModal } from '../components/CheckoutModal';
+import InstagramFeed from '../components/InstagramFeed';
 
 const CHECKOUT_BASE = process.env.REACT_APP_SHOPIFY_CHECKOUT_URL || 'https://eolekare.myshopify.com/cart';
 const CART_KEY = 'eolekare_eu_cart';
@@ -78,92 +78,73 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
 /* ─── CART DRAWER ─── */
 function CartDrawer({ lang, cart, total, onUpdate, onRemove, onClose, products }) {
   const t = T[lang];
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const checkoutUrl = `${CHECKOUT_BASE}?` + cart.map(i => `items[][variant_id]=${i.shopify_variant_id || ''}&items[][quantity]=${i.qty}`).join('&');
 
-  const handleCheckout = () => {
-    if (cart.length === 0) return;
-    setIsCheckingOut(true);
-    setShowCheckout(true);
-  };
-
-  const handleCheckoutSuccess = () => {
-    cart.forEach(item => onRemove(item.id));
-    setShowCheckout(false);
-    setIsCheckingOut(false);
-    onClose();
-  };
-
-  const handleCheckoutClose = () => {
-    setShowCheckout(false);
-    setIsCheckingOut(false);
-  };
-
-  const upsell = products
-    .filter(p => !cart.find(c => c.id === p.id) && p.stock > 0)
-    .slice(0, 3);
-
-  const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+  // Upsell : produits pas dans le panier
+  const upsell = products.filter(p => !cart.find(c => c.id === p.id)).slice(0, 3);
 
   return (
     <>
-      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(59,25,15,0.45)', animation: 'fadeIn 0.2s ease' }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 420, maxWidth: '100vw', zIndex: 201, background: '#fdf6ec', display: 'flex', flexDirection: 'column', boxShadow: '-8px 0 48px rgba(59,25,15,0.15)', animation: 'slideIn 0.3s ease' }}>
-        <style>{`
-          @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        `}</style>
-        
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(59,25,15,0.45)' }} />
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 420, maxWidth: '100vw', zIndex: 201, background: '#fdf6ec', display: 'flex', flexDirection: 'column', boxShadow: '-8px 0 48px rgba(59,25,15,0.15)' }}>
+        {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem 2rem', borderBottom: '0.5px solid rgba(59,25,15,0.1)' }}>
           <div>
-            <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 24, fontWeight: 300, color: '#3b190f' }}>{t.nav_cart}</p>
-            {cart.length > 0 && <p style={{ fontSize: 10, letterSpacing: '0.15em', color: '#7a4f2d', textTransform: 'uppercase' }}>{totalItems} {totalItems > 1 ? 'articles' : 'article'}</p>}
+            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, fontWeight: 300, color: '#3b190f' }}>{t.nav_cart}</p>
+            {cart.length > 0 && <p style={{ fontSize: 10, letterSpacing: '0.15em', color: '#7a4f2d', textTransform: 'uppercase' }}>{cart.reduce((s, i) => s + i.qty, 0)} {cart.reduce((s, i) => s + i.qty, 0) > 1 ? 'articles' : 'article'}</p>}
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 22, color: '#3b190f', padding: 8 }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 22, color: '#3b190f' }}>✕</button>
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 2rem' }}>
           {cart.length === 0 ? (
             <div style={{ textAlign: 'center', paddingTop: '4rem' }}>
-              <div style={{ fontSize: 48, marginBottom: '1rem', opacity: 0.3 }}>🛒</div>
-              <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 22, fontStyle: 'italic', color: 'rgba(59,25,15,0.35)', marginBottom: 8 }}>{t.empty}</p>
+              <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: 'rgba(59,25,15,0.35)', marginBottom: 8 }}>{t.empty}</p>
+              <p style={{ fontSize: 10, letterSpacing: '0.15em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>Découvrez nos beurres</p>
             </div>
           ) : (
             <>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {cart.map(item => (
                   <div key={item.id} style={{ display: 'flex', gap: '1rem', paddingBottom: '1.2rem', borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
-                    <div style={{ width: 70, height: 70, background: '#f8cb78', flexShrink: 0, overflow: 'hidden', borderRadius: 2 }}>
-                      {item.images?.[0] ? <img src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, opacity: 0.4 }}>🫙</div>}
+                    <div style={{ width: 70, height: 70, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
+                      {item.images?.[0] && <img src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 17, color: '#3b190f', marginBottom: 2 }}>{item.name}</p>
-                      <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d', marginBottom: 8 }}>{formatEUR(item.price_eur)}</p>
+                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d', marginBottom: 8 }}>{formatEUR(item.price_eur)}</p>
+                      {/* Sélecteur quantité */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <button onClick={() => onUpdate(item.id, item.qty - 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                        <span style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 17, color: '#3b190f', minWidth: 18, textAlign: 'center' }}>{item.qty}</span>
+                        <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', minWidth: 18, textAlign: 'center' }}>{item.qty}</span>
                         <button onClick={() => onUpdate(item.id, item.qty + 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-                        <span style={{ marginLeft: 'auto' }}>{formatEUR(item.price_eur * item.qty)}</span>
+                        <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d', marginLeft: 'auto' }}>{formatEUR(item.price_eur * item.qty)}</span>
                       </div>
                     </div>
-                    <button onClick={() => onRemove(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(59,25,15,0.25)', fontSize: 14 }}>✕</button>
+                    <button onClick={() => onRemove(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(59,25,15,0.25)', fontSize: 14, alignSelf: 'flex-start', lineHeight: 1 }}
+                      onMouseEnter={e => e.currentTarget.style.color = '#c0392b'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(59,25,15,0.25)'}>✕</button>
                   </div>
                 ))}
               </div>
+
+              {/* Upsell */}
               {upsell.length > 0 && (
                 <div style={{ marginTop: '2rem' }}>
                   <p style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '1rem' }}>{t.upsell}</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     {upsell.map(p => (
                       <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem', border: '0.5px solid rgba(59,25,15,0.08)', background: '#fff' }}>
-                        <div style={{ width: 48, height: 48, background: '#f8cb78', flexShrink: 0, overflow: 'hidden', borderRadius: 2 }}>
+                        <div style={{ width: 48, height: 48, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
                           {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                         </div>
                         <div style={{ flex: 1 }}>
-                          <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 15, color: '#3b190f' }}>{p.name}</p>
-                          <p style={{ fontSize: 13, fontStyle: 'italic', color: '#7a4f2d' }}>{formatEUR(p.price_eur)}</p>
+                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{p.name}</p>
+                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 13, fontStyle: 'italic', color: '#7a4f2d' }}>{formatEUR(p.price_eur)}</p>
                         </div>
-                        <button style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '7px 12px' }} onClick={() => document.dispatchEvent(new CustomEvent('upsell-add', { detail: p }))}>+ {t.buy}</button>
+                        <button style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', padding: '7px 12px', whiteSpace: 'nowrap' }}
+                          onClick={() => { onUpdate && null; document.dispatchEvent(new CustomEvent('upsell-add', { detail: p })); }}>
+                          + {t.buy}
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -173,21 +154,22 @@ function CartDrawer({ lang, cart, total, onUpdate, onRemove, onClose, products }
           )}
         </div>
 
+        {/* Footer */}
         {cart.length > 0 && (
-          <div style={{ padding: '1.5rem 2rem', borderTop: '0.5px solid rgba(59,25,15,0.1)', background: '#fdf6ec' }}>
+          <div style={{ padding: '1.5rem 2rem', borderTop: '0.5px solid rgba(59,25,15,0.1)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.2rem' }}>
               <span style={{ fontSize: 11, letterSpacing: '0.2em', color: '#7a4f2d', textTransform: 'uppercase' }}>{t.total}</span>
-              <span style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 22, color: '#3b190f' }}>{formatEUR(total)}</span>
+              <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, color: '#3b190f' }}>{formatEUR(total)}</span>
             </div>
-            <button onClick={handleCheckout} disabled={isCheckingOut} style={{ width: '100%', padding: '14px', background: isCheckingOut ? 'rgba(59,25,15,0.5)' : '#3b190f', color: '#fdf6ec', border: 'none', cursor: isCheckingOut ? 'wait' : 'pointer', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost, sans-serif' }}>{isCheckingOut ? 'Préparation...' : t.checkout}</button>
+            <a href={checkoutUrl} target="_blank" rel="noreferrer"
+              style={{ display: 'block', width: '100%', padding: '14px', background: '#3b190f', color: '#fdf6ec', border: 'none', cursor: 'pointer', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', textDecoration: 'none', textAlign: 'center', transition: 'background 0.3s', boxSizing: 'border-box' }}
+              onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
+              {t.checkout}
+            </a>
             <p style={{ textAlign: 'center', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase', marginTop: '0.8rem' }}>{t.secure}</p>
           </div>
         )}
       </div>
-
-      {showCheckout && (
-        <CheckoutModal isOpen={showCheckout} onClose={handleCheckoutClose} onSuccess={handleCheckoutSuccess} cartItems={cart} />
-      )}
     </>
   );
 }
@@ -264,221 +246,75 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
 function Products({ lang, cartHook }) {
   const t = T[lang];
   const { products, loading, error } = useProducts();
-  const { cart, add, update } = cartHook;
+  const { cart, add } = cartHook;
   const [added, setAdded] = useState(null);
   const [modal, setModal] = useState(null);
 
   useEffect(() => {
-    const handler = (e) => { 
-      if (e.detail && e.detail.stock > 0) {
-        add(e.detail, 1); 
-      }
-    };
+    const handler = (e) => { add(e.detail, 1); };
     document.addEventListener('upsell-add', handler);
     return () => document.removeEventListener('upsell-add', handler);
   }, [add]);
 
   const handleAdd = (p, qty = 1) => {
-    if (p.stock === 0 || p.stock === null) return;
+    if (p.stock === 0) return;
     add(p, qty);
     setAdded(p.id);
     setTimeout(() => setAdded(null), 2000);
   };
 
-  // Gestionnaire pour mettre à jour la quantité depuis le panier
-  const handleUpdateQuantity = (productId, newQty) => {
-    if (newQty <= 0) {
-      cartHook.remove(productId);
-    } else {
-      update(productId, newQty);
-    }
-  };
-
-  // Afficher le chargement
-  if (loading) {
-    return (
-      <section id="products" style={{ padding: '7rem 3rem', background: '#fff' }}>
-        <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
-        <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '4rem' }}>Nos Beurres</h2>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ width: 48, height: 48, border: '3px solid #f8cb78', borderTopColor: '#3b190f', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }} />
-            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>Chargement…</p>
-          </div>
-        </div>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
-      </section>
-    );
-  }
-
-  // Afficher l'erreur
-  if (error) {
-    return (
-      <section id="products" style={{ padding: '7rem 3rem', background: '#fff' }}>
-        <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
-        <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '4rem' }}>Nos Beurres</h2>
-        <div style={{ textAlign: 'center', padding: '3rem', background: 'rgba(192,57,43,0.05)', border: '1px solid rgba(192,57,43,0.2)', borderRadius: 8 }}>
-          <p style={{ color: '#c0392b', marginBottom: '1rem', fontSize: 13 }}>⚠️ Une erreur est survenue lors du chargement des produits.</p>
-          <button 
-            onClick={() => window.location.reload()}
-            style={{ padding: '10px 24px', background: '#3b190f', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 10, letterSpacing: '0.15em', fontFamily: 'Jost, sans-serif' }}
-            onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'}
-            onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}
-          >
-            Réessayer
-          </button>
-        </div>
-      </section>
-    );
-  }
-
-  // Afficher un message si aucun produit
-  if (!products || products.length === 0) {
-    return (
-      <section id="products" style={{ padding: '7rem 3rem', background: '#fff' }}>
-        <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
-        <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '4rem' }}>Nos Beurres</h2>
-        <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
-          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>
-            {lang === 'fr' ? 'Aucun produit disponible pour le moment.' : 'No products available at this time.'}
-          </p>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <>
-      {modal && (
-        <ProductModal 
-          product={modal} 
-          lang={lang} 
-          onClose={() => setModal(null)} 
-          onAdd={handleAdd} 
-          inCart={cart.find(i => i.id === modal.id)} 
-        />
-      )}
+      {modal && <ProductModal product={modal} lang={lang} onClose={() => setModal(null)} onAdd={handleAdd} inCart={cart.find(i => i.id === modal.id)} />}
       <section id="products" style={{ padding: '7rem 3rem', background: '#fff' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
         <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '4rem' }}>Nos Beurres</h2>
+        {loading && <p style={{ textAlign: 'center', fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>Chargement…</p>}
+        {error && <p style={{ textAlign: 'center', color: '#c0392b', fontSize: 11 }}>Erreur : {error}</p>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: '2rem', maxWidth: 1000, margin: '0 auto' }}>
           {products.map(p => {
             const isAdded = added === p.id;
             const inCart = cart.find(i => i.id === p.id);
-            const stock = p.stock ?? 0;
-            
             return (
               <div key={p.id} style={{ background: '#fff', border: '0.5px solid rgba(59,25,15,0.1)', overflow: 'hidden', transition: 'transform 0.4s,box-shadow 0.4s' }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 24px 50px rgba(59,25,15,0.1)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}>
-                
                 {/* Image cliquable → modal */}
                 <div onClick={() => setModal(p)} style={{ height: 240, overflow: 'hidden', background: '#f8cb78', position: 'relative', cursor: 'pointer' }}>
-                  {p.images?.[0] ? (
-                    <img 
-                      src={p.images[0]} 
-                      alt={p.name} 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s' }}
-                      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'} 
-                      onMouseLeave={e => e.currentTarget.style.transform = ''} 
-                    />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, fontSize: 48 }}>🫙</div>
-                  )}
-                  
-                  {stock === 0 && (
-                    <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>
-                      {t.soldout}
-                    </div>
-                  )}
-                  
-                  {stock > 0 && stock <= 5 && (
-                    <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>
-                      Plus que {stock} !
-                    </div>
-                  )}
-                  
-                  {inCart && (
-                    <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>
-                      × {inCart.qty} {t.inCart}
-                    </div>
-                  )}
-                  
+                  {p.images?.[0]
+                    ? <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s' }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseLeave={e => e.currentTarget.style.transform = ''} />
+                    : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, fontSize: 48 }}>🫙</div>
+                  }
+                  {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{t.soldout}</div>}
+                  {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>Plus que {p.stock} !</div>}
+                  {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} {t.inCart}</div>}
                   {/* Lien "voir détails" */}
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.6rem', background: 'linear-gradient(transparent,rgba(20,6,2,0.5))', textAlign: 'center' }}>
-                    <span style={{ fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>
-                      {t.details} →
-                    </span>
+                    <span style={{ fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>{t.details} →</span>
                   </div>
                 </div>
-                
                 <div style={{ padding: '1.8rem 1.5rem' }}>
-                  {p.category && (
-                    <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                      {p.category}
-                    </p>
-                  )}
-                  
-                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>
-                    {p.name}
-                  </p>
-                  
-                  <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>
-                    {p.description?.slice(0, 80)}{p.description?.length > 80 ? '…' : ''}
-                  </p>
-                  
-                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.4rem' }}>
-                    {formatEUR(p.price_eur)}
-                  </p>
+                  {p.category && <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.category}</p>}
+                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{p.name}</p>
+                  <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>{p.description?.slice(0, 80)}{p.description?.length > 80 ? '…' : ''}</p>
+                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.4rem' }}>{formatEUR(p.price_eur)}</p>
 
-                  {stock === 0 ? (
-                    <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>
-                      {t.soldout}
-                    </span>
+                  {p.stock === 0 ? (
+                    <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{t.soldout}</span>
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                       {inCart && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '0.5px solid rgba(59,25,15,0.15)', padding: '4px 8px' }}>
-                          <button 
-                            onClick={() => handleUpdateQuantity(p.id, inCart.qty - 1)} 
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                          >
-                            −
-                          </button>
-                          <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#3b190f', minWidth: 16, textAlign: 'center' }}>
-                            {inCart.qty}
-                          </span>
-                          <button 
-                            onClick={() => handleUpdateQuantity(p.id, inCart.qty + 1)} 
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                          >
-                            +
-                          </button>
+                          <button onClick={() => cartHook.update(p.id, inCart.qty - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                          <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#3b190f', minWidth: 16, textAlign: 'center' }}>{inCart.qty}</span>
+                          <button onClick={() => cartHook.update(p.id, inCart.qty + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                         </div>
                       )}
-                      <button 
-                        onClick={() => handleAdd(p)}
-                        style={{ 
-                          flex: 1, 
-                          fontSize: 9, 
-                          letterSpacing: '0.2em', 
-                          fontWeight: 300, 
-                          textTransform: 'uppercase', 
-                          fontFamily: 'Jost,sans-serif', 
-                          border: 'none', 
-                          cursor: 'pointer', 
-                          padding: '11px 16px', 
-                          background: isAdded ? '#4a8a25' : '#3b190f', 
-                          color: '#fdf6ec', 
-                          transition: 'all 0.3s' 
-                        }}
+                      <button onClick={() => handleAdd(p)}
+                        style={{ flex: 1, fontSize: 9, letterSpacing: '0.2em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', border: 'none', cursor: 'pointer', padding: '11px 16px', background: isAdded ? '#4a8a25' : '#3b190f', color: '#fdf6ec', transition: 'all 0.3s' }}
                         onMouseEnter={e => { if (!isAdded) e.currentTarget.style.background = '#5a2d12'; }}
-                        onMouseLeave={e => { if (!isAdded) e.currentTarget.style.background = '#3b190f'; }}
-                      >
+                        onMouseLeave={e => { if (!isAdded) e.currentTarget.style.background = '#3b190f'; }}>
                         {isAdded ? '✓ Ajouté' : inCart ? '+ Encore' : t.buy}
                       </button>
                     </div>

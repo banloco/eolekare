@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import FloatingFruits from '../components/FloatingFruits';
 import { useProducts } from '../hooks/useProducts';
 import { formatFCFA } from '../lib/format';
+import InstagramFeed from '../components/InstagramFeed';
 
 const WHATSAPP_NUMBER = process.env.REACT_APP_WHATSAPP_NUMBER || '2290148654200';
 const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
@@ -278,35 +279,27 @@ function Products({ cart, setCart }) {
 /* ─── STORY ── */
 function Story() {
   return (
-    <section id="story" style={{ background: '#3b190f', padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', right: 0, top: 0, width: '42%', height: '100%', zIndex: 0 }}>
-        <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
-      </div>
-      <div style={{ maxWidth: 980, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
-        <div>
-          <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 38, fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
-            L'odeur, la texture, le rituel… un moment rien qu'à toi.
-          </h2>
-          <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(253,246,236,0.58)', lineHeight: 1.95, marginBottom: '2rem' }}>
-            Eolekare, c'est une marque capillaire & cosmétique 100% naturelle, produite au Bénin avec amour.
-          </p>
-          <a href="#products" style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.25em', fontWeight: 300, textTransform: 'uppercase', color: '#3b190f', background: '#f8cb78', padding: '14px 36px', textDecoration: 'none' }}>
-            Voir la collection
-          </a>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {[['01', '100% Naturel', 'Beurres natifs, huiles végétales, vitamine E.'], ['02', 'Made in Bénin', 'Fabriqué avec amour au Bénin pour le monde.'], ['03', 'Multi-usage', 'Peau, cheveux, corps, ongles, cils, sourcils.'], ['04', 'Parfums uniques', 'Chaque beurre a son parfum signature.']].map(([n, t, d]) => (
-            <div key={n} style={{ display: 'flex', gap: '1.2rem', paddingBottom: '1.5rem', borderBottom: '0.5px solid rgba(248,203,120,0.1)' }}>
-              <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 32, fontWeight: 300, color: 'rgba(248,203,120,0.22)', minWidth: 40 }}>{n}</span>
-              <div>
-                <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 18, color: '#f8cb78', marginBottom: 4 }}>{t}</p>
-                <p style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.46)', lineHeight: 1.75 }}>{d}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    // Remplace la section Instagram existante par :
+<section style={{ background: '#fdf6ec', padding: '6rem 3rem', textAlign: 'center' }}>
+  <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, fontStyle: 'italic', color: '#3b190f', marginBottom: '0.8rem' }}>
+    Rejoins la communauté
+  </h2>
+  <p style={{ fontSize: 12, letterSpacing: '0.3em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '3rem' }}>
+    <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer" style={{ color: '#7a4f2d', textDecoration: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2 }}>
+      @eolekare
+    </a> sur Instagram & TikTok
+  </p>
+  
+  {/* Feed Instagram Fouita */}
+  <InstagramFeed />
+  
+  <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer"
+    style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', transition: 'all 0.3s' }}
+    onMouseEnter={e => { e.currentTarget.style.background = '#5a2d12'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+    onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; e.currentTarget.style.transform = ''; }}>
+    Suivre @eolekare
+  </a>
+</section>
   );
 }
 
