@@ -1,7 +1,7 @@
-const STORE_DOMAIN = process.env.REACT_APP_SHOPIFY_STORE_DOMAIN
-const ACCESS_TOKEN = process.env.REACT_APP_SHOPIFY_STOREFRONT_TOKEN;
-const ADMIN_TOKEN = process.env.REACT_APP_SHOPIFY_ADMIN_TOKEN;
-const API_VERSION = process.env.REACT_APP_SHOPIFY_API_VERSION
+const STORE_DOMAIN = process.env.REACT_APP_SHOPIFY_STORE_DOMAIN || 'https://eolekare.myshopify.com';
+const ACCESS_TOKEN = process.env.REACT_APP_SHOPIFY_STOREFRONT_TOKEN || '';
+const ADMIN_TOKEN = process.env.REACT_APP_SHOPIFY_ADMIN_TOKEN || '';
+const API_VERSION = process.env.REACT_APP_SHOPIFY_API_VERSION || '2024-01';
 
 async function shopifyFetch(query, variables = {}, useAdmin = false) {
   const url = `${STORE_DOMAIN}/api/${API_VERSION}/graphql.json`;
