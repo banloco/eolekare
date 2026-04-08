@@ -397,31 +397,54 @@ export default function EuropePage() {
       {cartOpen && <CartDrawer lang={lang} cart={cartHook.cart} total={cartHook.total} onUpdate={cartHook.update} onRemove={cartHook.remove} onClose={() => setCartOpen(false)} products={products} />}
 
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center text-center overflow-hidden" style={{ minHeight: '100vh', background: '#f8cb78', padding: '8rem 2rem 5rem' }}>
-        <FloatingFruits variant="hero" />
-        <div className="relative z-[2] flex flex-col items-center">
-          <p style={{ fontSize: 10, letterSpacing: '0.5em', fontWeight: 300, color: '#000', opacity: 0.65, textTransform: 'uppercase', marginBottom: '2rem' }}>{T[lang].eyebrow}</p>
-          <h1 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(72px,11vw,140px)', fontWeight: 300, lineHeight: 0.88, color: '#000', letterSpacing: '0.04em', marginBottom: '0.5rem' }}>EOLEKARE</h1>
-          <p style={{ fontSize: 10, letterSpacing: '0.38em', fontWeight: 300, color: '#000', opacity: 0.55, textTransform: 'uppercase', marginBottom: '1.8rem' }}>by Eoleeg</p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(59,25,15,0.08)', border: '0.5px solid rgba(59,25,15,0.15)', padding: '6px 18px', marginBottom: '1.5rem', borderRadius: 2 }}>
-            <span style={{ fontSize: 16 }}>🇪🇺</span>
-            <span style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#3b190f', textTransform: 'uppercase' }}>Europe · Mondial Relay</span>
-          </div>
-          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: '#000', maxWidth: 440, lineHeight: 1.65, marginBottom: '3rem' }}>{T[lang].tagline}</p>
-          <div className="flex gap-6 flex-wrap justify-center">
-            <a href="#products" style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', transition: 'all 0.3s' }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#5a2d12'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; e.currentTarget.style.transform = ''; }}>
-              {T[lang].discover}
-            </a>
-            {cartHook.count > 0 && (
-              <button onClick={() => setCartOpen(true)} style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#3b190f', border: '1px solid rgba(0,0,0,0.4)', padding: '14px 42px', background: 'transparent', cursor: 'pointer', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8 }}>
-                {T[lang].nav_cart} ({cartHook.count})
-              </button>
-            )}
-          </div>
-        </div>
-      </section>
+<section 
+  className="relative flex flex-col items-center justify-center text-center overflow-hidden" 
+  style={{ 
+    minHeight: '100vh', 
+    backgroundImage: `url('/images/bg-hero.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed', // Optionnel : effet parallaxe
+    padding: '8rem 2rem 5rem',
+    position: 'relative'
+  }}
+>
+  {/* Overlay sombre/coloré pour que le texte reste lisible */}
+  <div style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'rgba(248, 203, 120, 0.85)', // Ajuste l'opacité (0 = transparent, 1 = opaque)
+    zIndex: 0
+  }} />
+  
+  <FloatingFruits variant="hero" />
+  <div className="relative z-[2] flex flex-col items-center">
+    {/* Le reste de ton contenu Hero (texte, boutons) reste identique */}
+    <p style={{ fontSize: 10, letterSpacing: '0.5em', fontWeight: 300, color: '#000', opacity: 0.65, textTransform: 'uppercase', marginBottom: '2rem' }}>{T[lang].eyebrow}</p>
+    <h1 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(72px,11vw,140px)', fontWeight: 300, lineHeight: 0.88, color: '#000', letterSpacing: '0.04em', marginBottom: '0.5rem' }}>EOLEKARE</h1>
+    <p style={{ fontSize: 10, letterSpacing: '0.38em', fontWeight: 300, color: '#000', opacity: 0.55, textTransform: 'uppercase', marginBottom: '1.8rem' }}>by Eoleeg</p>
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(59,25,15,0.08)', border: '0.5px solid rgba(59,25,15,0.15)', padding: '6px 18px', marginBottom: '1.5rem', borderRadius: 2 }}>
+      <span style={{ fontSize: 16 }}>🇪🇺</span>
+      <span style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#3b190f', textTransform: 'uppercase' }}>Europe · Mondial Relay</span>
+    </div>
+    <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: '#000', maxWidth: 440, lineHeight: 1.65, marginBottom: '3rem' }}>{T[lang].tagline}</p>
+    <div className="flex gap-6 flex-wrap justify-center">
+      <a href="#products" style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', transition: 'all 0.3s' }}
+        onMouseEnter={e => { e.currentTarget.style.background = '#5a2d12'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; e.currentTarget.style.transform = ''; }}>
+        {T[lang].discover}
+      </a>
+      {cartHook.count > 0 && (
+        <button onClick={() => setCartOpen(true)} style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#3b190f', border: '1px solid rgba(0,0,0,0.4)', padding: '14px 42px', background: 'transparent', cursor: 'pointer', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8 }}>
+          {T[lang].nav_cart} ({cartHook.count})
+        </button>
+      )}
+    </div>
+  </div>
+</section>
 
       {/* Ticker */}
       <div style={{ background: '#f8cb78', padding: '1rem 0', overflow: 'hidden' }}>
@@ -433,25 +456,43 @@ export default function EuropePage() {
       </div>
 
       {/* Double strip */}
-      <div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>
-        <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>La nature dans chaque texture</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 300, overflow: 'hidden' }}>
-          {[1, 2, 3].map(i => (
-            <div key={i} style={{ position: 'relative', overflow: 'hidden' }}>
-              <img src={`/images/texture-${i}.jpg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
-            </div>
-          ))}
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
-          {[1, 2, 3].map(i => (
-            <div key={i} style={{ position: 'relative', overflow: 'hidden' }}>
-              <img src={`/images/fruit-${i}.jpg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
-            </div>
-          ))}
-        </div>
-      </div>
+<div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>
+  <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>
+    La nature dans chaque texture
+  </p>
+  
+  {/* Première rangée - Images de texture */}
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 300, overflow: 'hidden' }}>
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
+      <img src="/images/peau-eclattante.jpg" alt="Texture beurre" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
+    </div>
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
+      <img src="/images/texture-beurre.jpg" alt="Texture mangue" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
+    </div>
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
+      <img src="/images/cheveux.jpg" alt="Texture coco" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
+      <div style={{ position: 'absoluc.jpg" alt="te', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
+    </div>
+  </div>
+  
+  {/* Deuxième rangée - Images de fruits */}
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
+      <img src="/images/coconuts.jpg" alt="Mangue" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
+    </div>
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
+      <img src="/images/peau-cheveux.jpg" alt="Avocat" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
+    </div>
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
+      <img src="/images/texture-mangue.jpg" alt="Coco" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0.22)' }} />
+    </div>
+  </div>
+</div>
 
       <Products lang={lang} cartHook={cartHook} />
 
