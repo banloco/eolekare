@@ -4,18 +4,21 @@ import React from 'react';
 const InstagramFeed = () => {
   return (
     <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      marginBottom: '2rem',
-      width: '100%'
+      width: '100%',
+      minHeight: '600px',
+      margin: '0 auto'
     }}>
       <iframe 
         src="https://emb.fouita.com/widget/0x41fd18/ft2hfzig3" 
         title="Instagram Feed Eolekare" 
         width="100%" 
-        height="600" 
+        height="650" 
         frameBorder="0"
-        style={{ maxWidth: 620, borderRadius: 8 }}
+        scrolling="no"
+        style={{ 
+          borderRadius: 12,
+          overflow: 'hidden'
+        }}
         loading="lazy"
       />
     </div>

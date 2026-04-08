@@ -456,19 +456,25 @@ export default function EuropePage() {
       <Products lang={lang} cartHook={cartHook} />
 
       {/* Instagram */}
-<section style={{ background: '#fdf6ec', padding: '6rem 3rem', textAlign: 'center' }}>
+<section style={{ background: '#fdf6ec', padding: '6rem 2rem', textAlign: 'center' }}>
   <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, fontStyle: 'italic', color: '#3b190f', marginBottom: '0.8rem' }}>
     {lang === 'fr' ? 'Rejoins la communauté' : 'Join the community'}
   </h2>
-  <p style={{ fontSize: 12, letterSpacing: '0.3em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '3rem' }}>
+  <p style={{ fontSize: 12, letterSpacing: '0.3em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '2rem' }}>
     <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer" style={{ color: '#7a4f2d', textDecoration: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2 }}>@eolekare</a> sur Instagram & TikTok
   </p>
   
-  {/* ← REMPLACE TOUTE LA GRILLE PAR CE COMPOSANT */}
-  <InstagramFeed />
+  {/* Feed Instagram - Pleine largeur */}
+  <div style={{ 
+    maxWidth: 1200, 
+    margin: '0 auto',
+    padding: '0 1rem'
+  }}>
+    <InstagramFeed />
+  </div>
   
   <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer"
-    style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', transition: 'all 0.3s' }}
+    style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', marginTop: '2rem', transition: 'all 0.3s' }}
     onMouseEnter={e => { e.currentTarget.style.background = '#5a2d12'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
     onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; e.currentTarget.style.transform = ''; }}>
     {lang === 'fr' ? 'Suivre @eolekare' : 'Follow @eolekare'}

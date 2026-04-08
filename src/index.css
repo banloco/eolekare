@@ -73,4 +73,10 @@
   animation: pulse-wa 2s infinite;
 }
 
+@media (max-width: 768px) {
+  .instagram-feed-container iframe {
+    height: 500px !important;
+  }
+}
+
 /* Parallax léger sur le hero — ajouter au scroll JS */
