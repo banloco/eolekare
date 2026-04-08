@@ -456,30 +456,24 @@ export default function EuropePage() {
       <Products lang={lang} cartHook={cartHook} />
 
       {/* Instagram */}
-      <section style={{ background: '#fdf6ec', padding: '6rem 3rem', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, fontStyle: 'italic', color: '#3b190f', marginBottom: '0.8rem' }}>
-          {lang === 'fr' ? 'Rejoins la communauté' : 'Join the community'}
-        </h2>
-        <p style={{ fontSize: 12, letterSpacing: '0.3em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '3rem' }}>
-          <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer" style={{ color: '#7a4f2d', textDecoration: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2 }}>@eolekare</a> sur Instagram & TikTok
-        </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 3, maxWidth: 620, margin: '0 auto 2.5rem' }}>
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} style={{ aspectRatio: '1', overflow: 'hidden', position: 'relative', cursor: 'pointer', background: '#f8cb78' }}
-              onMouseEnter={e => { e.currentTarget.querySelector('img').style.transform = 'scale(1.08)'; e.currentTarget.querySelector('.iov').style.background = 'rgba(20,6,2,0.35)'; }}
-              onMouseLeave={e => { e.currentTarget.querySelector('img').style.transform = 'scale(1)'; e.currentTarget.querySelector('.iov').style.background = 'rgba(20,6,2,0)'; }}>
-              <img src={`/images/insta-${i}.jpg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s' }} />
-              <div className="iov" style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0)', transition: 'background 0.3s' }} />
-            </div>
-          ))}
-        </div>
-        <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer"
-          style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', transition: 'all 0.3s' }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#5a2d12'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; e.currentTarget.style.transform = ''; }}>
-          {lang === 'fr' ? 'Suivre @eolekare' : 'Follow @eolekare'}
-        </a>
-      </section>
+<section style={{ background: '#fdf6ec', padding: '6rem 3rem', textAlign: 'center' }}>
+  <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, fontStyle: 'italic', color: '#3b190f', marginBottom: '0.8rem' }}>
+    {lang === 'fr' ? 'Rejoins la communauté' : 'Join the community'}
+  </h2>
+  <p style={{ fontSize: 12, letterSpacing: '0.3em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '3rem' }}>
+    <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer" style={{ color: '#7a4f2d', textDecoration: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2 }}>@eolekare</a> sur Instagram & TikTok
+  </p>
+  
+  {/* ← REMPLACE TOUTE LA GRILLE PAR CE COMPOSANT */}
+  <InstagramFeed />
+  
+  <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer"
+    style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', transition: 'all 0.3s' }}
+    onMouseEnter={e => { e.currentTarget.style.background = '#5a2d12'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+    onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; e.currentTarget.style.transform = ''; }}>
+    {lang === 'fr' ? 'Suivre @eolekare' : 'Follow @eolekare'}
+  </a>
+</section>
 
       <Story lang={lang} />
       <Footer lang={lang} />
