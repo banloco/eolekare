@@ -93,17 +93,6 @@ export async function fedapayCreateTransaction(orderId) {
   return request('POST', '/payments/fedapay/transaction', { order_id: orderId });
 }
 
-export async function paypalCreateOrder(orderId) {
-  return request('POST', '/payments/paypal/create-order', { order_id: orderId });
-}
-
-export async function paypalCaptureOrder(paypalOrderId, orderId) {
-  return request('POST', '/payments/paypal/capture-order', {
-    paypal_order_id: paypalOrderId,
-    order_id: orderId,
-  });
-}
-
 // ── AUTH ────────────────────────────────────────────────
 
 export async function signIn(email, password) {

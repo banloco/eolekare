@@ -1,10 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import RelayPicker from '../components/RelayPicker';
-import { createOrder, fedapayCreateTransaction, paypalCreateOrder, paypalCaptureOrder } from '../lib/api';
+import { createOrder, fedapayCreateTransaction } from '../lib/api';
 import { formatEUR } from '../lib/format';
-
-const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || 'test';
 
 // ─── FEDAPAY FORM ──────────────────────────────────────────
 function FedaPayForm({ orderId, totalEur, onError }) {
@@ -37,7 +34,6 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
   const [step, setStep]         = useState(1);
   const [customer, setCustomer] = useState({ name: '', email: '', phone: '', address: '', city: '', zip: '', country: 'FR' });
   const [relay, setRelay]       = useState(null);
-  const [payMethod, setPayMethod] = useState('fedapay'); // 'fedapay' | 'paypal'
   const [createdOrder, setCreatedOrder] = useState(null);
   const [busy, setBusy]         = useState(false);
   const [formError, setFormError] = useState('');
@@ -226,43 +222,11 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                 </p>
               </div>
 
-              {/* Choix méthode */}
-              <p style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '1rem' }}>Choisir le mode de paiement</p>
-              <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1.5rem' }}>
-                {['fedapay', 'paypal'].map(m => (
-                  <button key={m} onClick={() => setPayMethod(m)}
-                    style={{ flex: 1, padding: '10px', border: `1.5px solid ${payMethod === m ? '#3b190f' : 'rgba(59,25,15,0.15)'}`, background: payMethod === m ? '#3b190f' : '#fff', color: payMethod === m ? '#fdf6ec' : '#3b190f', cursor: 'pointer', fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', transition: 'all 0.2s' }}>
-                    {m === 'fedapay' ? '💳  Carte / Mobile Money' : '🅿  PayPal'}
-                  </button>
-                ))}
-              </div>
-
-              {/* FedaPay */}
-              {payMethod === 'fedapay' && (
-                <FedaPayForm
-                  orderId={createdOrder.id}
-                  totalEur={createdOrder.total}
-                  onError={(msg) => setFormError(msg)}
-                />
-              )}
-
-              {/* PayPal */}
-              {payMethod === 'paypal' && (
-                <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID, currency: 'EUR' }}>
-                  <PayPalButtons
-                    style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'checkout' }}
-                    createOrder={async () => {
-                      const { paypal_order_id } = await paypalCreateOrder(createdOrder.id);
-                      return paypal_order_id;
-                    }}
-                    onApprove={async (data) => {
-                      await paypalCaptureOrder(data.orderID, createdOrder.id);
-                      onPaymentSuccess('paypal');
-                    }}
-                    onError={(err) => console.error('PayPal error', err)}
-                  />
-                </PayPalScriptProvider>
-              )}
+              <FedaPayForm
+                orderId={createdOrder.id}
+                totalEur={createdOrder.total}
+                onError={(msg) => setFormError(msg)}
+              />
 
               <button onClick={() => setStep(2)} style={{ display: 'block', marginTop: '1rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, color: '#7a4f2d', textDecoration: 'underline' }}>
                 ← Modifier la livraison
