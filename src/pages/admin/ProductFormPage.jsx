@@ -3,13 +3,20 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getProduct, createProduct, updateProduct, uploadImage, deleteImage } from '../../lib/api';
 
-const CATEGORIES = ['Corps', 'Capillaire', 'Mixte', 'Visage'];
-
 const EMPTY = {
-  name: '', description: '', category: 'Corps',
-  tags: '', price_fcfa: '', price_eur: '',
-  stock: '', active: true,
-  checkout_url: '', whatsapp: '2290148654200',
+  name: '',
+  format: '',
+  sku: '',
+  description_short: '',
+  description_long: '',
+  ingredients: '',
+  price_fcfa: '',
+  price_eur: '',
+  stock: '',
+  stock_alert: '5',
+  active: true,
+  benin_available: true,
+  intl_available: true,
   images: [],
 };
 
@@ -34,17 +41,20 @@ export default function ProductFormPage() {
     if (!isEdit) return;
     getProduct(id)
       .then(p => setForm({
-        name: p.name || '',
-        description: p.description || '',
-        category: p.category || 'Corps',
-        tags: (p.tags || []).join(', '),
-        price_fcfa: p.price_fcfa ?? '',
-        price_eur: p.price_eur ?? '',
-        stock: p.stock ?? '',
-        active: p.active ?? true,
-        checkout_url: p.checkout_url || '',
-        whatsapp: p.whatsapp || '2290148654200',
-        images: p.images || [],
+        name:              p.name || '',
+        format:            p.format || '',
+        sku:               p.sku || '',
+        description_short: p.description_short || '',
+        description_long:  p.description_long || '',
+        ingredients:       p.ingredients || '',
+        price_fcfa:        p.price_fcfa ?? '',
+        price_eur:         p.price_eur ?? '',
+        stock:             p.stock ?? '',
+        stock_alert:       p.stock_alert ?? '5',
+        active:            p.active ?? true,
+        benin_available:   p.benin_available ?? true,
+        intl_available:    p.intl_available ?? true,
+        images:            p.images || [],
       }))
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
@@ -100,19 +110,21 @@ export default function ProductFormPage() {
     setSaving(true);
 
     try {
-      // Préparer les données
       const payload = {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        category: form.category,
-        tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
-        price_fcfa: form.price_fcfa !== '' ? Number(form.price_fcfa) : null,
-        price_eur: form.price_eur !== '' ? Number(form.price_eur) : null,
-        stock: form.stock !== '' ? Number(form.stock) : 0,
-        active: form.active,
-        checkout_url: form.checkout_url.trim(),
-        whatsapp: form.whatsapp.trim(),
-        images: form.images,
+        name:              form.name.trim(),
+        format:            form.format.trim(),
+        sku:               form.sku.trim(),
+        description_short: form.description_short.trim(),
+        description_long:  form.description_long.trim(),
+        ingredients:       form.ingredients.trim(),
+        price_fcfa:        form.price_fcfa !== '' ? Number(form.price_fcfa) : 0,
+        price_eur:         form.price_eur  !== '' ? Number(form.price_eur)  : 0,
+        stock:             form.stock      !== '' ? Number(form.stock)      : 0,
+        stock_alert:       form.stock_alert !== '' ? Number(form.stock_alert) : null,
+        active:            form.active,
+        benin_available:   form.benin_available,
+        intl_available:    form.intl_available,
+        images:            form.images,
       };
 
       let productId = id;
@@ -203,27 +215,43 @@ export default function ProductFormPage() {
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
-              <Field label="Description">
-                <textarea value={form.description} onChange={e => set('description', e.target.value)}
-                  placeholder="Décris les bienfaits, les ingrédients, l'usage…"
-                  rows={5} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.7 }}
-                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
-                />
-              </Field>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <Field label="Catégorie">
-                  <select value={form.category} onChange={e => set('category', e.target.value)} style={inputStyle}>
-                    {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-                  </select>
+                <Field label="Format / Contenance *">
+                  <input required value={form.format} onChange={e => set('format', e.target.value)}
+                    placeholder="ex: 200ml, 100g, 50ml"
+                    style={inputStyle}
+                    onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                  />
                 </Field>
-                <Field label="Tags (séparés par virgule)">
-                  <input value={form.tags} onChange={e => set('tags', e.target.value)}
-                    placeholder="naturel, mangue, corps"
+                <Field label="SKU (référence unique) *">
+                  <input required value={form.sku} onChange={e => set('sku', e.target.value)}
+                    placeholder="ex: BM-200-NAT"
                     style={inputStyle}
                     onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                   />
                 </Field>
               </div>
+              <Field label="Description courte (vitrine)">
+                <textarea value={form.description_short} onChange={e => set('description_short', e.target.value)}
+                  placeholder="2-3 phrases percutantes pour la carte produit…"
+                  rows={3} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.7 }}
+                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
+              <Field label="Description longue (détail produit)">
+                <textarea value={form.description_long} onChange={e => set('description_long', e.target.value)}
+                  placeholder="Description complète : bienfaits, texture, usage, résultats…"
+                  rows={6} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.7 }}
+                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
+              <Field label="Ingrédients">
+                <textarea value={form.ingredients} onChange={e => set('ingredients', e.target.value)}
+                  placeholder="ex: Beurre de Mangue, Huile de Coco, Vitamine E…"
+                  rows={3} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.7 }}
+                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
             </Section>
 
             {/* Prix */}
@@ -242,27 +270,6 @@ export default function ProductFormPage() {
                   />
                 </Field>
               </div>
-            </Section>
-
-            {/* Liens de commande */}
-            <Section title="Liens de commande">
-              <Field label="Lien paiement Europe (Shopify / Stripe / autre)">
-                <input value={form.checkout_url} onChange={e => set('checkout_url', e.target.value)}
-                  placeholder="https://eolekare.myshopify.com/cart/..."
-                  style={inputStyle}
-                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
-                />
-                <p style={{ fontSize: 10, color: 'rgba(59,25,15,0.4)', marginTop: 4, letterSpacing: '0.05em' }}>
-                  Ce lien s'ouvre quand un client européen clique sur "Commander".
-                </p>
-              </Field>
-              <Field label="Numéro WhatsApp Bénin (sans + ni espaces)">
-                <input value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)}
-                  placeholder="2290148654200"
-                  style={inputStyle}
-                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
-                />
-              </Field>
             </Section>
 
             {/* Images */}
@@ -336,11 +343,31 @@ export default function ProductFormPage() {
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
-              {form.stock !== '' && Number(form.stock) <= 5 && (
+              <Field label="Seuil alerte stock bas">
+                <input type="number" min="0" value={form.stock_alert} onChange={e => set('stock_alert', e.target.value)}
+                  placeholder="5" style={inputStyle}
+                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
+              {form.stock !== '' && form.stock_alert !== '' && Number(form.stock) <= Number(form.stock_alert) && (
                 <p style={{ fontSize: 10, color: '#e67e22', letterSpacing: '0.08em', marginTop: 4 }}>
                   ⚠ Stock faible — pense à réapprovisionner
                 </p>
               )}
+            </Section>
+
+            {/* Disponibilité marchés */}
+            <Section title="Disponibilité marchés">
+              <Toggle
+                label="Disponible au Bénin"
+                value={form.benin_available}
+                onChange={v => set('benin_available', v)}
+              />
+              <Toggle
+                label="Disponible en Europe"
+                value={form.intl_available}
+                onChange={v => set('intl_available', v)}
+              />
             </Section>
 
             {/* Feedback */}
@@ -406,6 +433,27 @@ function Field({ label, children }) {
         {label}
       </label>
       {children}
+    </div>
+  );
+}
+
+function Toggle({ label, value, onChange }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ fontSize: 11, color: '#3b190f', letterSpacing: '0.05em' }}>{label}</span>
+      <div
+        onClick={() => onChange(!value)}
+        style={{
+          width: 46, height: 24, borderRadius: 12, cursor: 'pointer', transition: 'background 0.3s',
+          background: value ? '#3b190f' : 'rgba(59,25,15,0.15)',
+          position: 'relative', flexShrink: 0,
+        }}
+      >
+        <div style={{
+          position: 'absolute', top: 3, width: 18, height: 18, borderRadius: '50%', background: '#fff',
+          transition: 'left 0.3s', left: value ? 25 : 3,
+        }} />
+      </div>
     </div>
   );
 }

@@ -260,9 +260,9 @@ function Products({ cart, setCart }) {
                 {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#25D366', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} dans le panier</div>}
               </div>
               <div style={{ padding: '1.8rem 1.5rem' }}>
-                {p.category && <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.category}</p>}
+                {p.format && <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format}</p>}
                 <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{p.name}</p>
-                <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>{p.description?.slice(0, 100)}{p.description?.length > 100 ? '…' : ''}</p>
+                <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>{p.description_short?.slice(0, 100)}{p.description_short?.length > 100 ? '…' : ''}</p>
                 <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.4rem' }}>{formatFCFA(p.price_fcfa)}</p>
 
                 {/* Sélecteur quantité + bouton */}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts } from '../../lib/api';
+import { getAllProducts, getAdminOrders } from '../../lib/api';
 
 function StatCard({ label, value, sub, color = '#3b190f' }) {
   return (
@@ -16,10 +16,21 @@ function StatCard({ label, value, sub, color = '#3b190f' }) {
 export default function DashboardPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading]   = useState(true);
+  const [orderStats, setOrderStats] = useState({ total: null, pending: null });
 
   useEffect(() => {
-    getAllProducts()
-      .then(setProducts)
+    Promise.all([
+      getAllProducts(),
+      getAdminOrders({ page: 1, per_page: 1 }),
+      getAdminOrders({ page: 1, per_page: 1, status: 'pending' }),
+    ])
+      .then(([prods, allOrders, pendingOrders]) => {
+        setProducts(prods);
+        setOrderStats({
+          total:   allOrders?.meta?.total   ?? allOrders?.total   ?? null,
+          pending: pendingOrders?.meta?.total ?? pendingOrders?.total ?? null,
+        });
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -54,12 +65,27 @@ export default function DashboardPage() {
         <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>Chargement…</p>
       ) : (
         <>
-          {/* Stats */}
-          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+          {/* Stats produits */}
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
             <StatCard label="Total produits"  value={products.length} sub="dans la base" />
             <StatCard label="Actifs"          value={active}   sub="visibles en vitrine" color="#2d7a2d" />
             <StatCard label="Inactifs"        value={inactive} sub="masqués"              color="#7a4f2d" />
-            <StatCard label="Stock faible"    value={lowStock} sub="≤ 5 unités"           color={lowStock > 0 ? '#c0392b' : '#3b190f'} />
+            <StatCard label="Stock faible"    value={lowStock} sub="≤ seuil d'alerte"   color={lowStock > 0 ? '#c0392b' : '#3b190f'} />
+          </div>
+
+          {/* Stats commandes */}
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+            <StatCard
+              label="Commandes totales"
+              value={orderStats.total !== null ? orderStats.total : '…'}
+              sub={<Link to="/admin/orders" style={{ color: '#7a4f2d', textDecoration: 'none' }}>Voir tout →</Link>}
+            />
+            <StatCard
+              label="En attente"
+              value={orderStats.pending !== null ? orderStats.pending : '…'}
+              sub="à confirmer"
+              color={orderStats.pending > 0 ? '#e67e22' : '#3b190f'}
+            />
           </div>
 
           {/* Alertes stock */}
@@ -87,7 +113,7 @@ export default function DashboardPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '0.5px solid rgba(59,25,15,0.06)' }}>
-                  {['Produit', 'Catégorie', 'Prix Bénin', 'Prix Europe', 'Stock', 'Statut'].map(h => (
+                  {['Produit', 'Format', 'Prix Bénin', 'Prix Europe', 'Stock', 'Statut'].map(h => (
                     <th key={h} style={{ padding: '10px 2rem', textAlign: 'left', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(59,25,15,0.4)', fontWeight: 300 }}>{h}</th>
                   ))}
                 </tr>
@@ -105,13 +131,13 @@ export default function DashboardPage() {
                         )}
                         <div>
                           <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 16, color: '#3b190f' }}>{p.name}</p>
-                          {p.tags?.length > 0 && (
-                            <p style={{ fontSize: 9, color: 'rgba(59,25,15,0.35)', letterSpacing: '0.1em' }}>{p.tags.slice(0,2).join(' · ')}</p>
+                          {p.sku && (
+                            <p style={{ fontSize: 9, color: 'rgba(59,25,15,0.35)', letterSpacing: '0.1em' }}>{p.sku}</p>
                           )}
                         </div>
                       </div>
                     </td>
-                    <td style={{ padding: '14px 2rem', fontSize: 11, color: '#7a4f2d' }}>{p.category || '—'}</td>
+                    <td style={{ padding: '14px 2rem', fontSize: 11, color: '#7a4f2d' }}>{p.format || '—'}</td>
                     <td style={{ padding: '14px 2rem', fontFamily: '"Cormorant Garamond", serif', fontSize: 15, color: '#3b190f' }}>
                       {p.price_fcfa ? `${Number(p.price_fcfa).toLocaleString('fr-FR')} FCFA` : '—'}
                     </td>

@@ -3,14 +3,12 @@ import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getAllProducts, updateProduct, deleteProduct } from '../../lib/api';
 
-const CATEGORIES = ['Tous', 'Corps', 'Capillaire', 'Mixte', 'Visage'];
-
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [search, setSearch]     = useState('');
-  const [catFilter, setCatFilter] = useState('Tous');
+  const [marketFilter, setMarketFilter] = useState('tous');
   const [statusFilter, setStatusFilter] = useState('tous');
   const [deleteId, setDeleteId] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -27,13 +25,18 @@ export default function ProductsPage() {
   // Filtres
   useEffect(() => {
     let list = [...products];
-    if (search.trim()) list = list.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.description?.toLowerCase().includes(search.toLowerCase()));
-    if (catFilter !== 'Tous') list = list.filter(p => p.category === catFilter);
+    if (search.trim()) list = list.filter(p =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.sku?.toLowerCase().includes(search.toLowerCase()) ||
+      p.description_short?.toLowerCase().includes(search.toLowerCase())
+    );
+    if (marketFilter === 'benin') list = list.filter(p => p.benin_available);
+    if (marketFilter === 'intl')  list = list.filter(p => p.intl_available);
     if (statusFilter === 'actif') list = list.filter(p => p.active);
     if (statusFilter === 'inactif') list = list.filter(p => !p.active);
-    if (statusFilter === 'stock') list = list.filter(p => p.stock <= 5);
+    if (statusFilter === 'stock') list = list.filter(p => p.stock <= (p.stock_alert ?? 5));
     setFiltered(list);
-  }, [products, search, catFilter, statusFilter]);
+  }, [products, search, marketFilter, statusFilter]);
 
   const toggleActive = async (id, current) => {
     try {
@@ -81,8 +84,10 @@ export default function ProductsPage() {
           onChange={e => setSearch(e.target.value)}
           style={{ ...inputStyle, minWidth: 220 }}
         />
-        <select value={catFilter} onChange={e => setCatFilter(e.target.value)} style={inputStyle}>
-          {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+        <select value={marketFilter} onChange={e => setMarketFilter(e.target.value)} style={inputStyle}>
+          <option value="tous">Tous les marchés</option>
+          <option value="benin">Bénin</option>
+          <option value="intl">Europe</option>
         </select>
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={inputStyle}>
           <option value="tous">Tous les statuts</option>
@@ -105,7 +110,7 @@ export default function ProductsPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
-                {['Produit', 'Catégorie', 'Prix Bénin', 'Prix Europe', 'Stock', 'Statut', 'Actions'].map(h => (
+                {['Produit', 'Format', 'Prix Bénin', 'Prix Europe', 'Stock', 'Statut', 'Actions'].map(h => (
                   <th key={h} style={{ padding: '10px 1.5rem', textAlign: 'left', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(59,25,15,0.4)', fontWeight: 300 }}>{h}</th>
                 ))}
               </tr>
@@ -126,12 +131,18 @@ export default function ProductsPage() {
                       <div>
                         <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 16, color: '#3b190f', marginBottom: 2 }}>{p.name}</p>
                         <p style={{ fontSize: 9, color: 'rgba(59,25,15,0.35)', letterSpacing: '0.1em' }}>
-                          {p.tags?.slice(0,3).join(' · ') || '—'}
+                          {p.sku || '—'}
                         </p>
                       </div>
                     </div>
                   </td>
-                  <td style={{ padding: '12px 1.5rem', fontSize: 11, color: '#7a4f2d' }}>{p.category || '—'}</td>
+                  <td style={{ padding: '12px 1.5rem' }}>
+                    <div style={{ fontSize: 11, color: '#7a4f2d', marginBottom: 4 }}>{p.format || '—'}</div>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      {p.benin_available && <span style={{ fontSize: 8, letterSpacing: '0.1em', padding: '2px 6px', background: 'rgba(45,122,45,0.1)', color: '#2d7a2d' }}>🇧🇯 Bénin</span>}
+                      {p.intl_available  && <span style={{ fontSize: 8, letterSpacing: '0.1em', padding: '2px 6px', background: 'rgba(59,25,15,0.06)', color: '#7a4f2d' }}>🇪🇺 Europe</span>}
+                    </div>
+                  </td>
                   <td style={{ padding: '12px 1.5rem', fontFamily: '"Cormorant Garamond", serif', fontSize: 15, color: '#3b190f' }}>
                     {p.price_fcfa ? `${Number(p.price_fcfa).toLocaleString('fr-FR')} FCFA` : '—'}
                   </td>
