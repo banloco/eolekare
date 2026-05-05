@@ -1,5 +1,11 @@
 import React from 'react';
 
+const IMAGES = {
+  mango:  '/images/fruit-1.jpg',
+  avocat: '/images/fruit-2.jpg',
+  coco:   '/images/fruit-3.jpg',
+};
+
 const PATHS = {
   mango:  'M50,8 C50,8 78,22 85,52 C92,82 74,105 50,108 C26,105 8,82 15,52 C22,22 50,8 50,8Z',
   avocat: 'M50,4 C50,4 72,18 78,48 C84,78 68,102 50,104 C32,102 16,78 22,48 C28,18 50,4 50,4Z',
@@ -47,7 +53,7 @@ export default function FloatingFruits({ variant='hero' }) {
     <div style={{position:'absolute',inset:0,zIndex:1,pointerEvents:'none',overflow:'hidden'}}>
       {items.map((f,i) => (
         <div key={i} className={f.cls} style={{position:'absolute',left:`${f.x}%`,top:`${f.y}%`,width:f.s,height:f.s,opacity,filter:'drop-shadow(0 8px 24px rgba(59,25,15,0.25))'}}>
-          <FruitSVG type={f.type} imgSrc="" uid={`${variant}-${i}`}/>
+          <FruitSVG type={f.type} imgSrc={IMAGES[f.type]} uid={`${variant}-${i}`}/>
         </div>
       ))}
     </div>
