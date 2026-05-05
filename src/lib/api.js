@@ -102,6 +102,44 @@ export async function updateOrderStatus(id, status) {
   return request('PATCH', `/admin/orders/${id}/status`, { status });
 }
 
+export async function exportAdminOrders(params = {}) {
+  const token = getToken();
+  const qs = new URLSearchParams(params).toString();
+  const url = `${BASE_URL}/admin/orders/export${qs ? '?' + qs : ''}`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'text/csv' },
+  });
+  if (!res.ok) throw new Error('Erreur lors de l\'export');
+  const blob = await res.blob();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `commandes-eolekare-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+export async function getAdminStats() {
+  return request('GET', '/admin/stats');
+}
+
+// ── UTILISATEURS ADMIN ───────────────────────────────────
+
+export async function getAdminUsers() {
+  return request('GET', '/admin/users');
+}
+
+export async function createAdminUser(data) {
+  return request('POST', '/admin/users', data);
+}
+
+export async function updateAdminUser(id, data) {
+  return request('PUT', `/admin/users/${id}`, data);
+}
+
+export async function deleteAdminUser(id) {
+  return request('DELETE', `/admin/users/${id}`);
+}
+
 // ── PAIEMENTS ────────────────────────────────────────────
 
 export async function fedapayCreateTransaction(orderId) {

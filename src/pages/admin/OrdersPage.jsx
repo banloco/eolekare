@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAdminOrders } from '../../lib/api';
+import { getAdminOrders, exportAdminOrders } from '../../lib/api';
 
 const STATUS_LABELS = {
   pending:    'En attente',
@@ -91,6 +91,14 @@ export default function OrdersPage() {
             {meta.total != null ? `${meta.total} commande${meta.total !== 1 ? 's' : ''} au total` : ''}
           </p>
         </div>
+        <button
+          onClick={() => exportAdminOrders({ status: filters.status, market: filters.market })}
+          style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '12px 24px', border: 'none', cursor: 'pointer' }}
+          onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'}
+          onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}
+        >
+          ↓ Exporter CSV
+        </button>
       </div>
 
       {/* Filtres */}

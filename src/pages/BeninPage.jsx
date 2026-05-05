@@ -221,7 +221,11 @@ function Hero({ onCartOpen }) {
 /* ─── PRODUCTS ── */
 function Products({ cart, setCart }) {
   const { products, loading, error } = useProducts('benin');
-  const [added, setAdded] = useState(null);
+  const [added, setAdded]   = useState(null);
+  const [format, setFormat] = useState('tous');
+
+  const formats = ['tous', ...Array.from(new Set(products.map(p => p.format).filter(Boolean)))];
+  const visible = format === 'tous' ? products : products.filter(p => p.format === format);
 
   const handleAdd = (p) => {
     if (p.stock === 0) return;
@@ -237,11 +241,27 @@ function Products({ cart, setCart }) {
   return (
     <section id="products" style={{ padding: '7rem 3rem', background: '#fff' }}>
       <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>Notre collection</p>
-      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '4rem' }}>Nos Beurres</h2>
+      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '2rem' }}>Nos Beurres</h2>
+
+      {/* Filtre par format */}
+      {formats.length > 2 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+          {formats.map(f => (
+            <button key={f} onClick={() => setFormat(f)} style={{
+              padding: '6px 18px', border: '0.5px solid rgba(59,25,15,0.25)', background: format === f ? '#3b190f' : 'transparent',
+              color: format === f ? '#f8cb78' : '#7a4f2d', fontSize: 9, letterSpacing: '0.22em',
+              textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', fontWeight: 300,
+            }}>
+              {f === 'tous' ? 'Tous' : f}
+            </button>
+          ))}
+        </div>
+      )}
+
       {loading && <p style={{ textAlign: 'center', fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>Chargement…</p>}
       {error && <p style={{ textAlign: 'center', fontSize: 11, color: '#c0392b' }}>Erreur : {error}</p>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: '2rem', maxWidth: 1000, margin: '0 auto' }}>
-        {products.map(p => {
+        {visible.map(p => {
           const isAdded = added === p.id;
           const inCart = cart.find(i => i.id === p.id);
           return (

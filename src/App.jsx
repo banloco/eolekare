@@ -7,6 +7,9 @@ import ProtectedRoute from './components/admin/ProtectedRoute';
 import RegionSelector from './pages/RegionSelector';
 import BeninPage from './pages/BeninPage';
 import EuropePage from './pages/EuropePage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import LegalPage from './pages/LegalPage';
 
 // Pages admin
 import LoginPage from './pages/admin/LoginPage';
@@ -15,6 +18,7 @@ import ProductsPage from './pages/admin/ProductsPage';
 import ProductFormPage from './pages/admin/ProductFormPage';
 import OrdersPage from './pages/admin/OrdersPage';
 import OrderDetailPage from './pages/admin/OrderDetailPage';
+import UsersPage from './pages/admin/UsersPage';
 
 export default function App() {
   return (
@@ -22,9 +26,12 @@ export default function App() {
       <AuthProvider>
         <Routes>
           {/* ── Vitrine ── */}
-          <Route path="/"       element={<RegionSelector />} />
-          <Route path="/benin"  element={<BeninPage />} />
-          <Route path="/europe" element={<EuropePage />} />
+          <Route path="/"        element={<RegionSelector />} />
+          <Route path="/benin"   element={<BeninPage />} />
+          <Route path="/europe"  element={<EuropePage />} />
+          <Route path="/about"   element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/legal"   element={<LegalPage />} />
 
           {/* ── Admin ── */}
           <Route path="/admin" element={<LoginPage />} />
@@ -46,6 +53,9 @@ export default function App() {
           } />
           <Route path="/admin/orders/:id" element={
             <ProtectedRoute><OrderDetailPage /></ProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <ProtectedRoute><UsersPage /></ProtectedRoute>
           } />
 
           {/* Fallback */}

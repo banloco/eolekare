@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts, getAdminOrders } from '../../lib/api';
+import { getAllProducts, getAdminStats } from '../../lib/api';
 
 function StatCard({ label, value, sub, color = '#3b190f' }) {
   return (
@@ -13,24 +13,20 @@ function StatCard({ label, value, sub, color = '#3b190f' }) {
   );
 }
 
+function fmt(n, currency) {
+  if (n == null || n === 0) return '—';
+  if (currency === 'XOF') return `${Number(n).toLocaleString('fr-FR')} F`;
+  return `${Number(n).toFixed(0)} €`;
+}
+
 export default function DashboardPage() {
   const [products, setProducts] = useState([]);
+  const [stats, setStats]       = useState(null);
   const [loading, setLoading]   = useState(true);
-  const [orderStats, setOrderStats] = useState({ total: null, pending: null });
 
   useEffect(() => {
-    Promise.all([
-      getAllProducts(),
-      getAdminOrders({ page: 1, per_page: 1 }),
-      getAdminOrders({ page: 1, per_page: 1, status: 'pending' }),
-    ])
-      .then(([prods, allOrders, pendingOrders]) => {
-        setProducts(prods);
-        setOrderStats({
-          total:   allOrders?.meta?.total   ?? allOrders?.total   ?? null,
-          pending: pendingOrders?.meta?.total ?? pendingOrders?.total ?? null,
-        });
-      })
+    Promise.all([getAllProducts(), getAdminStats()])
+      .then(([prods, s]) => { setProducts(prods); setStats(s); })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -53,7 +49,7 @@ export default function DashboardPage() {
           </p>
         </div>
         <Link to="/admin/products/new"
-          style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.22em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '12px 28px', textDecoration: 'none', transition: 'background 0.3s' }}
+          style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.22em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '12px 28px', textDecoration: 'none' }}
           onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'}
           onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}
         >
@@ -74,18 +70,19 @@ export default function DashboardPage() {
           </div>
 
           {/* Stats commandes */}
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+            <StatCard label="Commandes totales"  value={stats?.orders?.total ?? '…'} sub={<Link to="/admin/orders" style={{ color: '#7a4f2d', textDecoration: 'none' }}>Voir tout →</Link>} />
+            <StatCard label="En attente"         value={stats?.orders?.pending ?? '…'} sub="à confirmer" color={(stats?.orders?.pending ?? 0) > 0 ? '#e67e22' : '#3b190f'} />
+            <StatCard label="Aujourd'hui"        value={stats?.orders?.today ?? 0}  sub="nouvelles commandes" />
+            <StatCard label="Ce mois"            value={stats?.orders?.month ?? 0}  sub="commandes" />
+          </div>
+
+          {/* Stats revenus */}
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-            <StatCard
-              label="Commandes totales"
-              value={orderStats.total !== null ? orderStats.total : '…'}
-              sub={<Link to="/admin/orders" style={{ color: '#7a4f2d', textDecoration: 'none' }}>Voir tout →</Link>}
-            />
-            <StatCard
-              label="En attente"
-              value={orderStats.pending !== null ? orderStats.pending : '…'}
-              sub="à confirmer"
-              color={orderStats.pending > 0 ? '#e67e22' : '#3b190f'}
-            />
+            <StatCard label="CA Aujourd'hui (EUR)" value={fmt(stats?.revenue?.today_eur, 'EUR')} sub="marché international" color="#2d7a2d" />
+            <StatCard label="CA Cette semaine (EUR)" value={fmt(stats?.revenue?.week_eur, 'EUR')} sub="marché international" />
+            <StatCard label="CA Ce mois (FCFA)"   value={fmt(stats?.revenue?.month_xof, 'XOF')} sub="marché Bénin" />
+            <StatCard label="CA Ce mois (EUR)"    value={fmt(stats?.revenue?.month_eur, 'EUR')} sub="marché international" />
           </div>
 
           {/* Alertes stock */}
@@ -96,6 +93,45 @@ export default function DashboardPage() {
                 <strong>{noStock} produit{noStock > 1 ? 's' : ''}</strong> en rupture de stock.{' '}
                 <Link to="/admin/products" style={{ color: '#c0392b', textDecoration: 'underline' }}>Gérer les stocks →</Link>
               </p>
+            </div>
+          )}
+
+          {/* Dernières commandes */}
+          {stats?.recent_orders?.length > 0 && (
+            <div style={{ background: '#fff', border: '0.5px solid rgba(59,25,15,0.08)', marginBottom: '2.5rem' }}>
+              <div style={{ padding: '1.2rem 2rem', borderBottom: '0.5px solid rgba(59,25,15,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <p style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#3b190f', fontWeight: 300 }}>Dernières commandes</p>
+                <Link to="/admin/orders" style={{ fontSize: 9, letterSpacing: '0.18em', color: '#7a4f2d', textTransform: 'uppercase', textDecoration: 'none' }}>Tout voir →</Link>
+              </div>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '0.5px solid rgba(59,25,15,0.06)' }}>
+                    {['Référence', 'Client', 'Marché', 'Total', 'Statut', 'Date'].map(h => (
+                      <th key={h} style={{ padding: '10px 2rem', textAlign: 'left', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(59,25,15,0.4)', fontWeight: 300 }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats.recent_orders.map(o => (
+                    <tr key={o.id} style={{ borderBottom: '0.5px solid rgba(59,25,15,0.04)' }}>
+                      <td style={{ padding: '12px 2rem', fontFamily: '"Cormorant Garamond", serif', fontSize: 15, color: '#3b190f' }}>{o.reference}</td>
+                      <td style={{ padding: '12px 2rem', fontSize: 12, color: '#3b190f' }}>{o.customer_name}</td>
+                      <td style={{ padding: '12px 2rem', fontSize: 11, color: '#7a4f2d' }}>{o.market === 'benin' ? '🇧🇯 Bénin' : '🇪🇺 Intl'}</td>
+                      <td style={{ padding: '12px 2rem', fontFamily: '"Cormorant Garamond", serif', fontSize: 15 }}>
+                        {o.currency === 'XOF' ? `${Number(o.total).toLocaleString('fr-FR')} F` : `${Number(o.total).toFixed(2)} €`}
+                      </td>
+                      <td style={{ padding: '12px 2rem' }}>
+                        <span style={{ fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '3px 8px', background: o.status === 'pending' ? 'rgba(230,126,34,0.1)' : 'rgba(45,122,45,0.1)', color: o.status === 'pending' ? '#e67e22' : '#2d7a2d' }}>
+                          {o.status}
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px 2rem', fontSize: 11, color: 'rgba(59,25,15,0.5)' }}>
+                        {new Date(o.created_at).toLocaleDateString('fr-FR')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
 
@@ -131,9 +167,7 @@ export default function DashboardPage() {
                         )}
                         <div>
                           <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 16, color: '#3b190f' }}>{p.name}</p>
-                          {p.sku && (
-                            <p style={{ fontSize: 9, color: 'rgba(59,25,15,0.35)', letterSpacing: '0.1em' }}>{p.sku}</p>
-                          )}
+                          {p.sku && <p style={{ fontSize: 9, color: 'rgba(59,25,15,0.35)', letterSpacing: '0.1em' }}>{p.sku}</p>}
                         </div>
                       </div>
                     </td>
@@ -145,21 +179,12 @@ export default function DashboardPage() {
                       {p.price_eur ? `${Number(p.price_eur).toFixed(2)} €` : '—'}
                     </td>
                     <td style={{ padding: '14px 2rem' }}>
-                      <span style={{
-                        fontSize: 11, fontWeight: 300,
-                        color: p.stock === 0 ? '#c0392b' : p.stock <= 5 ? '#e67e22' : '#2d7a2d',
-                      }}>
+                      <span style={{ fontSize: 11, fontWeight: 300, color: p.stock === 0 ? '#c0392b' : p.stock <= 5 ? '#e67e22' : '#2d7a2d' }}>
                         {p.stock ?? '—'}
                       </span>
                     </td>
                     <td style={{ padding: '14px 2rem' }}>
-                      <span style={{
-                        fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 300,
-                        padding: '3px 10px',
-                        background: p.active ? 'rgba(45,122,45,0.1)' : 'rgba(122,79,45,0.1)',
-                        color: p.active ? '#2d7a2d' : '#7a4f2d',
-                        border: `0.5px solid ${p.active ? 'rgba(45,122,45,0.3)' : 'rgba(122,79,45,0.3)'}`,
-                      }}>
+                      <span style={{ fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 300, padding: '3px 10px', background: p.active ? 'rgba(45,122,45,0.1)' : 'rgba(122,79,45,0.1)', color: p.active ? '#2d7a2d' : '#7a4f2d' }}>
                         {p.active ? 'Actif' : 'Inactif'}
                       </span>
                     </td>
@@ -173,3 +198,4 @@ export default function DashboardPage() {
     </AdminLayout>
   );
 }
+
