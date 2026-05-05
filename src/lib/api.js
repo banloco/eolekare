@@ -87,6 +87,21 @@ export async function createOrder(payload) {
   return request('POST', '/orders', payload);
 }
 
+// ── COMMANDES ADMIN ──────────────────────────────────────
+
+export async function getAdminOrders(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return request('GET', `/admin/orders${qs ? '?' + qs : ''}`);
+}
+
+export async function getAdminOrder(id) {
+  return request('GET', `/admin/orders/${id}`);
+}
+
+export async function updateOrderStatus(id, status) {
+  return request('PATCH', `/admin/orders/${id}/status`, { status });
+}
+
 // ── PAIEMENTS ────────────────────────────────────────────
 
 export async function fedapayCreateTransaction(orderId) {

@@ -13,6 +13,8 @@ import LoginPage from './pages/admin/LoginPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import ProductsPage from './pages/admin/ProductsPage';
 import ProductFormPage from './pages/admin/ProductFormPage';
+import OrdersPage from './pages/admin/OrdersPage';
+import OrderDetailPage from './pages/admin/OrderDetailPage';
 
 export default function App() {
   return (
@@ -38,6 +40,12 @@ export default function App() {
           } />
           <Route path="/admin/products/:id" element={
             <ProtectedRoute><ProductFormPage /></ProtectedRoute>
+          } />
+          <Route path="/admin/orders" element={
+            <ProtectedRoute><OrdersPage /></ProtectedRoute>
+          } />
+          <Route path="/admin/orders/:id" element={
+            <ProtectedRoute><OrderDetailPage /></ProtectedRoute>
           } />
 
           {/* Fallback */}
