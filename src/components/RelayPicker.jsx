@@ -15,17 +15,17 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
   useEffect(() => {
     if (initialised.current) return;
 
-    // 1. Charger jQuery si absent
     function loadScript(src, id, cb) {
       if (document.getElementById(id)) { cb(); return; }
       const s = document.createElement('script');
       s.src = src;
       s.id  = id;
+      s.async = false;
       s.onload = cb;
+      s.onerror = () => console.error('Failed to load script:', src);
       document.head.appendChild(s);
     }
 
-    // 2. Charger le CSS Mondial Relay
     function loadStyle(href, id) {
       if (document.getElementById(id)) return;
       const l = document.createElement('link');
@@ -40,22 +40,31 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
       'mr-css'
     );
 
-    // 3. Charger jQuery puis le widget MR
     loadScript(
       'https://code.jquery.com/jquery-3.7.1.min.js',
       'jquery-mr',
       () => {
+        // Expose jQuery globalement pour le plugin MR
+        window.jQuery = window.jQuery || window.$;
+        window.$      = window.jQuery;
+
         loadScript(
           'https://widget.mondialrelay.com/parcelshop-picker/v4_0/plugin/mondialrelay-parcelshoppicker.min.js',
           'mr-widget',
           () => {
             if (!containerRef.current || initialised.current) return;
+
+            // Vérification que le plugin est bien chargé
+            if (typeof window.jQuery('#mr-widget-container').MRParcelShopPicker !== 'function') {
+              console.error('MRParcelShopPicker plugin not loaded');
+              return;
+            }
+
             initialised.current = true;
 
-            /* global jQuery */
-            jQuery('#mr-widget-container').MRParcelShopPicker({
-              Target:           '#mr-selected-relay', // input caché qui reçoit la valeur
-              Brand:            'BDTEST  ',            // remplacer par votre code enseigne MR
+            window.jQuery('#mr-widget-container').MRParcelShopPicker({
+              Target:           '#mr-selected-relay',
+              Brand:            'BDTEST  ',
               Country:          countryCode,
               EnableGmap:       false,
               ShowResultsOnMap: false,
@@ -68,10 +77,6 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
         );
       }
     );
-
-    return () => {
-      // Nettoyage : pas de destroy officiel — on réinitialise via la clé si besoin
-    };
   }, [countryCode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -81,3 +86,4 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
     </div>
   );
 }
+
