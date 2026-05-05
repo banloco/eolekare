@@ -1,91 +1,92 @@
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
+
+const inputStyle = {
+  padding: '10px 12px',
+  border: '0.5px solid rgba(59,25,15,0.2)',
+  background: '#fff',
+  fontSize: 12,
+  color: '#3b190f',
+  outline: 'none',
+  fontFamily: 'Jost,sans-serif',
+  boxSizing: 'border-box',
+};
 
 export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
-  const containerRef = useRef(null);
-  const initialised  = useRef(false);
-  const onSelectRef  = useRef(onSelect); // ref stable — évite les stale closures
-  onSelectRef.current = onSelect;
+  const [cp, setCp]           = useState('');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [error, setError]     = useState('');
 
-  useEffect(() => {
-    if (initialised.current) return;
+  const BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
-    function loadScript(src, id, cb) {
-      if (document.getElementById(id)) { cb(); return; }
-      const s = document.createElement('script');
-      s.src = src; s.id = id; s.async = false;
-      s.onload = cb;
-      s.onerror = () => console.error('Failed to load script:', src);
-      document.head.appendChild(s);
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (cp.trim().length < 4) { setError('Entrez un code postal valide.'); return; }
+    setError('');
+    setLoading(true);
+    setSearched(false);
+    setResults([]);
+    try {
+      const res = await fetch(`${BASE}/relay-points?cp=${encodeURIComponent(cp.trim())}&country=${countryCode}`, {
+        headers: { Accept: 'application/json' },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Erreur serveur');
+      setResults(data);
+      setSearched(true);
+    } catch (err) {
+      setError(err.message || 'Impossible de charger les points relais.');
+    } finally {
+      setLoading(false);
     }
-
-    function loadStyle(href, id) {
-      if (document.getElementById(id)) return;
-      const l = document.createElement('link');
-      l.rel = 'stylesheet'; l.href = href; l.id = id;
-      document.head.appendChild(l);
-    }
-
-    loadStyle(
-      'https://widget.mondialrelay.com/parcelshop-picker/v4_0/css/mondialrelay-widgetv4_0.css',
-      'mr-css'
-    );
-
-    loadScript('https://code.jquery.com/jquery-3.7.1.min.js', 'jquery-mr', () => {
-      // Expose jQuery globalement pour le plugin MR (Vite isole les modules)
-      window.jQuery = window.jQuery || window.$;
-      window.$      = window.jQuery;
-
-      loadScript(
-        'https://widget.mondialrelay.com/parcelshop-picker/v4_0/plugin/mondialrelay-parcelshoppicker.min.js',
-        'mr-widget',
-        () => {
-          if (!containerRef.current || initialised.current) return;
-          if (typeof window.jQuery().MRParcelShopPicker !== 'function') {
-            console.error('MRParcelShopPicker plugin not loaded');
-            return;
-          }
-          initialised.current = true;
-
-          window.jQuery('#mr-widget-container').MRParcelShopPicker({
-            Target:           '#mr-selected-relay',
-            Brand:            'BDTEST  ',
-            Country:          countryCode,
-            EnableGmap:       false,
-            ShowResultsOnMap: false,
-            Responsive:       true,
-            OnParcelShopSelected: (relay) => {
-              onSelectRef.current && onSelectRef.current(relay);
-            },
-          });
-
-          // Fallback : écoute l'input caché au cas où OnParcelShopSelected ne se déclenche pas
-          const hiddenInput = document.getElementById('mr-selected-relay');
-          if (hiddenInput) {
-            hiddenInput.addEventListener('change', () => {
-              if (!hiddenInput.value) return;
-              const relayData = {
-                ID:    hiddenInput.value,
-                Nom:   'Point Relais ' + hiddenInput.value,
-                Adresse1: '',
-                CP:    '',
-                Ville: '',
-                Pays:  countryCode,
-              };
-              onSelectRef.current && onSelectRef.current(relayData);
-            });
-          }
-        }
-      );
-    });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  };
 
   return (
     <div>
-      <p style={{ fontSize: 11, color: '#7a4f2d', marginBottom: 8, fontStyle: 'italic' }}>
-        Saisissez votre code postal, cliquez sur "Rechercher" puis sélectionnez un point relais dans la liste.
-      </p>
-      <div id="mr-widget-container" ref={containerRef} style={{ width: '100%', minHeight: 400 }} />
-      <input type="hidden" id="mr-selected-relay" />
+      {/* Formulaire de recherche */}
+      <form onSubmit={handleSearch} style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
+        <input
+          style={{ ...inputStyle, flex: 1 }}
+          value={cp}
+          onChange={e => setCp(e.target.value)}
+          placeholder="Code postal (ex : 75001)"
+          maxLength={10}
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ padding: '10px 16px', background: loading ? '#999' : '#3b190f', color: '#fdf6ec', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', whiteSpace: 'nowrap' }}
+        >
+          {loading ? '…' : 'Rechercher'}
+        </button>
+      </form>
+
+      {error && <p style={{ color: '#c0392b', fontSize: 11, marginBottom: 8 }}>{error}</p>}
+
+      {/* Résultats */}
+      {results.length > 0 && (
+        <div style={{ maxHeight: 320, overflowY: 'auto', border: '0.5px solid rgba(59,25,15,0.1)' }}>
+          {results.map((relay) => (
+            <button
+              key={relay.ID}
+              type="button"
+              onClick={() => onSelect(relay)}
+              style={{ display: 'block', width: '100%', padding: '12px 14px', background: 'none', border: 'none', borderBottom: '0.5px solid rgba(59,25,15,0.07)', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = '#f8f0e3'}
+              onMouseLeave={e => e.currentTarget.style.background = 'none'}
+            >
+              <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f', margin: 0 }}>{relay.Nom}</p>
+              <p style={{ fontSize: 11, color: '#7a4f2d', margin: '2px 0 0' }}>{relay.Adresse1} — {relay.CP} {relay.Ville}</p>
+              {relay.Horaires && <p style={{ fontSize: 10, color: '#aaa', margin: '2px 0 0' }}>{relay.Horaires}</p>}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {searched && results.length === 0 && !error && (
+        <p style={{ fontSize: 11, color: '#7a4f2d', fontStyle: 'italic' }}>Aucun point relais trouvé pour ce code postal.</p>
+      )}
     </div>
   );
 }
