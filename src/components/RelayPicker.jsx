@@ -54,11 +54,12 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
 
             /* global jQuery */
             jQuery('#mr-widget-container').MRParcelShopPicker({
-              Target:         '#mr-selected-relay', // input caché qui reçoit la valeur
-              Brand:          'BDTEST  ',            // remplacer par votre code enseigne MR
-              Country:        countryCode,
-              EnableGmap:     true,
-              ShowResultsOnMap: true,
+              Target:           '#mr-selected-relay', // input caché qui reçoit la valeur
+              Brand:            'BDTEST  ',            // remplacer par votre code enseigne MR
+              Country:          countryCode,
+              EnableGmap:       false,
+              ShowResultsOnMap: false,
+              Responsive:       true,
               OnParcelShopSelected: (relay) => {
                 onSelect && onSelect(relay);
               },
