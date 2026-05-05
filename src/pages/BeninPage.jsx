@@ -21,29 +21,55 @@ function buildWAMessage(cart, address) {
 }
 
 /* ─── NAV ── */
+const NAV_LINKS = [['#products', 'Collection'], ['#story', 'Histoire'], ['#howto', 'Utilisation']];
+
 function Nav({ cartCount, onCartOpen }) {
+  const [mobOpen, setMobOpen] = useState(false);
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center"
-      style={{ padding: '0.9rem 2.5rem', background: '#f8cb78' }}>
-      <div>
-        <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 400, letterSpacing: '0.28em', color: '#000', textTransform: 'uppercase' }}>EOLEKARE</div>
-        <small style={{ display: 'block', fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', marginTop: 2 }}>by Eoleeg</small>
-      </div>
-      <ul className="hidden md:flex gap-8 list-none items-center">
-        {[['#products', 'Collection'], ['#story', 'Histoire'], ['#howto', 'Utilisation']].map(([h, l]) => (
-          <li key={h}><a href={h} style={{ fontSize: 10, fontWeight: 300, letterSpacing: '0.15em', color: '#3b190f', textDecoration: 'none', textTransform: 'uppercase', opacity: 0.7 }}
-            onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>{l}</a></li>
-        ))}
-        <li>
-          <button onClick={onCartOpen} style={{ position: 'relative', background: '#25D366', border: 'none', cursor: 'pointer', color: '#fff', padding: '7px 18px', fontSize: 10, letterSpacing: '0.15em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8 }}>
-            💬 Panier
-            {cartCount > 0 && (
-              <span style={{ background: '#fff', color: '#25D366', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>
-            )}
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center"
+        style={{ padding: '0.9rem 1.5rem', background: '#f8cb78' }}>
+        <div>
+          <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 400, letterSpacing: '0.28em', color: '#000', textTransform: 'uppercase' }}>EOLEKARE</div>
+          <small style={{ display: 'block', fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', marginTop: 2 }}>by Eoleeg</small>
+        </div>
+
+        {/* Desktop nav */}
+        <ul className="hidden md:flex gap-8 list-none items-center">
+          {NAV_LINKS.map(([h, l]) => (
+            <li key={h}><a href={h} style={{ fontSize: 10, fontWeight: 300, letterSpacing: '0.15em', color: '#3b190f', textDecoration: 'none', textTransform: 'uppercase', opacity: 0.7 }}
+              onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>{l}</a></li>
+          ))}
+          <li>
+            <button onClick={onCartOpen} style={{ position: 'relative', background: '#25D366', border: 'none', cursor: 'pointer', color: '#fff', padding: '7px 18px', fontSize: 10, letterSpacing: '0.15em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8 }}>
+              💬 Panier
+              {cartCount > 0 && (
+                <span style={{ background: '#fff', color: '#25D366', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>
+              )}
+            </button>
+          </li>
+        </ul>
+
+        {/* Mobile: cart + hamburger */}
+        <div className="flex md:hidden items-center gap-3">
+          <button onClick={onCartOpen} style={{ background: '#25D366', border: 'none', cursor: 'pointer', color: '#fff', padding: '7px 14px', fontSize: 10, letterSpacing: '0.1em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}>
+            💬{cartCount > 0 && <span style={{ background: '#fff', color: '#25D366', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
           </button>
-        </li>
-      </ul>
-    </nav>
+          <button onClick={() => setMobOpen(v => !v)} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.2)', cursor: 'pointer', width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: '#3b190f', flexShrink: 0 }}>
+            {mobOpen ? '✕' : '☰'}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      {mobOpen && (
+        <div className="mob-menu md:hidden">
+          {NAV_LINKS.map(([h, l]) => (
+            <a key={h} href={h} onClick={() => setMobOpen(false)}>{l}</a>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 
@@ -239,7 +265,7 @@ function Products({ cart, setCart }) {
   };
 
   return (
-    <section id="products" style={{ padding: '7rem 3rem', background: '#fff' }}>
+    <section id="products" style={{ padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', background: '#fff' }}>
       <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>Notre collection</p>
       <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '2rem' }}>Nos Beurres</h2>
 
@@ -320,11 +346,11 @@ function Products({ cart, setCart }) {
 /* ─── STORY ── */
 function Story() {
   return (
-    <section id="story" style={{ background: '#3b190f', padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
+    <section id="story" style={{ background: '#3b190f', padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', right: 0, top: 0, width: '42%', height: '100%', zIndex: 0 }}>
         <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
       </div>
-      <div style={{ maxWidth: 980, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
+      <div className="grid-2col" style={{ maxWidth: 980, margin: '0 auto', gap: '2.5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
         <div>
           <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 38, fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
             L'odeur, la texture, le rituel… un moment rien qu'à toi.
@@ -355,10 +381,10 @@ function Story() {
 /* ─── HOWTO ── */
 function HowTo() {
   return (
-    <section id="howto" style={{ background: '#2a1208', padding: '6rem 3rem' }}>
+    <section id="howto" style={{ background: '#2a1208', padding: 'clamp(4rem,7vw,6rem) clamp(1.25rem,4vw,3rem)' }}>
       <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>Rituel Eolekare</p>
       <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, color: '#fdf6ec', textAlign: 'center', marginBottom: '4rem' }}>Comment utiliser</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '2rem', maxWidth: 960, margin: '0 auto' }}>
+      <div className="grid-3col" style={{ gap: '2rem', maxWidth: 960, margin: '0 auto' }}>
         {[['01', 'Sur les cheveux', 'Prélève une noisette, frotte entre tes mains. Applique sur longueurs et pointes.'], ['02', 'Sur le corps', "Sur peau humide après la douche. Masse jusqu'à pénétration complète."], ['03', "Bain d'huile profond", '1x par semaine. 30min à 2h sous bonnet chaud. Cheveux réparés et brillants.']].map(([n, t, d]) => (
           <div key={n} style={{ border: '0.5px solid rgba(248,203,120,0.15)', padding: '2.5rem 2rem' }}>
             <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 56, fontWeight: 300, color: 'rgba(248,203,120,0.12)', lineHeight: 1, marginBottom: '0.5rem' }}>{n}</div>

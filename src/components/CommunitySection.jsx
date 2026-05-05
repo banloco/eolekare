@@ -27,7 +27,7 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
   }[lang] || {};
 
   return (
-    <section style={{ background: '#fdf6ec', padding: '6rem 3rem', textAlign: 'center' }}>
+    <section style={{ background: '#fdf6ec', padding: 'clamp(4rem,7vw,6rem) clamp(1.25rem,4vw,3rem)', textAlign: 'center' }}>
       <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.6rem' }}>
         {t.eyebrow}
       </p>
@@ -43,7 +43,7 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
         {BEHOLD_FEED_ID ? (
           <BeholdWidget feedId={BEHOLD_FEED_ID} />
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 3, maxWidth: 620, margin: '0 auto' }}>
+          <div className="grid-3col" style={{ gap: 3, maxWidth: 620, margin: '0 auto' }}>
             {[
               '/images/WhatsApp Image 2026-02-28 at 1.28.11 PM.jpeg',
               '/images/WhatsApp Image 2026-02-28 at 1.28.12 PM.jpeg',

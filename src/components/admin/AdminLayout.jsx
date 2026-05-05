@@ -14,6 +14,7 @@ export default function AdminLayout({ children }) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [signingOut, setSigningOut] = useState(false);
+  const [sideOpen, setSideOpen] = useState(false);
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -24,13 +25,24 @@ export default function AdminLayout({ children }) {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Jost, sans-serif', background: '#f5ede0' }}>
 
+      {/* ── MOBILE TOGGLE ── */}
+      <button className="admin-mob-btn" onClick={() => setSideOpen(v => !v)} aria-label="Menu">
+        {sideOpen ? '✕' : '☰'}
+      </button>
+
+      {/* ── OVERLAY (mobile) ── */}
+      <div
+        className={`admin-overlay${sideOpen ? ' open' : ''}`}
+        onClick={() => setSideOpen(false)}
+      />
+
       {/* ── SIDEBAR ── */}
-      <aside style={{
+      <aside className={`admin-sidebar${sideOpen ? ' open' : ''}`} style={{
         width: 240, flexShrink: 0,
         background: '#3b190f',
         display: 'flex', flexDirection: 'column',
         position: 'fixed', top: 0, left: 0, bottom: 0,
-        zIndex: 50,
+        zIndex: 150,
       }}>
         {/* Logo */}
         <div style={{ padding: '2rem 1.5rem 1.5rem', borderBottom: '0.5px solid rgba(248,203,120,0.12)' }}>
@@ -49,6 +61,7 @@ export default function AdminLayout({ children }) {
               key={item.to}
               to={item.to}
               end={item.to === '/admin/dashboard'}
+              onClick={() => setSideOpen(false)}
               style={({ isActive }) => ({
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '11px 1.5rem',
@@ -95,7 +108,7 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* ── MAIN ── */}
-      <main style={{ marginLeft: 240, flex: 1, minHeight: '100vh', padding: '2.5rem 3rem' }}>
+      <main className="admin-main" style={{ marginLeft: 240, flex: 1, minHeight: '100vh', padding: '2.5rem 3rem' }}>
         {children}
       </main>
     </div>

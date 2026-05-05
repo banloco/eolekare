@@ -40,3 +40,60 @@
 .fruit-wf3{animation:wf3 11s  ease-in-out infinite -2s}
 .fruit-wf4{animation:wf4 7.5s ease-in-out infinite -4s}
 .fruit-wf5{animation:wf5 9.5s ease-in-out infinite -1s}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+/* Grid helpers — collapse to 1 col on mobile */
+.grid-2col { display: grid; grid-template-columns: 1fr 1fr; }
+.grid-3col { display: grid; grid-template-columns: repeat(3, 1fr); }
+
+/* Mobile nav dropdown */
+.mob-menu {
+  position: fixed; top: 56px; left: 0; right: 0; z-index: 98;
+  background: #f8cb78; border-top: 0.5px solid rgba(59,25,15,0.12);
+  box-shadow: 0 8px 24px rgba(59,25,15,0.1);
+  display: flex; flex-direction: column; padding: 0.5rem 0;
+}
+.mob-menu a {
+  display: block; padding: 0.9rem 1.5rem;
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: #3b190f; text-decoration: none;
+  font-family: 'Jost', sans-serif; font-weight: 300;
+  border-bottom: 0.5px solid rgba(59,25,15,0.07);
+  transition: background 0.15s;
+}
+.mob-menu a:hover { background: rgba(59,25,15,0.05); }
+
+/* Admin mobile toggle */
+.admin-mob-btn {
+  display: none;
+  position: fixed; top: 0.9rem; left: 0.9rem; z-index: 300;
+  background: #3b190f; border: none; color: #f8cb78;
+  width: 42px; height: 42px; cursor: pointer; font-size: 20px;
+  align-items: center; justify-content: center;
+}
+
+/* Admin sidebar overlay */
+.admin-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 149;
+}
+
+/* ── Mobile breakpoint (< 768px) ── */
+@media (max-width: 767px) {
+  /* Grids collapse to 1 column */
+  .grid-2col { grid-template-columns: 1fr !important; }
+  .grid-3col { grid-template-columns: 1fr !important; }
+
+  /* Admin sidebar slides in */
+  .admin-mob-btn { display: flex; }
+  .admin-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .admin-sidebar.open { transform: translateX(0); }
+  .admin-overlay.open { display: block; }
+  .admin-main {
+    margin-left: 0 !important;
+    padding: 4.5rem 1rem 2rem !important;
+  }
+}

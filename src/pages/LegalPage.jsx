@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 
 const s = {
   body: { minHeight: '100vh', background: '#fdf6ec', fontFamily: "'Helvetica Neue', Arial, sans-serif" },
-  header: { background: '#3b190f', padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  header: { background: '#3b190f', padding: '1.2rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.8rem' },
   logo: { color: '#f8cb78', fontFamily: '"Cormorant Garamond", serif', fontSize: 22, letterSpacing: '0.3em', textDecoration: 'none', fontWeight: 300 },
-  nav: { display: 'flex', gap: '1.5rem' },
+  nav: { display: 'flex', gap: '1rem', flexWrap: 'wrap' },
   navLink: { color: 'rgba(248,203,120,0.65)', fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', textDecoration: 'none' },
-  main: { maxWidth: 760, margin: '0 auto', padding: '4rem 2rem' },
-  tabs: { display: 'flex', gap: 0, marginBottom: '2.5rem', borderBottom: '0.5px solid rgba(59,25,15,0.1)' },
+  main: { maxWidth: 760, margin: '0 auto', padding: 'clamp(2rem,6vw,4rem) clamp(1.25rem,4vw,2rem)' },
+  tabs: { display: 'flex', gap: 0, marginBottom: '2.5rem', borderBottom: '0.5px solid rgba(59,25,15,0.1)', flexWrap: 'wrap' },
   h1: { fontFamily: '"Cormorant Garamond", serif', fontSize: 46, fontWeight: 300, color: '#3b190f', marginBottom: '0.5rem' },
   h2: { fontFamily: '"Cormorant Garamond", serif', fontSize: 24, fontWeight: 400, color: '#3b190f', marginBottom: '0.8rem', marginTop: '2rem' },
   p: { fontSize: 13, color: '#7a4f2d', lineHeight: 1.9, marginBottom: '1rem' },

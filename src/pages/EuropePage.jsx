@@ -46,33 +46,66 @@ function useCart() {
 }
 
 /* ─── NAV ─── */
+const EU_NAV_LINKS = (t) => [['#products', t.collection], ['#story', t.story]];
+
 function Nav({ lang, setLang, cartCount, onCartOpen }) {
   const t = T[lang];
+  const [mobOpen, setMobOpen] = useState(false);
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center" style={{ padding: '0.9rem 2.5rem', background: '#f8cb78' }}>
-      <div>
-        <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 400, letterSpacing: '0.28em', color: '#000', textTransform: 'uppercase' }}>EOLEKARE</div>
-        <small style={{ display: 'block', fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', marginTop: 2 }}>by Eoleeg · Europe</small>
-      </div>
-      <div className="hidden md:flex items-center gap-6">
-        {[['#products', t.collection], ['#story', t.story]].map(([h, l]) => (
-          <a key={h} href={h} style={{ fontSize: 10, fontWeight: 300, letterSpacing: '0.15em', color: '#3b190f', textDecoration: 'none', textTransform: 'uppercase', opacity: 0.7 }}
-            onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>{l}</a>
-        ))}
-        <div style={{ display: 'flex', gap: 2 }}>
-          {['fr', 'en'].map(l => (
-            <button key={l} onClick={() => setLang(l)} style={{ background: lang === l ? '#3b190f' : 'transparent', color: lang === l ? '#f8cb78' : 'rgba(59,25,15,0.5)', border: '0.5px solid rgba(59,25,15,0.2)', padding: '4px 10px', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', transition: 'all 0.2s' }}>
-              {l.toUpperCase()}
-            </button>
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center" style={{ padding: '0.9rem 1.5rem', background: '#f8cb78' }}>
+        <div>
+          <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 400, letterSpacing: '0.28em', color: '#000', textTransform: 'uppercase' }}>EOLEKARE</div>
+          <small style={{ display: 'block', fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', marginTop: 2 }}>by Eoleeg · Europe</small>
+        </div>
+
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-6">
+          {EU_NAV_LINKS(t).map(([h, l]) => (
+            <a key={h} href={h} style={{ fontSize: 10, fontWeight: 300, letterSpacing: '0.15em', color: '#3b190f', textDecoration: 'none', textTransform: 'uppercase', opacity: 0.7 }}
+              onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>{l}</a>
+          ))}
+          <div style={{ display: 'flex', gap: 2 }}>
+            {['fr', 'en'].map(l => (
+              <button key={l} onClick={() => setLang(l)} style={{ background: lang === l ? '#3b190f' : 'transparent', color: lang === l ? '#f8cb78' : 'rgba(59,25,15,0.5)', border: '0.5px solid rgba(59,25,15,0.2)', padding: '4px 10px', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', transition: 'all 0.2s' }}>
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
+          <button onClick={onCartOpen} style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', padding: '7px 18px', fontSize: 10, letterSpacing: '0.15em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.3s' }}
+            onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
+            {t.nav_cart}
+            {cartCount > 0 && <span style={{ background: '#f8cb78', color: '#3b190f', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
+          </button>
+        </div>
+
+        {/* Mobile */}
+        <div className="flex md:hidden items-center gap-3">
+          <div style={{ display: 'flex', gap: 2 }}>
+            {['fr', 'en'].map(l => (
+              <button key={l} onClick={() => setLang(l)} style={{ background: lang === l ? '#3b190f' : 'transparent', color: lang === l ? '#f8cb78' : 'rgba(59,25,15,0.5)', border: '0.5px solid rgba(59,25,15,0.2)', padding: '4px 8px', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif' }}>
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
+          <button onClick={onCartOpen} style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', padding: '7px 12px', fontSize: 10, letterSpacing: '0.1em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}>
+            {t.nav_cart}
+            {cartCount > 0 && <span style={{ background: '#f8cb78', color: '#3b190f', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
+          </button>
+          <button onClick={() => setMobOpen(v => !v)} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.2)', cursor: 'pointer', width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: '#3b190f', flexShrink: 0 }}>
+            {mobOpen ? '✕' : '☰'}
+          </button>
+        </div>
+      </nav>
+
+      {mobOpen && (
+        <div className="mob-menu md:hidden">
+          {EU_NAV_LINKS(t).map(([h, l]) => (
+            <a key={h} href={h} onClick={() => setMobOpen(false)}>{l}</a>
           ))}
         </div>
-        <button onClick={onCartOpen} style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', padding: '7px 18px', fontSize: 10, letterSpacing: '0.15em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.3s' }}
-          onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
-          {t.nav_cart}
-          {cartCount > 0 && <span style={{ background: '#f8cb78', color: '#3b190f', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
-        </button>
-      </div>
-    </nav>
+      )}
+    </>
   );
 }
 
@@ -183,7 +216,7 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(59,25,15,0.55)' }} />
       <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 301, background: '#fdf6ec', width: '90%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 32px 80px rgba(0,0,0,0.3)' }}>
         <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1.2rem', background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#3b190f', opacity: 0.45, zIndex: 1 }}>✕</button>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        <div className="grid-2col">
           {/* Image */}
           <div style={{ height: 400, background: '#f8cb78', overflow: 'hidden' }}>
             {product.images?.[0]
@@ -264,7 +297,7 @@ function Products({ lang, cartHook }) {
   return (
     <>
       {modal && <ProductModal product={modal} lang={lang} onClose={() => setModal(null)} onAdd={handleAdd} inCart={cart.find(i => i.id === modal.id)} />}
-      <section id="products" style={{ padding: '7rem 3rem', background: '#fff' }}>
+        <section id="products" style={{ padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', background: '#fff' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
         <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '4rem' }}>Nos Beurres</h2>
         {loading && <p style={{ textAlign: 'center', fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>Chargement…</p>}
@@ -330,11 +363,11 @@ function Products({ lang, cartHook }) {
 /* ─── STORY ─── */
 function Story({ lang }) {
   return (
-    <section id="story" style={{ background: '#3b190f', padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
+    <section id="story" style={{ background: '#3b190f', padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', right: 0, top: 0, width: '42%', height: '100%', zIndex: 0 }}>
         <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
       </div>
-      <div style={{ maxWidth: 980, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
+      <div className="grid-2col" style={{ maxWidth: 980, margin: '0 auto', gap: '2.5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
         <div>
           <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 38, fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
             {lang === 'fr' ? "L'odeur, la texture, le rituel… un moment rien qu'à toi." : 'The scent, the texture, the ritual… a moment just for you.'}
