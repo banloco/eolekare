@@ -50,7 +50,7 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
               '/images/WhatsApp Image 2026-02-28 at 1.28.11 PM (1).jpeg',
               '/images/WhatsApp Image 2026-02-28 at 1.31.10 PM (1).jpeg',
               '/images/WhatsApp Image 2026-02-28 at 1.31.10 PM (3).jpeg',
-              '/images/coco.jpg',
+              '/images/WhatsApp Image 2026-02-28 at 1.31.10 PM (2).jpg',
             ].map((src, i) => (
               <a
                 key={i}
