@@ -368,36 +368,44 @@ function Products({ lang, cartHook }) {
 
 /* ─── STORY ─── */
 function Story({ lang }) {
+  const t = {
+    fr: {
+      eyebrow: "Née d\u2019un besoin, pensée pour tous.",
+      label: 'UN MOT DE LA FONDATRICE',
+      p1: "Quand je me suis rasée les cheveux, on m'a dit qu'ils ne repousseraient pas. Plutôt que d'accepter, je me suis tournée vers les ingrédients naturels du Bénin pour tester différents soins — et les résultats ont parlé d'eux-mêmes.",
+      p2: "Eolekare est la solution que j'ai trouvée pour moi, et que je partage aujourd'hui avec tous : hommes, femmes, enfants — pour vos cheveux, votre peau, votre corps.",
+      p3: "J'espère que ces produits deviendront les vôtres. Qu'ils traîneront dans votre sac, sur votre table de nuit, dans votre salle de bain. Qu'à chaque moment — matin, soir, en voyage — ils seront là pour adoucir, nourrir et prendre soin de vous.",
+    },
+    en: {
+      eyebrow: 'Born from a need, made for everyone.',
+      label: 'A WORD FROM THE FOUNDER',
+      p1: "When I shaved my head, I was told my hair wouldn't grow back. Rather than accept that, I turned to Benin's natural ingredients to test different treatments — and the results spoke for themselves.",
+      p2: "Eolekare is the solution I found for myself, and that I now share with everyone: men, women, children — for your hair, your skin, your body.",
+      p3: "I hope these products will become yours. That they'll end up in your bag, on your nightstand, in your bathroom. That at every moment — morning, evening, on the go — they'll be there to soften, nourish and take care of you.",
+    },
+  }[lang];
   return (
-    <section id="story" style={{ background: '#3b190f', padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', right: 0, top: 0, width: '42%', height: '100%', zIndex: 0 }}>
-        <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
-      </div>
-      <div className="grid-2col" style={{ maxWidth: 980, margin: '0 auto', gap: '2.5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
-        <div>
-          <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 38, fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
-            {lang === 'fr' ? "L'odeur, la texture, le rituel… un moment rien qu'à toi." : 'The scent, the texture, the ritual… a moment just for you.'}
-          </h2>
-          <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(253,246,236,0.58)', lineHeight: 1.95, marginBottom: '2rem' }}>
-            {lang === 'fr' ? "Eolekare, c'est une marque capillaire & cosmétique 100% naturelle, produite au Bénin avec amour." : 'Eolekare is a 100% natural hair & cosmetic brand, made in Benin with love.'}
-          </p>
-          <a href="#products" style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.25em', fontWeight: 300, textTransform: 'uppercase', color: '#3b190f', background: '#f8cb78', padding: '14px 36px', textDecoration: 'none' }}>
-            {T[lang].discover}
-          </a>
+    <section id="story" style={{ background: '#3b190f', overflow: 'hidden' }}>
+      <div className="grid-2col" style={{ maxWidth: 1100, margin: '0 auto', gap: 0, alignItems: 'stretch' }}>
+        {/* Col 1 : Mot de la fondatrice */}
+        <div style={{ padding: 'clamp(3rem,7vw,6rem) clamp(1.5rem,4vw,4rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{t.eyebrow}</p>
+          <p style={{ fontSize: 9, letterSpacing: '0.32em', fontWeight: 300, color: '#f8cb78', textTransform: 'uppercase', marginBottom: '2rem' }}>{t.label}</p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>{t.p1}</p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>{t.p2}</p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '2rem' }}>{t.p3}</p>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— Eoleeg</p>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {(lang === 'fr'
-            ? [['01', '100% Naturel', 'Beurres natifs, huiles végétales, vitamine E.'], ['02', 'Made in Bénin', 'Fabriqué avec amour pour le monde.'], ['03', 'Multi-usage', 'Peau, cheveux, corps, ongles, cils.'], ['04', 'Parfums uniques', 'Chaque beurre a son parfum signature.']]
-            : [['01', '100% Natural', 'Native butters, vegetable oils, vitamin E.'], ['02', 'Made in Benin', 'Crafted with love for the world.'], ['03', 'Multi-use', 'Skin, hair, body, nails, lashes.'], ['04', 'Unique scents', 'Each butter has its signature fragrance.']]
-          ).map(([n, ti, d]) => (
-            <div key={n} style={{ display: 'flex', gap: '1.2rem', paddingBottom: '1.5rem', borderBottom: '0.5px solid rgba(248,203,120,0.1)' }}>
-              <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 32, fontWeight: 300, color: 'rgba(248,203,120,0.22)', minWidth: 40 }}>{n}</span>
-              <div>
-                <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 18, color: '#f8cb78', marginBottom: 4 }}>{ti}</p>
-                <p style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.46)', lineHeight: 1.75 }}>{d}</p>
-              </div>
-            </div>
-          ))}
+        {/* Col 2 : Instagram */}
+        <div style={{ display: 'flex', alignItems: 'stretch', minHeight: 520, background: '#000' }}>
+          <iframe
+            src="https://www.instagram.com/p/DK-SszQsc60/embed/"
+            style={{ width: '100%', height: '100%', minHeight: 520, border: 'none', display: 'block' }}
+            loading="lazy"
+            allowTransparency="true"
+            scrolling="no"
+            title="Eolekare Instagram"
+          />
         </div>
       </div>
     </section>
@@ -407,29 +415,48 @@ function Story({ lang }) {
 /* ─── HOWTO ─── */
 function HowTo({ lang }) {
   const steps = lang === 'fr'
-    ? [['01', 'Sur les cheveux', 'Prélève une noisette, frotte entre tes mains. Applique sur longueurs et pointes. Nutrition, brillance, boucles définies.'],
-       ['02', 'Sur le corps', "Sur peau humide après la douche. Masse jusqu'à pénétration. Hydrate et parfume naturellement."],
-       ['03', "Bain d'huile profond", '1x par semaine. 30min à 2h sous bonnet chaud. Rince, shampoing doux. Résultat : cheveux réparés et brillants.']]
-    : [['01', 'On hair', 'Take a small amount, rub between hands. Apply to lengths and ends. Nutrition, shine, defined curls.'],
-       ['02', 'On body', 'Apply on damp skin after shower. Massage until absorbed. Naturally moisturizes and perfumes.'],
-       ['03', 'Deep oil bath', 'Once a week. 30min to 2h under a warm cap. Rinse, gentle shampoo. Result: repaired and shiny hair.']];
+    ? [
+        { n: '01', t: 'Sur les cheveux', paras: [
+          "Prélève une noisette, frotte entre tes mains. Applique sur les longueurs et pointes pour nourrir, réparer et faire briller.",
+          "Pour un soin intense, utilise en bain d'huile : applique généreusement, masse profondément le cuir chevelu, laisse poser 30min à 2h sous un bonnet chauffant si possible.",
+        ]},
+        { n: '02', t: 'Sur le corps', paras: [
+          "Sur peau humide après la douche. Masse jusqu'à pénétration complète. Idéal pour la peau, les ongles, les lèvres, les cils, les sourcils et les pieds — partout où ta peau a besoin de douceur.",
+        ]},
+        { n: '03', t: 'Sur la barbe', paras: [
+          "Quelques gouttes réchauffées entre les mains. Masse sur la barbe et la peau en dessous pour adoucir, hydrater et discipliner.",
+        ]},
+      ]
+    : [
+        { n: '01', t: 'On hair', paras: [
+          "Take a small amount, rub between your hands. Apply to lengths and ends to nourish, repair and add shine.",
+          "For an intensive treatment, use as a hot oil bath: apply generously, deeply massage the scalp, leave on 30min to 2h under a warm cap if possible.",
+        ]},
+        { n: '02', t: 'On body', paras: [
+          "Apply to damp skin after the shower. Massage until fully absorbed. Perfect for skin, nails, lips, lashes, brows and feet — anywhere your skin needs softness.",
+        ]},
+        { n: '03', t: 'On beard', paras: [
+          "A few drops warmed between the hands. Massage into the beard and skin beneath to soften, moisturize and tame.",
+        ]},
+      ];
   return (
     <section id="howto" style={{ background: '#2a1208', padding: 'clamp(4rem,7vw,6rem) clamp(1.25rem,4vw,3rem)' }}>
       <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>Rituel Eolekare</p>
       <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, color: '#fdf6ec', textAlign: 'center', marginBottom: '4rem' }}>{lang === 'fr' ? 'Comment utiliser' : 'How to use'}</h2>
       <div className="grid-3col" style={{ gap: '2rem', maxWidth: 960, margin: '0 auto' }}>
-        {steps.map(([n, t, d]) => (
+        {steps.map(({ n, t, paras }) => (
           <div key={n} style={{ border: '0.5px solid rgba(248,203,120,0.15)', padding: '2.5rem 2rem' }}>
             <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 56, fontWeight: 300, color: 'rgba(248,203,120,0.12)', lineHeight: 1, marginBottom: '0.5rem' }}>{n}</div>
             <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 300, color: '#f8cb78', marginBottom: '1rem' }}>{t}</p>
-            <p style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.5)', lineHeight: 1.85 }}>{d}</p>
+            {paras.map((p, i) => (
+              <p key={i} style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.5)', lineHeight: 1.85, marginBottom: i < paras.length - 1 ? '0.8rem' : 0 }}>{p}</p>
+            ))}
           </div>
         ))}
       </div>
     </section>
   );
 }
-
 /* ─── ORDER ─── */
 function Order({ lang, onCartOpen }) {
   return (
@@ -467,7 +494,9 @@ function Order({ lang, onCartOpen }) {
 function Footer({ lang }) {
   return (
     <footer style={{ background: '#3b190f', padding: '4rem 3rem', textAlign: 'center' }}>
-      <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 40, fontWeight: 300, letterSpacing: '0.3em', color: '#f8cb78', marginBottom: '0.4rem' }}>EOLEKARE</div>
+      <div style={{ overflow: 'hidden', height: 52, margin: '0 auto 0.6rem', display: 'inline-block' }}>
+        <img src="/images/Eolekare logo noir .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67, filter: 'invert(1)', mixBlendMode: 'screen' }} />
+      </div>
       <p style={{ fontSize: 9, letterSpacing: '0.32em', color: 'rgba(248,203,120,0.28)', textTransform: 'uppercase', marginBottom: '2rem' }}>by Eoleeg · Europe</p>
       <ul className="flex justify-center gap-12 list-none flex-wrap" style={{ marginBottom: '2rem' }}>
         {[['https://instagram.com/eolekare', 'Instagram @eolekare'], ['https://tiktok.com/@eolekare', 'TikTok @eolekare']].map(([h, l]) => (
