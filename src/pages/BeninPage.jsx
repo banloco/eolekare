@@ -360,9 +360,16 @@ function Story() {
           </p>
           <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— Eoleeg</p>
         </div>
-        {/* Col 2 : Image */}
-        <div style={{ position: 'relative', minHeight: 520 }}>
-          <img src="/images/story-bg.jpg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(0.6) brightness(0.7)' }} />
+        {/* Col 2 : Instagram */}
+        <div style={{ display: 'flex', alignItems: 'stretch', minHeight: 520, background: '#000' }}>
+          <iframe
+            src="https://www.instagram.com/p/DK-SszQsc60/embed/"
+            style={{ width: '100%', height: '100%', minHeight: 520, border: 'none', display: 'block' }}
+            loading="lazy"
+            allowTransparency="true"
+            scrolling="no"
+            title="Eolekare Instagram"
+          />
         </div>
       </div>
     </section>
