@@ -398,6 +398,65 @@ function Story({ lang }) {
   );
 }
 
+/* ─── HOWTO ─── */
+function HowTo({ lang }) {
+  const steps = lang === 'fr'
+    ? [['01', 'Sur les cheveux', 'Prélève une noisette, frotte entre tes mains. Applique sur longueurs et pointes. Nutrition, brillance, boucles définies.'],
+       ['02', 'Sur le corps', "Sur peau humide après la douche. Masse jusqu'à pénétration. Hydrate et parfume naturellement."],
+       ['03', "Bain d'huile profond", '1x par semaine. 30min à 2h sous bonnet chaud. Rince, shampoing doux. Résultat : cheveux réparés et brillants.']]
+    : [['01', 'On hair', 'Take a small amount, rub between hands. Apply to lengths and ends. Nutrition, shine, defined curls.'],
+       ['02', 'On body', 'Apply on damp skin after shower. Massage until absorbed. Naturally moisturizes and perfumes.'],
+       ['03', 'Deep oil bath', 'Once a week. 30min to 2h under a warm cap. Rinse, gentle shampoo. Result: repaired and shiny hair.']];
+  return (
+    <section id="howto" style={{ background: '#2a1208', padding: 'clamp(4rem,7vw,6rem) clamp(1.25rem,4vw,3rem)' }}>
+      <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>Rituel Eolekare</p>
+      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, color: '#fdf6ec', textAlign: 'center', marginBottom: '4rem' }}>{lang === 'fr' ? 'Comment utiliser' : 'How to use'}</h2>
+      <div className="grid-3col" style={{ gap: '2rem', maxWidth: 960, margin: '0 auto' }}>
+        {steps.map(([n, t, d]) => (
+          <div key={n} style={{ border: '0.5px solid rgba(248,203,120,0.15)', padding: '2.5rem 2rem' }}>
+            <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 56, fontWeight: 300, color: 'rgba(248,203,120,0.12)', lineHeight: 1, marginBottom: '0.5rem' }}>{n}</div>
+            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 300, color: '#f8cb78', marginBottom: '1rem' }}>{t}</p>
+            <p style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.5)', lineHeight: 1.85 }}>{d}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ─── ORDER ─── */
+function Order({ lang, onCartOpen }) {
+  return (
+    <section id="order" style={{ background: '#faeacc', padding: 'clamp(4rem,8vw,6rem) clamp(1.25rem,4vw,3rem)', textAlign: 'center' }}>
+      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>
+        {lang === 'fr' ? 'Commandez maintenant' : 'Order now'}
+      </h2>
+      <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', maxWidth: 500, margin: '0 auto 3rem' }}>
+        {lang === 'fr' ? 'Livraison en Europe via Mondial Relay. Paiement sécurisé par carte bancaire.' : 'Delivery in Europe via Mondial Relay. Secure payment by credit card.'}
+      </p>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
+        {[
+          { icon: '🛒', label: lang === 'fr' ? 'En ligne' : 'Online', val: lang === 'fr' ? 'Via le panier' : 'Via cart' },
+          { icon: 'W', label: 'WhatsApp', val: '+229 0148654200' },
+          { icon: '@', label: 'Instagram', val: '@eolekare' },
+          { icon: '🚚', label: 'Mondial Relay', val: lang === 'fr' ? "Toute l'Europe" : 'All Europe' },
+        ].map(m => (
+          <div key={m.label} style={{ textAlign: 'center', minWidth: 120 }}>
+            <div style={{ width: 56, height: 56, border: '0.5px solid rgba(59,25,15,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.8rem', fontFamily: '"Cormorant Garamond",serif', fontSize: 22, color: '#3b190f' }}>{m.icon}</div>
+            <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 4 }}>{m.label}</p>
+            <p style={{ fontSize: 11, fontWeight: 300, color: '#3b190f' }}>{m.val}</p>
+          </div>
+        ))}
+      </div>
+      <button onClick={onCartOpen}
+        style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', border: 'none', cursor: 'pointer', fontFamily: 'Jost,sans-serif', transition: 'background 0.3s' }}
+        onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
+        {lang === 'fr' ? 'Commander →' : 'Order →'}
+      </button>
+    </section>
+  );
+}
+
 /* ─── FOOTER ─── */
 function Footer({ lang }) {
   return (
@@ -479,15 +538,6 @@ export default function EuropePage() {
         </div>
       </section>
 
-      {/* Ticker */}
-      <div style={{ background: '#f8cb78', padding: '1rem 0', overflow: 'hidden' }}>
-        <div className="ticker-track" style={{ display: 'flex', gap: '4rem', whiteSpace: 'nowrap' }}>
-          {[...Array(2)].flatMap(() => ['Eolekare', '·', T[lang].tagline, '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·']).map((t, i) => (
-            <span key={i} style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, fontStyle: 'italic', letterSpacing: '0.1em', color: '#3b190f', flexShrink: 0 }}>{t}</span>
-          ))}
-        </div>
-      </div>
-
       {/* Double strip */}
       <div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>La nature dans chaque texture</p>
@@ -509,10 +559,20 @@ export default function EuropePage() {
         </div>
       </div>
 
-      <Products lang={lang} cartHook={cartHook} />
-      <CommunitySection lang={lang} />
+      {/* Ticker */}
+      <div style={{ background: '#f8cb78', padding: '1rem 0', overflow: 'hidden' }}>
+        <div className="ticker-track" style={{ display: 'flex', gap: '4rem', whiteSpace: 'nowrap' }}>
+          {[...Array(2)].flatMap(() => ['Eolekare', '·', T[lang].tagline, '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·']).map((t, i) => (
+            <span key={i} style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, fontStyle: 'italic', letterSpacing: '0.1em', color: '#3b190f', flexShrink: 0 }}>{t}</span>
+          ))}
+        </div>
+      </div>
 
+      <Products lang={lang} cartHook={cartHook} />
       <Story lang={lang} />
+      <CommunitySection lang={lang} />
+      <HowTo lang={lang} />
+      <Order lang={lang} onCartOpen={() => setCartOpen(true)} />
       <Footer lang={lang} />
     </>
   );

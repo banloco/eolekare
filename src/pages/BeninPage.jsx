@@ -397,6 +397,37 @@ function HowTo() {
   );
 }
 
+/* ─── ORDER ── */
+function Order() {
+  return (
+    <section id="order" style={{ background: '#faeacc', padding: 'clamp(4rem,8vw,6rem) clamp(1.25rem,4vw,3rem)', textAlign: 'center' }}>
+      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>Commandez maintenant</h2>
+      <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', maxWidth: 500, margin: '0 auto 3rem' }}>
+        Livraison en Europe & à l'international. Pour l'Afrique de l'ouest, contactez-nous directement.
+      </p>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
+        {[
+          { icon: 'W', label: 'WhatsApp', val: '+229 0148654200' },
+          { icon: '@', label: 'Instagram', val: '@eolekare' },
+          { icon: 'T', label: 'TikTok', val: '@eolekare' },
+          { icon: '$', label: 'Paiement', val: 'revolut.me/eole15vp4' },
+        ].map(m => (
+          <div key={m.label} style={{ textAlign: 'center', minWidth: 120 }}>
+            <div style={{ width: 56, height: 56, border: '0.5px solid rgba(59,25,15,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.8rem', fontFamily: '"Cormorant Garamond",serif', fontSize: 22, color: '#3b190f' }}>{m.icon}</div>
+            <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 4 }}>{m.label}</p>
+            <p style={{ fontSize: 11, fontWeight: 300, color: '#3b190f' }}>{m.val}</p>
+          </div>
+        ))}
+      </div>
+      <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer"
+        style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', display: 'inline-block', transition: 'background 0.3s' }}
+        onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
+        Commander sur WhatsApp
+      </a>
+    </section>
+  );
+}
+
 /* ─── FOOTER ── */
 function Footer() {
   return (
@@ -432,13 +463,6 @@ export default function BeninPage() {
       <Nav cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
       {cartOpen && <CartDrawer cart={cart} onClose={() => setCartOpen(false)} onUpdate={updateQty} onRemove={removeItem} />}
       <Hero onCartOpen={() => setCartOpen(true)} />
-      <div style={{ background: '#f8cb78', padding: '1rem 0', overflow: 'hidden' }}>
-        <div className="ticker-track" style={{ display: 'flex', gap: '4rem', whiteSpace: 'nowrap' }}>
-          {[...Array(2)].flatMap(() => ['Eolekare', '·', 'Votre skincare aux parfums uniques', '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·']).map((t, i) => (
-            <span key={i} style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, fontStyle: 'italic', letterSpacing: '0.1em', color: '#3b190f', flexShrink: 0 }}>{t}</span>
-          ))}
-        </div>
-      </div>
       {/* Double strip */}
       <div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>La nature dans chaque texture</p>
@@ -459,9 +483,19 @@ export default function BeninPage() {
           ))}
         </div>
       </div>
+      <div style={{ background: '#f8cb78', padding: '1rem 0', overflow: 'hidden' }}>
+        <div className="ticker-track" style={{ display: 'flex', gap: '4rem', whiteSpace: 'nowrap' }}>
+          {[...Array(2)].flatMap(() => ['Eolekare', '·', 'Votre skincare aux parfums uniques', '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·']).map((t, i) => (
+            <span key={i} style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, fontStyle: 'italic', letterSpacing: '0.1em', color: '#3b190f', flexShrink: 0 }}>{t}</span>
+          ))}
+        </div>
+      </div>
       <Products cart={cart} setCart={setCart} />
+      <Story />
       <CommunitySection lang="fr" waNumber={WHATSAPP_NUMBER} />
-      <Story /><HowTo /><Footer />
+      <HowTo />
+      <Order />
+      <Footer />
     </>
   );
 }
