@@ -218,11 +218,16 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
         <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1.2rem', background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#3b190f', opacity: 0.45, zIndex: 1 }}>✕</button>
         <div className="grid-2col">
           {/* Image */}
-          <div style={{ height: 400, background: '#f8cb78', overflow: 'hidden' }}>
+          <div style={{ height: 400, background: '#f8cb78', overflow: 'hidden', position: 'relative' }}>
             {product.images?.[0]
               ? <img src={product.images[0]} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, opacity: 0.3 }}>🫙</div>
             }
+            {product.images?.[1] && (
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                <img src={product.images[1]} alt="" style={{ width: 140, height: 140, objectFit: 'contain', borderRadius: '50%', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }} />
+              </div>
+            )}
           </div>
           {/* Infos */}
           <div style={{ padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -313,10 +318,15 @@ function Products({ lang, cartHook }) {
                 {/* Image cliquable → modal */}
                 <div onClick={() => setModal(p)} style={{ height: 240, overflow: 'hidden', background: '#f8cb78', position: 'relative', cursor: 'pointer' }}>
                   {p.images?.[0]
-                    ? <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s' }}
-                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseLeave={e => e.currentTarget.style.transform = ''} />
+                    ? <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.6s' }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = ''} />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, fontSize: 48 }}>🫙</div>
                   }
+                  {p.images?.[1] && (
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                      <img src={p.images[1]} alt="" style={{ width: 110, height: 110, objectFit: 'contain', borderRadius: '50%', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }} />
+                    </div>
+                  )}
                   {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{t.soldout}</div>}
                   {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>Plus que {p.stock} !</div>}
                   {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} {t.inCart}</div>}
