@@ -313,34 +313,16 @@ function Products({ cart, setCart }) {
                 {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#25D366', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} dans le panier</div>}
               </div>
               <div style={{ padding: '1.8rem 1.5rem' }}>
-                {p.format && <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format}</p>}
+                <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format || 'Skincare · Haircare · Corps'}</p>
                 <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{p.name}</p>
                 <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>{p.description_short?.slice(0, 100)}{p.description_short?.length > 100 ? '…' : ''}</p>
-                <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.4rem' }}>{formatFCFA(p.price_fcfa)}</p>
-
-                {/* Sélecteur quantité + bouton */}
-                {p.stock === 0 ? (
-                  <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>Épuisé</span>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                    {/* Qty inline sur la card */}
-                    {inCart && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '0.5px solid rgba(59,25,15,0.15)', padding: '4px 6px' }}>
-                        <button onClick={() => setCart(prev => prev.map(i => i.id === p.id ? { ...i, qty: Math.max(1, i.qty - 1) } : i))}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                        <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#3b190f', minWidth: 16, textAlign: 'center' }}>{inCart.qty}</span>
-                        <button onClick={() => setCart(prev => prev.map(i => i.id === p.id ? { ...i, qty: i.qty + 1 } : i))}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-                      </div>
-                    )}
-                    <button onClick={() => handleAdd(p)}
-                      style={{ flex: 1, fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', border: 'none', cursor: 'pointer', padding: '11px 16px', background: isAdded ? '#25D366' : '#3b190f', color: '#fdf6ec', transition: 'all 0.3s' }}
-                      onMouseEnter={e => { if (!isAdded) e.currentTarget.style.background = '#5a2d12'; }}
-                      onMouseLeave={e => { if (!isAdded) e.currentTarget.style.background = '#3b190f'; }}>
-                      {isAdded ? '✓ Ajouté' : inCart ? '+ Ajouter encore' : '+ Ajouter au panier'}
+                <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatFCFA(p.price_fcfa)}</p>
+                {p.stock === 0
+                  ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>Épuisé</span>
+                  : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: isAdded ? '#25D366' : '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
+                      {isAdded ? '✓ Ajouté →' : inCart ? `× ${inCart.qty} · Commander →` : 'Commander →'}
                     </button>
-                  </div>
-                )}
+                }
               </div>
             </div>
           );

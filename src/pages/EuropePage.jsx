@@ -8,8 +8,8 @@ import { formatEUR } from '../lib/format';
 const CART_KEY = 'eolekare_eu_cart';
 
 const T = {
-  fr: { eyebrow:'100% Naturel · Made in Bénin · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Collection', story:'Notre histoire', buy:'Ajouter au panier', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé · Shopify', back:'← Retour' },
-  en: { eyebrow:'100% Natural · Made in Benin · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Collection', story:'Our story', buy:'Add to cart', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment · Shopify', back:'← Back' },
+  fr: { eyebrow:'100% Naturel · Made in Bénin · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Collection', story:'Notre histoire', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé · Shopify', back:'← Retour' },
+  en: { eyebrow:'100% Natural · Made in Benin · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Collection', story:'Our story', buy:'Add to cart', added:'Added', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment · Shopify', back:'← Back' },
 };
 
 /* ─── CART HOOK (localStorage) ─── */
@@ -336,30 +336,16 @@ function Products({ lang, cartHook }) {
                   </div>
                 </div>
                 <div style={{ padding: '1.8rem 1.5rem' }}>
-                  {p.format && <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format}</p>}
+                  <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format || 'Skincare · Haircare · Corps'}</p>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{p.name}</p>
                   <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>{p.description_short?.slice(0, 80)}{p.description_short?.length > 80 ? '…' : ''}</p>
-                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.4rem' }}>{formatEUR(p.price_eur)}</p>
-
-                  {p.stock === 0 ? (
-                    <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{t.soldout}</span>
-                  ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                      {inCart && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '0.5px solid rgba(59,25,15,0.15)', padding: '4px 8px' }}>
-                          <button onClick={() => cartHook.update(p.id, inCart.qty - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                          <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#3b190f', minWidth: 16, textAlign: 'center' }}>{inCart.qty}</span>
-                          <button onClick={() => cartHook.update(p.id, inCart.qty + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-                        </div>
-                      )}
-                      <button onClick={() => handleAdd(p)}
-                        style={{ flex: 1, fontSize: 9, letterSpacing: '0.2em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', border: 'none', cursor: 'pointer', padding: '11px 16px', background: isAdded ? '#4a8a25' : '#3b190f', color: '#fdf6ec', transition: 'all 0.3s' }}
-                        onMouseEnter={e => { if (!isAdded) e.currentTarget.style.background = '#5a2d12'; }}
-                        onMouseLeave={e => { if (!isAdded) e.currentTarget.style.background = '#3b190f'; }}>
-                        {isAdded ? '✓ Ajouté' : inCart ? '+ Encore' : t.buy}
+                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatEUR(p.price_eur)}</p>
+                  {p.stock === 0
+                    ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{t.soldout}</span>
+                    : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: isAdded ? '#4a8a25' : '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
+                        {isAdded ? `✓ ${t.added} →` : inCart ? `× ${inCart.qty} · ${t.buy} →` : `${t.buy} →`}
                       </button>
-                    </div>
-                  )}
+                  }
                 </div>
               </div>
             );
