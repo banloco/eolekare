@@ -29,9 +29,8 @@ function Nav({ cartCount, onCartOpen }) {
     <>
       <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center"
         style={{ padding: '0.9rem 1.5rem', background: '#f8cb78' }}>
-        <div>
-          <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 400, letterSpacing: '0.28em', color: '#000', textTransform: 'uppercase' }}>EOLEKARE</div>
-          <small style={{ display: 'block', fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', marginTop: 2 }}>by Eoleeg</small>
+        <div style={{ overflow: 'hidden', height: 52, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <img src="/images/Logo Eolekare .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67 }} />
         </div>
 
         {/* Desktop nav */}
@@ -41,10 +40,14 @@ function Nav({ cartCount, onCartOpen }) {
               onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>{l}</a></li>
           ))}
           <li>
-            <button onClick={onCartOpen} style={{ position: 'relative', background: '#25D366', border: 'none', cursor: 'pointer', color: '#fff', padding: '7px 18px', fontSize: 10, letterSpacing: '0.15em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8 }}>
-              💬 Panier
+            <button onClick={onCartOpen} style={{ position: 'relative', background: 'none', border: '0.5px solid rgba(59,25,15,0.3)', cursor: 'pointer', color: '#3b190f', padding: '7px 12px', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
               {cartCount > 0 && (
-                <span style={{ background: '#fff', color: '#25D366', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>
+                <span style={{ background: '#3b190f', color: '#f8cb78', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>{cartCount}</span>
               )}
             </button>
           </li>
@@ -52,8 +55,13 @@ function Nav({ cartCount, onCartOpen }) {
 
         {/* Mobile: cart + hamburger */}
         <div className="flex md:hidden items-center gap-3">
-          <button onClick={onCartOpen} style={{ background: '#25D366', border: 'none', cursor: 'pointer', color: '#fff', padding: '7px 14px', fontSize: 10, letterSpacing: '0.1em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}>
-            💬{cartCount > 0 && <span style={{ background: '#fff', color: '#25D366', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
+          <button onClick={onCartOpen} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.3)', cursor: 'pointer', color: '#3b190f', padding: '7px 10px', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            {cartCount > 0 && <span style={{ background: '#3b190f', color: '#f8cb78', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
           </button>
           <button onClick={() => setMobOpen(v => !v)} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.2)', cursor: 'pointer', width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: '#3b190f', flexShrink: 0 }}>
             {mobOpen ? '✕' : '☰'}
@@ -335,32 +343,26 @@ function Products({ cart, setCart }) {
 /* ─── STORY ── */
 function Story() {
   return (
-    <section id="story" style={{ background: '#3b190f', padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', right: 0, top: 0, width: '42%', height: '100%', zIndex: 0 }}>
-        <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
-      </div>
-      <div className="grid-2col" style={{ maxWidth: 980, margin: '0 auto', gap: '2.5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
-        <div>
-          <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 38, fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
-            L'odeur, la texture, le rituel… un moment rien qu'à toi.
-          </h2>
-          <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(253,246,236,0.58)', lineHeight: 1.95, marginBottom: '2rem' }}>
-            Eolekare, c'est une marque capillaire & cosmétique 100% naturelle, produite au Bénin avec amour.
+    <section id="story" style={{ background: '#3b190f', overflow: 'hidden' }}>
+      <div className="grid-2col" style={{ maxWidth: 1100, margin: '0 auto', gap: 0, alignItems: 'stretch' }}>
+        {/* Col 1 : Mot de la fondatrice */}
+        <div style={{ padding: 'clamp(3rem,7vw,6rem) clamp(1.5rem,4vw,4rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Née d'un besoin, pensée pour tous.</p>
+          <p style={{ fontSize: 9, letterSpacing: '0.32em', fontWeight: 300, color: '#f8cb78', textTransform: 'uppercase', marginBottom: '2rem' }}>UN MOT DE LA FONDATRICE</p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>
+            Quand je me suis rasée les cheveux, on m'a dit qu'ils ne repousseraient pas. Plutôt que d'accepter, je me suis tournée vers les ingrédients naturels du Bénin pour tester différents soins — et les résultats ont parlé d'eux-mêmes.
           </p>
-          <a href="#products" style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.25em', fontWeight: 300, textTransform: 'uppercase', color: '#3b190f', background: '#f8cb78', padding: '14px 36px', textDecoration: 'none' }}>
-            Voir la collection
-          </a>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>
+            Eolekare est la solution que j'ai trouvée pour moi, et que je partage aujourd'hui avec tous : hommes, femmes, enfants — pour vos cheveux, votre peau, votre corps.
+          </p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '2rem' }}>
+            J'espère que ces produits deviendront les vôtres. Qu'ils traîneront dans votre sac, sur votre table de nuit, dans votre salle de bain. Qu'à chaque moment — matin, soir, en voyage — ils seront là pour adoucir, nourrir et prendre soin de vous.
+          </p>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— Eoleeg</p>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {[['01', '100% Naturel', 'Beurres natifs, huiles végétales, vitamine E.'], ['02', 'Made in Bénin', 'Fabriqué avec amour au Bénin pour le monde.'], ['03', 'Multi-usage', 'Peau, cheveux, corps, ongles, cils, sourcils.'], ['04', 'Parfums uniques', 'Chaque beurre a son parfum signature.']].map(([n, t, d]) => (
-            <div key={n} style={{ display: 'flex', gap: '1.2rem', paddingBottom: '1.5rem', borderBottom: '0.5px solid rgba(248,203,120,0.1)' }}>
-              <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 32, fontWeight: 300, color: 'rgba(248,203,120,0.22)', minWidth: 40 }}>{n}</span>
-              <div>
-                <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 18, color: '#f8cb78', marginBottom: 4 }}>{t}</p>
-                <p style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.46)', lineHeight: 1.75 }}>{d}</p>
-              </div>
-            </div>
-          ))}
+        {/* Col 2 : Image */}
+        <div style={{ position: 'relative', minHeight: 520 }}>
+          <img src="/images/story-bg.jpg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(0.6) brightness(0.7)' }} />
         </div>
       </div>
     </section>
@@ -369,16 +371,35 @@ function Story() {
 
 /* ─── HOWTO ── */
 function HowTo() {
+  const steps = [
+    {
+      n: '01',
+      t: 'Sur les cheveux',
+      d: 'Prélève une noisette, frotte entre tes mains. Applique sur les longueurs et pointes pour nourrir, réparer et faire briller.\n\nPour un soin intense, utilise en bain d\'huile : applique généreusement, masse profondément le cuir chevelu, laisse poser 30min à 2h sous un bonnet chauffant si possible.',
+    },
+    {
+      n: '02',
+      t: 'Sur le corps',
+      d: 'Sur peau humide après la douche. Masse jusqu\'à pénétration complète. Idéal pour la peau, les ongles, les lèvres, les cils, les sourcils et les pieds — partout où ta peau a besoin de douceur.',
+    },
+    {
+      n: '03',
+      t: 'Sur la barbe',
+      d: 'Quelques gouttes réchauffées entre les mains. Masse sur la barbe et la peau en dessous pour adoucir, hydrater et discipliner.',
+    },
+  ];
   return (
     <section id="howto" style={{ background: '#2a1208', padding: 'clamp(4rem,7vw,6rem) clamp(1.25rem,4vw,3rem)' }}>
       <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>Rituel Eolekare</p>
       <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, color: '#fdf6ec', textAlign: 'center', marginBottom: '4rem' }}>Comment utiliser</h2>
       <div className="grid-3col" style={{ gap: '2rem', maxWidth: 960, margin: '0 auto' }}>
-        {[['01', 'Sur les cheveux', 'Prélève une noisette, frotte entre tes mains. Applique sur longueurs et pointes.'], ['02', 'Sur le corps', "Sur peau humide après la douche. Masse jusqu'à pénétration complète."], ['03', "Bain d'huile profond", '1x par semaine. 30min à 2h sous bonnet chaud. Cheveux réparés et brillants.']].map(([n, t, d]) => (
+        {steps.map(({ n, t, d }) => (
           <div key={n} style={{ border: '0.5px solid rgba(248,203,120,0.15)', padding: '2.5rem 2rem' }}>
             <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 56, fontWeight: 300, color: 'rgba(248,203,120,0.12)', lineHeight: 1, marginBottom: '0.5rem' }}>{n}</div>
             <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 300, color: '#f8cb78', marginBottom: '1rem' }}>{t}</p>
-            <p style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.5)', lineHeight: 1.85 }}>{d}</p>
+            {d.split('\n\n').map((para, i) => (
+              <p key={i} style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.5)', lineHeight: 1.85, marginBottom: i < d.split('\n\n').length - 1 ? '0.8rem' : 0 }}>{para}</p>
+            ))}
           </div>
         ))}
       </div>
@@ -421,8 +442,9 @@ function Order() {
 function Footer() {
   return (
     <footer style={{ background: '#3b190f', padding: '4rem 3rem', textAlign: 'center' }}>
-      <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 40, fontWeight: 300, letterSpacing: '0.3em', color: '#f8cb78', marginBottom: '0.4rem' }}>EOLEKARE</div>
-      <p style={{ fontSize: 9, letterSpacing: '0.32em', color: 'rgba(248,203,120,0.28)', textTransform: 'uppercase', marginBottom: '2rem' }}>by Eoleeg</p>
+      <div style={{ overflow: 'hidden', height: 52, margin: '0 auto 0.6rem', display: 'inline-block' }}>
+        <img src="/images/Eolekare logo noir .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67, filter: 'invert(1)', mixBlendMode: 'screen' }} />
+      </div>
       <ul className="flex justify-center gap-12 list-none flex-wrap" style={{ marginBottom: '2rem' }}>
         {[['https://instagram.com/eolekare', 'Instagram @eolekare'], [WA_BASE, 'WhatsApp'], ['https://tiktok.com/@eolekare', 'TikTok @eolekare']].map(([h, l]) => (
           <li key={l}><a href={h} target="_blank" rel="noreferrer"
@@ -463,7 +485,7 @@ export default function BeninPage() {
             </div>
           ))}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden', gap: 0, fontSize: 0 }}>
           {[1, 2, 3].map(i => (
             <div key={i} style={{ position: 'relative', overflow: 'hidden' }}>
               <img src={`/images/fruit-${i}.jpg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
@@ -481,9 +503,9 @@ export default function BeninPage() {
       </div>
       <Products cart={cart} setCart={setCart} />
       <Story />
-      <CommunitySection lang="fr" waNumber={WHATSAPP_NUMBER} />
       <HowTo />
-      <Order />
+      <CommunitySection lang="fr" waNumber={WHATSAPP_NUMBER} />
+      {/* <Order /> */}
       <Footer />
     </>
   );

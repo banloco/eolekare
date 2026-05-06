@@ -54,9 +54,11 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center" style={{ padding: '0.9rem 1.5rem', background: '#f8cb78' }}>
-        <div>
-          <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 400, letterSpacing: '0.28em', color: '#000', textTransform: 'uppercase' }}>EOLEKARE</div>
-          <small style={{ display: 'block', fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', marginTop: 2 }}>by Eoleeg · Europe</small>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ overflow: 'hidden', height: 52, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img src="/images/Logo Eolekare .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67 }} />
+          </div>
+          <span style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase' }}>Europe</span>
         </div>
 
         {/* Desktop */}
@@ -72,10 +74,14 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
               </button>
             ))}
           </div>
-          <button onClick={onCartOpen} style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', padding: '7px 18px', fontSize: 10, letterSpacing: '0.15em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.3s' }}
-            onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
-            {t.nav_cart}
-            {cartCount > 0 && <span style={{ background: '#f8cb78', color: '#3b190f', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
+          <button onClick={onCartOpen} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.3)', cursor: 'pointer', color: '#3b190f', padding: '7px 12px', display: 'flex', alignItems: 'center', gap: 6, transition: 'background 0.3s' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(59,25,15,0.06)'} onMouseLeave={e => e.currentTarget.style.background = 'none'}>
+            <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            {cartCount > 0 && <span style={{ background: '#3b190f', color: '#f8cb78', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
           </button>
         </div>
 
@@ -88,9 +94,13 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
               </button>
             ))}
           </div>
-          <button onClick={onCartOpen} style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', padding: '7px 12px', fontSize: 10, letterSpacing: '0.1em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}>
-            {t.nav_cart}
-            {cartCount > 0 && <span style={{ background: '#f8cb78', color: '#3b190f', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
+          <button onClick={onCartOpen} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.3)', cursor: 'pointer', color: '#3b190f', padding: '7px 10px', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            {cartCount > 0 && <span style={{ background: '#3b190f', color: '#f8cb78', borderRadius: '50%', width: 18, height: 18, fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>}
           </button>
           <button onClick={() => setMobOpen(v => !v)} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.2)', cursor: 'pointer', width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: '#3b190f', flexShrink: 0 }}>
             {mobOpen ? '✕' : '☰'}
@@ -537,7 +547,7 @@ export default function EuropePage() {
       {/* Double strip */}
       <div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>La nature dans chaque texture</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 300, overflow: 'hidden' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
           {[1, 2, 3].map(i => (
             <div key={i} style={{ position: 'relative', overflow: 'hidden' }}>
               <img src={`/images/texture-${i}.jpg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
@@ -566,9 +576,9 @@ export default function EuropePage() {
 
       <Products lang={lang} cartHook={cartHook} />
       <Story lang={lang} />
-      <CommunitySection lang={lang} />
       <HowTo lang={lang} />
-      <Order lang={lang} onCartOpen={() => setCartOpen(true)} />
+      <CommunitySection lang={lang} />
+      {/* <Order lang={lang} onCartOpen={() => setCartOpen(true)} /> */}
       <Footer lang={lang} />
     </>
   );

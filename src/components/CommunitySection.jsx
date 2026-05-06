@@ -38,32 +38,28 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
         {t.tagline}
       </p>
 
-      {/* Feed Instagram via Behold */}
+        {/* Feed Instagram */}
       <div style={{ maxWidth: 920, margin: '0 auto 2.5rem', minHeight: 300 }}>
         {BEHOLD_FEED_ID ? (
           <BeholdWidget feedId={BEHOLD_FEED_ID} />
         ) : (
-          <div className="grid-3col" style={{ gap: 3, maxWidth: 620, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
             {[
-              '/images/WhatsApp Image 2026-02-28 at 1.28.11 PM.jpeg',
-              '/images/WhatsApp Image 2026-02-28 at 1.28.12 PM.jpeg',
-              '/images/WhatsApp Image 2026-02-28 at 1.28.11 PM (1).jpeg',
-              '/images/WhatsApp Image 2026-02-28 at 1.31.10 PM (1).jpeg',
-              '/images/WhatsApp Image 2026-02-28 at 1.31.10 PM (3).jpeg',
-              '/images/WhatsApp Image 2026-02-28 at 1.31.11 PM (1).jpeg',
+              'https://www.instagram.com/reel/DUizfMFjDIo/embed/',
+              'https://www.instagram.com/reel/DQ69CeEDPTl/embed/',
+              'https://www.instagram.com/reel/DUqiTbajSHu/embed/',
+              'https://www.instagram.com/p/DLHoqYRs9TZ/embed/',
             ].map((src, i) => (
-              <a
-                key={i}
-                href="https://instagram.com/eolekare"
-                target="_blank"
-                rel="noreferrer"
-                style={{ aspectRatio: '1', overflow: 'hidden', display: 'block', position: 'relative', textDecoration: 'none' }}
-                onMouseEnter={e => { e.currentTarget.querySelector('img').style.transform = 'scale(1.08)'; e.currentTarget.querySelector('.iov').style.background = 'rgba(20,6,2,0.35)'; }}
-                onMouseLeave={e => { e.currentTarget.querySelector('img').style.transform = 'scale(1)'; e.currentTarget.querySelector('.iov').style.background = 'rgba(20,6,2,0)'; }}
-              >
-                <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s' }} />
-                <div className="iov" style={{ position: 'absolute', inset: 0, background: 'rgba(20,6,2,0)', transition: 'background 0.3s' }} />
-              </a>
+              <div key={i} style={{ aspectRatio: '9/16', overflow: 'hidden', background: '#f0e8d8' }}>
+                <iframe
+                  src={src}
+                  style={{ width: '100%', height: '100%', border: 'none' }}
+                  loading="lazy"
+                  allowTransparency="true"
+                  scrolling="no"
+                  title={`Instagram post ${i + 1}`}
+                />
+              </div>
             ))}
           </div>
         )}
