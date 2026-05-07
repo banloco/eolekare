@@ -12,17 +12,15 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
   const t = {
     fr: {
       eyebrow: 'Rejoins la communauté',
-      tagline: '@eolekare sur Instagram & TikTok',
+      tagline: 'Sur Instagram & TikTok',
       cta_ig:  'Suivre @eolekare',
       cta_tt:  'TikTok @eolekare',
-      cta_wa:  'Commander sur WhatsApp',
     },
     en: {
       eyebrow: 'Join the community',
-      tagline: '@eolekare on Instagram & TikTok',
+      tagline: 'On Instagram & TikTok',
       cta_ig:  'Follow @eolekare',
       cta_tt:  'TikTok @eolekare',
-      cta_wa:  'Order on WhatsApp',
     },
   }[lang] || {};
 
@@ -95,7 +93,7 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
           {t.cta_tt}
         </a>
 
-        {waNumber && (
+        {/* {waNumber && (
           <a
             href={`https://wa.me/${waNumber}`}
             target="_blank"
@@ -106,7 +104,7 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
           >
             💬 {t.cta_wa}
           </a>
-        )}
+        )} */}
       </div>
     </section>
   );

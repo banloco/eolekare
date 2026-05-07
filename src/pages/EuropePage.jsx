@@ -8,8 +8,8 @@ import { formatEUR } from '../lib/format';
 const CART_KEY = 'eolekare_eu_cart';
 
 const T = {
-  fr: { eyebrow:'100% Naturel · Made in Bénin · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Collection', story:'Notre histoire', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé · Shopify', back:'← Retour' },
-  en: { eyebrow:'100% Natural · Made in Benin · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Collection', story:'Our story', buy:'Add to cart', added:'Added', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment · Shopify', back:'← Back' },
+  fr: { eyebrow:'100% Naturel · Made in 🇧🇯 · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Collection', story:'Notre histoire', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé · Shopify', back:'← Retour' },
+  en: { eyebrow:'100% Natural · Made in 🇧🇯 · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Collection', story:'Our story', buy:'Add to cart', added:'Added', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment · Shopify', back:'← Back' },
 };
 
 /* ─── CART HOOK (localStorage) ─── */
@@ -46,7 +46,7 @@ function useCart() {
 }
 
 /* ─── NAV ─── */
-const EU_NAV_LINKS = (t) => [['#products', t.collection], ['#story', t.story]];
+const EU_NAV_LINKS = (t) => [['#story', t.story], ['#products', t.collection]];
 
 function Nav({ lang, setLang, cartCount, onCartOpen }) {
   const t = T[lang];
@@ -352,7 +352,7 @@ function Products({ lang, cartHook }) {
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatEUR(p.price_eur)}</p>
                   {p.stock === 0
                     ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{t.soldout}</span>
-                    : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: isAdded ? '#4a8a25' : '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
+                    : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: isAdded ? '#3b190f' : '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
                         {isAdded ? `✓ ${t.added} →` : inCart ? `× ${inCart.qty} · ${t.buy} →` : `${t.buy} →`}
                       </button>
                   }
@@ -389,12 +389,12 @@ function Story({ lang }) {
       <div className="grid-2col" style={{ maxWidth: 1100, margin: '0 auto', gap: 0, alignItems: 'stretch' }}>
         {/* Col 1 : Mot de la fondatrice */}
         <div style={{ padding: 'clamp(3rem,7vw,6rem) clamp(1.5rem,4vw,4rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{t.eyebrow}</p>
+          <h2 style={{ fontSize: 38, fontFamily: '"Cormorant Garamond",serif', fontWeight: 300, fontStyle: 'italic', color: 'rgba(248,203,120,0.5)', lineHeight: 1.15, marginBottom: '2rem' }}>{t.eyebrow}</h2>
           <p style={{ fontSize: 9, letterSpacing: '0.32em', fontWeight: 300, color: '#f8cb78', textTransform: 'uppercase', marginBottom: '2rem' }}>{t.label}</p>
           <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>{t.p1}</p>
           <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>{t.p2}</p>
           <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '2rem' }}>{t.p3}</p>
-          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— Eoleeg</p>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— @eoleeg</p>
         </div>
         {/* Col 2 : Instagram */}
         <div style={{ display: 'flex', alignItems: 'stretch', minHeight: 520, background: '#000' }}>
