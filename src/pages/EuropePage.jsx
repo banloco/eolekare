@@ -377,9 +377,6 @@ function Story({ lang }) {
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>
           {lang === 'fr' ? 'Notre histoire' : 'Our story'}
         </p>
-        <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#f8cb78', textAlign: 'center', marginBottom: '4rem' }}>
-          {lang === 'fr' ? 'La fondatrice' : 'The founder'}
-        </h2>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start' }}>
         <div>
           <h2 style={{ fontSize: 38, fontFamily: '"Cormorant Garamond",serif', fontWeight: 300, fontStyle: 'italic', color: 'rgba(248,203,120,0.5)', lineHeight: 1.15, marginBottom: '2rem' }}>
