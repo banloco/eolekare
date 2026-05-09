@@ -87,10 +87,6 @@
   /* Story grid */
   .story-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
 
-  /* Texture/fruit strips collapse to 1 image */
-  .img-strip { grid-template-columns: 1fr !important; height: auto !important; }
-  .img-strip > div { height: 220px; }
-
   /* Instagram community grid → 1 col */
   .grid-instagram { grid-template-columns: 1fr !important; }
 
