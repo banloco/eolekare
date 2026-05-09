@@ -415,7 +415,7 @@ function Story({ lang }) {
         </div>
         </div>
       </div>
-      {/* Instagram post */}}
+      {/* Instagram post */}
       <div style={{ maxWidth: 480, margin: '4rem auto 0', position: 'relative', zIndex: 1 }}>
         <iframe
           src="https://www.instagram.com/p/DK-SszQsc60/embed/"
