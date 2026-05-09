@@ -13,14 +13,14 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
     fr: {
       eyebrow: 'Rejoins la communauté',
       tagline: 'Sur Instagram & TikTok',
-      cta_ig:  'Suivre @eolekare',
-      cta_tt:  'TikTok @eolekare',
+      cta_ig:  'Instagram',
+      cta_tt:  'TikTok',
     },
     en: {
       eyebrow: 'Join the community',
       tagline: 'On Instagram & TikTok',
-      cta_ig:  'Follow @eolekare',
-      cta_tt:  'TikTok @eolekare',
+      cta_ig:  'Instagram',
+      cta_tt:  'TikTok',
     },
   }[lang] || {};
 
