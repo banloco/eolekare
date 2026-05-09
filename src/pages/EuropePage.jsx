@@ -375,15 +375,22 @@ function Story({ lang }) {
       </div>
       <div style={{ maxWidth: 980, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
         <div>
-          <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 38, fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
-            {lang === 'fr' ? "L'odeur, la texture, le rituel\u2026 un moment rien qu'\u00e0 toi." : 'The scent, the texture, the ritual\u2026 a moment just for you.'}
+          <h2 style={{ fontSize: 38, fontFamily: '"Cormorant Garamond",serif', fontWeight: 300, fontStyle: 'italic', color: 'rgba(248,203,120,0.5)', lineHeight: 1.15, marginBottom: '2rem' }}>
+            {lang === 'fr' ? "N\u00e9e d\u2019un besoin, pens\u00e9e pour tous." : 'Born from a need, made for everyone.'}
           </h2>
-          <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(253,246,236,0.58)', lineHeight: 1.95, marginBottom: '2rem' }}>
-            {lang === 'fr' ? "Eolekare, c'est une marque capillaire & cosm\u00e9tique 100% naturelle, produite au B\u00e9nin avec amour." : 'Eolekare is a 100% natural hair & cosmetic brand, made in Benin with love.'}
+          <p style={{ fontSize: 9, letterSpacing: '0.32em', fontWeight: 300, color: '#f8cb78', textTransform: 'uppercase', marginBottom: '2rem' }}>
+            {lang === 'fr' ? 'UN MOT DE LA FONDATRICE' : 'A WORD FROM THE FOUNDER'}
           </p>
-          <a href="#products" style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.25em', fontWeight: 300, textTransform: 'uppercase', color: '#3b190f', background: '#f8cb78', padding: '14px 36px', textDecoration: 'none' }}>
-            {T[lang].discover}
-          </a>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>
+            {lang === 'fr' ? "Quand je me suis ras\u00e9e les cheveux, on m'a dit qu'ils ne repousseraient pas. Plut\u00f4t que d'accepter, je me suis tourn\u00e9e vers les ingr\u00e9dients naturels du B\u00e9nin pour tester diff\u00e9rents soins \u2014 et les r\u00e9sultats ont parl\u00e9 d'eux-m\u00eames." : "When I shaved my head, I was told my hair wouldn't grow back. Rather than accept that, I turned to Benin's natural ingredients to test different treatments \u2014 and the results spoke for themselves."}
+          </p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>
+            {lang === 'fr' ? "Eolekare est la solution que j'ai trouv\u00e9e pour moi, et que je partage aujourd'hui avec tous : hommes, femmes, enfants \u2014 pour vos cheveux, votre peau, votre corps." : "Eolekare is the solution I found for myself, and that I now share with everyone: men, women, children \u2014 for your hair, your skin, your body."}
+          </p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '2rem' }}>
+            {lang === 'fr' ? "J'esp\u00e8re que ces produits deviendront les v\u00f4tres. Qu'ils tra\u00eeneront dans votre sac, sur votre table de nuit, dans votre salle de bain. Qu'\u00e0 chaque moment \u2014 matin, soir, en voyage \u2014 ils seront l\u00e0 pour adoucir, nourrir et prendre soin de vous." : "I hope these products will become yours. That they'll end up in your bag, on your nightstand, in your bathroom. That at every moment \u2014 morning, evening, on the go \u2014 they'll be there to soften, nourish and take care of you."}
+          </p>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>\u2014 @eoleeg</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {(lang === 'fr'
@@ -399,6 +406,17 @@ function Story({ lang }) {
             </div>
           ))}
         </div>
+      </div>
+      {/* Instagram post */}
+      <div style={{ maxWidth: 480, margin: '4rem auto 0', position: 'relative', zIndex: 1 }}>
+        <iframe
+          src="https://www.instagram.com/p/DK-SszQsc60/embed/"
+          style={{ width: '100%', height: 560, border: 'none', display: 'block' }}
+          loading="lazy"
+          allowTransparency="true"
+          scrolling="no"
+          title="Eolekare Instagram"
+        />
       </div>
     </section>
   );
