@@ -401,15 +401,22 @@ function Story() {
       </div>
       <div style={{ maxWidth: 980, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
         <div>
-          <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 38, fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
-            L'odeur, la texture, le rituel… un moment rien qu'à toi.
+          <h2 style={{ fontSize: 38, fontFamily: '"Cormorant Garamond",serif', fontWeight: 300, fontStyle: 'italic', color: 'rgba(248,203,120,0.5)', lineHeight: 1.15, marginBottom: '2rem' }}>
+            Née d'un besoin, pensée pour tous.
           </h2>
-          <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(253,246,236,0.58)', lineHeight: 1.95, marginBottom: '2rem' }}>
-            Eolekare, c'est une marque capillaire &amp; cosmétique 100% naturelle, produite au Bénin avec amour.
+          <p style={{ fontSize: 9, letterSpacing: '0.32em', fontWeight: 300, color: '#f8cb78', textTransform: 'uppercase', marginBottom: '2rem' }}>
+            UN MOT DE LA FONDATRICE
           </p>
-          <a href="#products" style={{ display: 'inline-block', fontSize: 10, letterSpacing: '0.25em', fontWeight: 300, textTransform: 'uppercase', color: '#3b190f', background: '#f8cb78', padding: '14px 36px', textDecoration: 'none' }}>
-            Découvrir la collection
-          </a>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>
+            Quand je me suis rasée les cheveux, on m'a dit qu'ils ne repousseraient pas. Plutôt que d'accepter, je me suis tournée vers les ingrédients naturels du Bénin pour tester différents soins — et les résultats ont parlé d'eux-mêmes.
+          </p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '1.4rem' }}>
+            Eolekare est la solution que j'ai trouvée pour moi, et que je partage aujourd'hui avec tous : hommes, femmes, enfants — pour vos cheveux, votre peau, votre corps.
+          </p>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '2rem' }}>
+            J'espère que ces produits deviendront les vôtres. Qu'ils traîneront dans votre sac, sur votre table de nuit, dans votre salle de bain. Qu'à chaque moment — matin, soir, en voyage — ils seront là pour adoucir, nourrir et prendre soin de vous.
+          </p>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— @eoleeg</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {[['01', '100% Naturel', 'Beurres natifs, huiles végétales, vitamine E.'], ['02', 'Made in Bénin', 'Fabriqué avec amour pour le monde.'], ['03', 'Multi-usage', 'Peau, cheveux, corps, ongles, cils.'], ['04', 'Parfums uniques', 'Chaque beurre a son parfum signature.']]
@@ -423,6 +430,17 @@ function Story() {
             </div>
           ))}
         </div>
+      </div>
+      {/* Instagram post */}
+      <div style={{ maxWidth: 480, margin: '4rem auto 0', position: 'relative', zIndex: 1 }}>
+        <iframe
+          src="https://www.instagram.com/p/DK-SszQsc60/embed/"
+          style={{ width: '100%', height: 560, border: 'none', display: 'block' }}
+          loading="lazy"
+          allowTransparency="true"
+          scrolling="no"
+          title="Eolekare Instagram"
+        />
       </div>
     </section>
   );
