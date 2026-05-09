@@ -234,21 +234,21 @@ export default function ProductFormPage() {
               <Field label="Description courte (vitrine)">
                 <textarea value={form.description_short} onChange={e => set('description_short', e.target.value)}
                   placeholder="2-3 phrases percutantes pour la carte produit…"
-                  rows={3} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.7 }}
+                  rows={3} style={{ ...inputStyle, resize: 'vertical', fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85 }}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
               <Field label="Description longue (détail produit)">
                 <textarea value={form.description_long} onChange={e => set('description_long', e.target.value)}
                   placeholder="Description complète : bienfaits, texture, usage, résultats…"
-                  rows={6} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.7 }}
+                  rows={6} style={{ ...inputStyle, resize: 'vertical', fontSize: 13, fontWeight: 300, color: 'rgba(59,25,15,0.72)', lineHeight: 1.9 }}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
               <Field label="Ingrédients">
                 <textarea value={form.ingredients} onChange={e => set('ingredients', e.target.value)}
                   placeholder="ex: Beurre de Mangue, Huile de Coco, Vitamine E…"
-                  rows={3} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.7 }}
+                  rows={3} style={{ ...inputStyle, resize: 'vertical', fontSize: 10, fontWeight: 300, color: 'rgba(59,25,15,0.6)', lineHeight: 1.7, letterSpacing: '0.04em' }}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
