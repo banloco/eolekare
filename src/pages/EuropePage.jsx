@@ -370,7 +370,7 @@ function Products({ lang, cartHook }) {
 function Story({ lang }) {
   return (
     <section id="story" style={{ background: '#3b190f', padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', right: 0, top: 0, width: '42%', height: '100%', zIndex: 0 }}>
+      <div style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%', zIndex: 0 }}>
         <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
       </div>
       <div style={{ maxWidth: 980, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start', position: 'relative', zIndex: 1 }}>
@@ -390,7 +390,7 @@ function Story({ lang }) {
           <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(253,246,236,0.72)', lineHeight: 1.9, marginBottom: '2rem' }}>
             {lang === 'fr' ? "J'esp\u00e8re que ces produits deviendront les v\u00f4tres. Qu'ils tra\u00eeneront dans votre sac, sur votre table de nuit, dans votre salle de bain. Qu'\u00e0 chaque moment \u2014 matin, soir, en voyage \u2014 ils seront l\u00e0 pour adoucir, nourrir et prendre soin de vous." : "I hope these products will become yours. That they'll end up in your bag, on your nightstand, in your bathroom. That at every moment \u2014 morning, evening, on the go \u2014 they'll be there to soften, nourish and take care of you."}
           </p>
-          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>\u2014 @eoleeg</p>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— @eoleeg</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {(lang === 'fr'
