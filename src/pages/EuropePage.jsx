@@ -369,7 +369,7 @@ function Products({ lang, cartHook }) {
 /* ─── STORY ─── */
 function Story({ lang }) {
   return (
-    <section id="story" style={{ background: '#3b190f', padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
+    <section id="story" style={{ background: '#3b190f', padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%', zIndex: 0 }}>
         <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
       </div>
@@ -377,7 +377,7 @@ function Story({ lang }) {
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>
           {lang === 'fr' ? 'Notre histoire' : 'Our story'}
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start' }}>
+        <div className="story-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(2rem,5vw,5rem)', alignItems: 'start' }}>
         <div>
           <h2 style={{ fontSize: 38, fontFamily: '"Cormorant Garamond",serif', fontWeight: 300, fontStyle: 'italic', color: 'rgba(248,203,120,0.5)', lineHeight: 1.15, marginBottom: '2rem' }}>
             {lang === 'fr' ? "N\u00e9e d\u2019un besoin, pens\u00e9e pour tous." : 'Born from a need, made for everyone.'}
@@ -591,7 +591,7 @@ export default function EuropePage() {
       {/* Double strip */}
       <div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>La nature dans chaque texture</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
+        <div className="img-strip" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
           {[1, 2, 3].map(i => (
             <div key={i} style={{ position: 'relative', overflow: 'hidden' }}>
               <img src={`/images/texture-${i}.jpg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
@@ -599,7 +599,7 @@ export default function EuropePage() {
             </div>
           ))}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
+        <div className="img-strip" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 260, overflow: 'hidden' }}>
           {[1, 2, 3].map(i => (
             <div key={i} style={{ position: 'relative', overflow: 'hidden' }}>
               <img src={`/images/fruit-${i}.jpg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.7s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
@@ -618,8 +618,8 @@ export default function EuropePage() {
         </div>
       </div>
 
-      <Products lang={lang} cartHook={cartHook} />
       <Story lang={lang} />
+      <Products lang={lang} cartHook={cartHook} />
       <HowTo lang={lang} />
       <CommunitySection lang={lang} />
       {/* <Order lang={lang} onCartOpen={() => setCartOpen(true)} /> */}
