@@ -351,7 +351,7 @@ function Products({ cart, setCart }) {
       {loading && <p style={{ textAlign: 'center', fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>Chargement…</p>}
       {error && <p style={{ textAlign: 'center', fontSize: 11, color: '#c0392b' }}>Erreur : {error}</p>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: '2rem', maxWidth: 1000, margin: '0 auto' }}>
-          {products.map(p => {
+          {visible.map(p => {
             const isAdded = added === p.id;
             const inCart = cart.find(i => i.id === p.id);
             return (
