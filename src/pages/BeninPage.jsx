@@ -35,8 +35,11 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
     <>
       <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center"
         style={{ padding: '0.9rem 1.5rem', background: '#f8cb78' }}>
-        <div style={{ overflow: 'hidden', height: 52, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <img src="/images/Logo Eolekare .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ overflow: 'hidden', height: 52, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img src="/images/Logo Eolekare .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67 }} />
+          </div>
+          <span style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase' }}>Bénin</span>
         </div>
 
         {/* Desktop nav */}
