@@ -24,9 +24,9 @@ function buildWAMessage(cart, address) {
 
 /* ─── NAV ── */
 const BJ_NAV_LINKS = (lang) => [
-  ['#products', lang === 'fr' ? 'Collection' : 'Collection'],
+  ['#products', lang === 'fr' ? 'Notre collection' : 'Our collection'],
   ['#story',    lang === 'fr' ? 'Notre histoire' : 'Our story'],
-  ['#howto',    lang === 'fr' ? 'Utilisation' : 'How to use'],
+  ['#howto',    lang === 'fr' ? 'L\' utilisation' : 'How to use'],
 ];
 
 function Nav({ lang, setLang, cartCount, onCartOpen }) {
