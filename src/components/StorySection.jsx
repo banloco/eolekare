@@ -49,7 +49,7 @@ export default function StorySection({ lang = 'fr' }) {
             </p>
             <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>\u2014 @eoleeg</p>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', alignSelf: 'center', paddingLeft: '10%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', alignSelf: 'center' }}>
             {features.map(([n, ti, d]) => (
               <div key={n} style={{ display: 'flex', gap: '1.2rem', paddingBottom: '1.5rem', borderBottom: '0.5px solid rgba(248,203,120,0.1)', alignItems: 'center' }}>
                 <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 32, fontWeight: 300, color: 'rgba(248,203,120,0.22)', minWidth: 40, textAlign: 'center' }}>{n}</span>
