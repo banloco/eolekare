@@ -70,8 +70,8 @@ export default function ReviewsSection({ lang = 'fr' }) {
             {/* Cadre téléphone */}
             <div
               style={{
-                width: 'clamp(152px,14.5vw,188px)',
-                height: 'clamp(334px,32vw,414px)',
+                width: 'clamp(210px,20vw,260px)',
+                height: 'clamp(460px,44vw,570px)',
                 borderRadius: 30,
                 border: '5px solid rgba(248,203,120,0.2)',
                 overflow: 'hidden',
