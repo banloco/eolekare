@@ -81,7 +81,7 @@ export default function RegionSelector() {
         </div>
 
         <p className="absolute bottom-8" style={{fontSize:9,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.3)',textTransform:'uppercase'}}>
-          © 2025 Eolekare by Eoleeg &nbsp;·&nbsp; Instagram @eolekare
+          © 2026 Eolekare by Eoleeg &nbsp;·&nbsp; Instagram @eolekare
         </p>
       </div>
     </>
