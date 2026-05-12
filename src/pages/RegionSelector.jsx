@@ -48,7 +48,7 @@ export default function RegionSelector() {
 
         <div className="regions-wrap flex gap-6 flex-wrap justify-center mb-10">
           <Card to="/benin">
-            <div style={{fontSize:52,marginBottom:'1rem',lineHeight:1}}>🇧🇯</div>
+            {/* <div style={{fontSize:52,marginBottom:'1rem',lineHeight:1}}>🇧🇯</div> */}
             <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:26,fontWeight:300,color:'#fff',letterSpacing:'0.1em',marginBottom:'0.4rem'}}>Bénin</p>
             <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne</p>
             <div style={{display:'flex',alignItems:'center',gap:6,marginTop:'1rem',background:'rgba(37,211,102,0.15)',border:'0.5px solid rgba(37,211,102,0.35)',borderRadius:3,padding:'5px 12px'}}>
@@ -67,7 +67,7 @@ export default function RegionSelector() {
           </div>
 
           <Card to="/europe">
-            <div style={{fontSize:52,marginBottom:'1rem',lineHeight:1}}>🇪🇺</div>
+            {/* <div style={{fontSize:52,marginBottom:'1rem',lineHeight:1}}>🇪🇺</div> */}
             <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:26,fontWeight:300,color:'#fff',letterSpacing:'0.1em',marginBottom:'0.4rem'}}>Europe</p>
             <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne<br/>Livraison Mondial Relay</p>
             <div style={{display:'flex',alignItems:'center',gap:6,marginTop:'1rem',background:'rgba(150,191,99,0.15)',border:'0.5px solid rgba(150,191,99,0.35)',borderRadius:3,padding:'5px 12px'}}>
