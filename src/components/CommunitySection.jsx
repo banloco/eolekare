@@ -41,14 +41,14 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
         {BEHOLD_FEED_ID ? (
           <BeholdWidget feedId={BEHOLD_FEED_ID} />
         ) : (
-          <div className="grid-instagram" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem', maxWidth: 520, margin: '0 auto' }}>
+          <div className="grid-instagram" style={{ display: 'flex', flexDirection: 'row', gap: '1rem', maxWidth: 1000, margin: '0 auto', overflowX: 'auto' }}>
             {[
               'https://www.instagram.com/reel/DUizfMFjDIo/embed/',
               'https://www.instagram.com/reel/DQ69CeEDPTl/embed/',
               'https://www.instagram.com/reel/DUqiTbajSHu/embed/',
               'https://www.instagram.com/p/DLHoqYRs9TZ/embed/',
             ].map((src, i) => (
-              <div key={i} style={{ aspectRatio: '9/16', overflow: 'hidden', background: '#f0e8d8' }}>
+              <div key={i} style={{ flex: '0 0 220px', aspectRatio: '9/16', overflow: 'hidden', background: '#f0e8d8' }}>
                 <iframe
                   src={src}
                   style={{ width: '100%', height: '100%', border: 'none' }}
