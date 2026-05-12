@@ -41,7 +41,7 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
         {BEHOLD_FEED_ID ? (
           <BeholdWidget feedId={BEHOLD_FEED_ID} />
         ) : (
-          <div className="grid-instagram" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', maxWidth: 600, margin: '0 auto' }}>
+          <div className="grid-instagram" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem', maxWidth: 520, margin: '0 auto' }}>
             {[
               'https://www.instagram.com/reel/DUizfMFjDIo/embed/',
               'https://www.instagram.com/reel/DQ69CeEDPTl/embed/',
