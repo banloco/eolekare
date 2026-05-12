@@ -12,8 +12,8 @@ export default function ReviewsSection({ lang = 'fr' }) {
   return (
     <section style={{
       background: '#2a1208',
-      padding: 'clamp(5rem,10vw,8rem) clamp(1.25rem,4vw,3rem)',
-      overflow: 'hidden',
+      padding: 'clamp(5rem,10vw,8rem) 0',
+      overflow: 'visible',
       position: 'relative',
     }}>
 
@@ -53,11 +53,12 @@ export default function ReviewsSection({ lang = 'fr' }) {
         justifyContent: 'center',
         alignItems: 'center',
         overflowX: 'auto',
-        paddingBottom: '2.5rem',
-        paddingTop: '2rem',
-        paddingLeft: '1rem',
-        paddingRight: '1rem',
-        maxWidth: 1080,
+        overflowY: 'visible',
+        paddingBottom: '4rem',
+        paddingTop: '4rem',
+        paddingLeft: 'clamp(2rem,5vw,4rem)',
+        paddingRight: 'clamp(2rem,5vw,4rem)',
+        maxWidth: 1200,
         margin: '0 auto',
         position: 'relative',
         zIndex: 1,
