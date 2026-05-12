@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import FloatingFruits from '../components/FloatingFruits';
 import CommunitySection from '../components/CommunitySection';
+import ReviewsSection from '../components/ReviewsSection';
 import { useProducts } from '../hooks/useProducts';
 import { formatFCFA } from '../lib/format';
 import { createOrder, fedapayCreateTransaction } from '../lib/api';
@@ -584,6 +585,7 @@ export default function BeninPage() {
       <Story />
       <Products cart={cart} setCart={setCart} />
       <HowTo />
+      <ReviewsSection lang="fr" />
       <CommunitySection lang="fr" waNumber={WHATSAPP_NUMBER} />
       {/* <Order /> */}
       <Footer />

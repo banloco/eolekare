@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FloatingFruits from '../components/FloatingFruits';
 import CheckoutPage from './CheckoutPage';
 import CommunitySection from '../components/CommunitySection';
+import ReviewsSection from '../components/ReviewsSection';
 import { useProducts } from '../hooks/useProducts';
 import { formatEUR } from '../lib/format';
 
@@ -641,6 +642,7 @@ export default function EuropePage() {
       <Story lang={lang} />
       <Products lang={lang} cartHook={cartHook} />
       <HowTo lang={lang} />
+      <ReviewsSection lang={lang} />
       <CommunitySection lang={lang} />
       {/* <Order lang={lang} onCartOpen={() => setCartOpen(true)} /> */}
       <Footer lang={lang} />
