@@ -42,11 +42,10 @@ export default function RegionSelector() {
 
       <div className="page-inner relative z-[3] h-screen flex flex-col items-center justify-center text-center" style={{padding:'2rem'}}>
 
-        <img
-          src="/images/Eolekare logo noir .png"
-          alt="Eolekare"
-          style={{ width: 'clamp(180px,30vw,320px)', display: 'block', marginBottom: '2rem', filter: 'brightness(0) invert(1)' }}
-        />
+        <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:'clamp(42px,7vw,80px)',fontWeight:300,letterSpacing:'0.18em',color:'#fff',textTransform:'uppercase',lineHeight:0.9,textShadow:'0 2px 20px rgba(59,25,15,0.3)',marginBottom:'0.3rem'}}>
+          EOLEKARE
+        </p>
+        <p style={{fontSize:11,letterSpacing:'0.35em',fontWeight:300,color:'rgba(255,255,255,0.6)',textTransform:'uppercase',marginBottom:'2rem'}}>by Eoleeg</p>
         <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:'clamp(16px,2.5vw,22px)',fontStyle:'italic',color:'rgba(255,255,255,0.85)',maxWidth:420,lineHeight:1.6,marginBottom:'0.8rem'}}>
           Votre skincare aux parfums uniques
         </p>
