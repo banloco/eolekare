@@ -20,13 +20,14 @@ export default function StorySection({ lang = 'fr' }) {
       <div style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%', zIndex: 0 }}>
         <img src="/images/story-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.13, filter: 'saturate(0.4)' }} />
       </div>
-      <div style={{ maxWidth: 980, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div style={{ margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>
           {lang === 'fr' ? 'Notre histoire' : 'Our story'}
         </p>
+        <br />
         <div className="story-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(2rem,5vw,5rem)', alignItems: 'start' }}>
-          <div>
-            <h2 style={{ fontSize: 38, fontFamily: '"Cormorant Garamond",serif', fontWeight: 300, fontStyle: 'italic', color: 'rgb(250, 209, 73)', lineHeight: 1.15, marginBottom: '2rem' }}>
+          <div style={{ paddingInline: 'clamp(4rem,8vw,7rem' }}>
+            <h2 style={{ fontSize: 38, fontFamily: '"Cormorant Garamond",u2014serif', fontWeight: 300, fontStyle: 'italic', color: '#f8cb78', lineHeight: 1.15, marginBottom: '2rem' }}>
               {lang === 'fr' ? 'N\u00e9e d\u2019un besoin, pens\u00e9e pour tous.' : 'Born from a need, made for everyone.'}
             </h2>
             <p style={{ fontSize: 9, letterSpacing: '0.32em', fontWeight: 300, color: '#f8cb78c7', textTransform: 'uppercase', marginBottom: '2rem' }}>
@@ -47,9 +48,9 @@ export default function StorySection({ lang = 'fr' }) {
                 ? "J'esp\u00e8re que ces produits deviendront les v\u00f4tres. Qu'ils tra\u00eeneront dans votre sac, sur votre table de nuit, dans votre salle de bain. Qu'\u00e0 chaque moment \u2014 matin, soir, en voyage \u2014 ils seront l\u00e0 pour adoucir, nourrir et prendre soin de vous."
                 : "I hope these products will become yours. That they\u2019ll end up in your bag, on your nightstand, in your bathroom. That at every moment \u2014 morning, evening, on the go \u2014 they\u2019ll be there to soften, nourish and take care of you."}
             </p>
-            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>\u2014 @eoleeg</p>
+            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontStyle: 'italic', color: '#f8cb78' }}>— @eoleeg</p>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', alignSelf: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center', alignItems: 'center' }}>
             {features.map(([n, ti, d]) => (
               <div key={n} style={{ display: 'flex', gap: '1.2rem', paddingBottom: '1.5rem', borderBottom: '0.5px solid rgba(248,203,120,0.1)', alignItems: 'center' }}>
                 <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 32, fontWeight: 300, color: 'rgba(248,203,120,0.22)', minWidth: 40, textAlign: 'center' }}>{n}</span>

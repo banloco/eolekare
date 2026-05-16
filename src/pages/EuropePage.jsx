@@ -4,6 +4,8 @@ import CheckoutPage from './CheckoutPage';
 import CommunitySection from '../components/CommunitySection';
 import ReviewsSection from '../components/ReviewsSection';
 import StorySection from '../components/StorySection';
+import HowToSection from '../components/HowToSection';
+import { useSEO } from '../hooks/useSEO';
 import { useProducts } from '../hooks/useProducts';
 import { formatEUR } from '../lib/format';
 
@@ -389,51 +391,6 @@ function Products({ lang, cartHook }) {
 }
 
 
-/* ─── HOWTO ─── */
-function HowTo({ lang }) {
-  const steps = lang === 'fr'
-    ? [
-        { n: '01', t: 'Sur les cheveux', paras: [
-          "Prélève une noisette, frotte entre tes mains. Applique sur les longueurs et pointes pour nourrir, réparer et faire briller.",
-          "Pour un soin intense, utilise en bain d'huile : applique généreusement, masse profondément le cuir chevelu, laisse poser 30min à 2h sous un bonnet chauffant si possible.",
-        ]},
-        { n: '02', t: 'Sur le corps', paras: [
-          "Sur peau humide après la douche. Masse jusqu'à pénétration complète. Idéal pour la peau, les ongles, les lèvres, les cils, les sourcils et les pieds — partout où ta peau a besoin de douceur.",
-        ]},
-        { n: '03', t: 'Sur la barbe', paras: [
-          "Quelques gouttes réchauffées entre les mains. Masse sur la barbe et la peau en dessous pour adoucir, hydrater et discipliner.",
-        ]},
-      ]
-    : [
-        { n: '01', t: 'On hair', paras: [
-          "Take a small amount, rub between your hands. Apply to lengths and ends to nourish, repair and add shine.",
-          "For an intensive treatment, use as a hot oil bath: apply generously, deeply massage the scalp, leave on 30min to 2h under a warm cap if possible.",
-        ]},
-        { n: '02', t: 'On body', paras: [
-          "Apply to damp skin after the shower. Massage until fully absorbed. Perfect for skin, nails, lips, lashes, brows and feet — anywhere your skin needs softness.",
-        ]},
-        { n: '03', t: 'On beard', paras: [
-          "A few drops warmed between the hands. Massage into the beard and skin beneath to soften, moisturize and tame.",
-        ]},
-      ];
-  return (
-    <section id="howto" style={{ background: '#2a1208', padding: 'clamp(4rem,7vw,6rem) clamp(1.25rem,4vw,3rem)' }}>
-      <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: 'rgba(248,203,120,0.5)', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>Rituel Eolekare</p>
-      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 46, fontWeight: 300, color: '#fdf6ec', textAlign: 'center', marginBottom: '4rem' }}>{lang === 'fr' ? 'Comment utiliser' : 'How to use'}</h2>
-      <div className="grid-3col" style={{ gap: '2rem', maxWidth: 960, margin: '0 auto' }}>
-        {steps.map(({ n, t, paras }) => (
-          <div key={n} style={{ border: '0.5px solid rgba(248,203,120,0.15)', padding: '2.5rem 2rem' }}>
-            <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 56, fontWeight: 300, color: 'rgba(248,203,120,0.12)', lineHeight: 1, marginBottom: '0.5rem' }}>{n}</div>
-            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontWeight: 300, color: '#f8cb78', marginBottom: '1rem' }}>{t}</p>
-            {paras.map((p, i) => (
-              <p key={i} style={{ fontSize: 12, fontWeight: 300, color: 'rgba(253,246,236,0.5)', lineHeight: 1.85, marginBottom: i < paras.length - 1 ? '0.8rem' : 0 }}>{p}</p>
-            ))}
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 /* ─── ORDER ─── */
 function Order({ lang, onCartOpen }) {
   return (
@@ -497,6 +454,17 @@ export default function EuropePage() {
   const openCheckout = () => { setCartOpen(false); setCheckoutOpen(true); };
   const closeCheckout = () => setCheckoutOpen(false);
   const onCheckoutDone = () => { cartHook.setCart([]); setCheckoutOpen(false); };
+
+  useSEO({
+    title: lang === 'fr'
+      ? 'Eolekare Europe — Skincare naturel Made in Bénin, livré en Europe'
+      : 'Eolekare Europe — Natural skincare Made in Benin, shipped to Europe',
+    description: lang === 'fr'
+      ? 'Découvrez les soins Eolekare en Europe. Beurres natifs, huiles végétales, 100% naturel. Livraison via Mondial Relay, paiement sécurisé.'
+      : 'Discover Eolekare skincare in Europe. Native butters, vegetable oils, 100% natural. Delivery via Mondial Relay, secure payment.',
+    url: 'https://eolekare.com/europe',
+    lang,
+  });
 
   return (
     <>
@@ -582,7 +550,7 @@ export default function EuropePage() {
 
       <Products lang={lang} cartHook={cartHook} />
       <StorySection lang={lang} />
-      <HowTo lang={lang} />
+      <HowToSection lang={lang} />
       <ReviewsSection lang={lang} />
       <CommunitySection lang={lang} />
       {/* <Order lang={lang} onCartOpen={() => setCartOpen(true)} /> */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import FloatingFruits from '../components/FloatingFruits';
+import { useSEO } from '../hooks/useSEO';
 
 const cardBase = {
   background:'rgba(255,255,255,0.12)', backdropFilter:'blur(12px)',
@@ -20,6 +21,12 @@ function Card({ to, children }) {
 }
 
 export default function RegionSelector() {
+  useSEO({
+    title: 'Eolekare — Skincare naturel Made in Bénin',
+    description: 'Eolekare, soins naturels 100% naturels fabriqués au Bénin. Choisissez votre région : Bénin ou Europe.',
+    url: 'https://eolekare.com/',
+    lang: 'fr',
+  });
   return (
     <>
       <style>{`

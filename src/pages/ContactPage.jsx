@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO';
 
 const s = {
   body: { minHeight: '100vh', background: '#fdf6ec', fontFamily: "'Helvetica Neue', Arial, sans-serif" },
@@ -19,6 +20,12 @@ const s = {
 };
 
 export default function ContactPage() {
+  useSEO({
+    title: 'Eolekare — Contact',
+    description: 'Contactez l’équipe Eolekare par WhatsApp, Instagram ou email. Commandes, questions, partenariats.',
+    url: 'https://eolekare.com/contact',
+    lang: 'fr',
+  });
   return (
     <div style={s.body}>
       <header style={s.header}>

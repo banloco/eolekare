@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO';
 
 const s = {
   body: { minHeight: '100vh', background: '#fdf6ec', fontFamily: "'Helvetica Neue', Arial, sans-serif" },
@@ -20,6 +21,12 @@ const TABS = ['Mentions légales', 'CGV', 'Confidentialité'];
 
 export default function LegalPage() {
   const [tab, setTab] = useState(0);
+  useSEO({
+    title: 'Eolekare — Mentions légales & CGV',
+    description: 'Mentions légales, politique de confidentialité et conditions générales de vente Eolekare.',
+    url: 'https://eolekare.com/legal',
+    lang: 'fr',
+  });
 
   return (
     <div style={s.body}>

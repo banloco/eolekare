@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO';
 
 const s = {
   body: { minHeight: '100vh', background: '#fdf6ec', fontFamily: "'Helvetica Neue', Arial, sans-serif" },
@@ -18,6 +19,12 @@ const s = {
 };
 
 export default function AboutPage() {
+  useSEO({
+    title: 'Eolekare — Notre histoire',
+    description: 'Découvrez l’histoire d’Eolekare, marque de soins naturels Made in Bénin. Beurres natifs, huiles végétales, pour toute la famille.',
+    url: 'https://eolekare.com/about',
+    lang: 'fr',
+  });
   return (
     <div style={s.body}>
       <header style={s.header}>
