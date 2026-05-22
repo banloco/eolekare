@@ -4,24 +4,38 @@ function getToken() {
   return localStorage.getItem('auth_token');
 }
 
-async function request(method, path, body = null) {
+async function request(method, path, body = null, retries = 2) {
   const headers = { 'Content-Type': 'application/json', Accept: 'application/json' };
   const token = getToken();
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : null,
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error(err.message || res.statusText);
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : null,
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || res.statusText);
+    }
+
+    if (res.status === 204) return null;
+    return res.json();
+  } catch (err) {
+    clearTimeout(timer);
+    if (retries > 0 && (err.name === 'AbortError' || err.message === 'Failed to fetch')) {
+      await new Promise(r => setTimeout(r, 1500));
+      return request(method, path, body, retries - 1);
+    }
+    throw err;
   }
-
-  if (res.status === 204) return null;
-  return res.json();
 }
 
 // ── PRODUITS ────────────────────────────────────────────
@@ -138,6 +152,29 @@ export async function updateAdminUser(id, data) {
 
 export async function deleteAdminUser(id) {
   return request('DELETE', `/admin/users/${id}`);
+}
+
+// ── DÉPENSES ─────────────────────────────────────────────
+
+export async function getAdminExpenses(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return request('GET', `/admin/expenses${qs ? '?' + qs : ''}`);
+}
+
+export async function getAdminExpenseStats() {
+  return request('GET', '/admin/expenses/stats');
+}
+
+export async function createExpense(data) {
+  return request('POST', '/admin/expenses', data);
+}
+
+export async function updateExpense(id, data) {
+  return request('PUT', `/admin/expenses/${id}`, data);
+}
+
+export async function deleteExpense(id) {
+  return request('DELETE', `/admin/expenses/${id}`);
 }
 
 // ── PAIEMENTS ────────────────────────────────────────────

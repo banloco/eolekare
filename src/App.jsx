@@ -19,6 +19,7 @@ import ProductFormPage from './pages/admin/ProductFormPage';
 import OrdersPage from './pages/admin/OrdersPage';
 import OrderDetailPage from './pages/admin/OrderDetailPage';
 import UsersPage from './pages/admin/UsersPage';
+import ExpensesPage from './pages/admin/ExpensesPage';
 
 export default function App() {
   return (
@@ -53,6 +54,9 @@ export default function App() {
           } />
           <Route path="/admin/orders/:id" element={
             <ProtectedRoute><OrderDetailPage /></ProtectedRoute>
+          } />
+          <Route path="/admin/expenses" element={
+            <ProtectedRoute><ExpensesPage /></ProtectedRoute>
           } />
           <Route path="/admin/users" element={
             <ProtectedRoute><UsersPage /></ProtectedRoute>

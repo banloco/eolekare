@@ -12,6 +12,11 @@ import { createOrder, fedapayCreateTransaction } from '../lib/api';
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '2290148654200';
 const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
 
+const T_BJ = {
+  fr: { ingredients: 'Ingrédients', buy: 'Ajouter au panier', added: '✓ Ajouté →', soldout: 'Épuisé', qty: 'Quantité', inCart: 'dans le panier', details: 'Voir les détails →', loading: 'Chargement…' },
+  en: { ingredients: 'Ingredients', buy: 'Add to cart', added: '✓ Added →', soldout: 'Sold out', qty: 'Quantity', inCart: 'in cart', details: 'View details →', loading: 'Loading…' },
+};
+
 /* ─── PANIER WHATSAPP ─────────────────────────────────────── */
 function buildWAMessage(cart, address) {
   const lines = cart.map(i => `• ${i.name} x${i.qty} — ${formatFCFA(i.price_fcfa * i.qty)}`).join('\n');
@@ -41,13 +46,15 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
           <div style={{ overflow: 'hidden', height: 52, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src="/images/Logo Eolekare .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67 }} />
           </div>
-          <a
-            href="/europe"
-            title="Passer à la boutique Europe"
-            style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', textDecoration: 'none', borderBottom: '0.5px solid rgba(122,79,45,0.35)', paddingBottom: 1, cursor: 'pointer' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#3b190f'}
-            onMouseLeave={e => e.currentTarget.style.color = '#7a4f2d'}
-          >Bénin → Europe</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: '#3b190f', textTransform: 'uppercase' }}>Bénin</span>
+            <span style={{ fontSize: 8, color: 'rgba(59,25,15,0.3)' }}>·</span>
+            <a href="/europe" title="Passer à la boutique Europe"
+              style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', textDecoration: 'none', borderBottom: '0.5px solid rgba(122,79,45,0.35)', paddingBottom: 1 }}
+              onMouseEnter={e => e.currentTarget.style.color = '#3b190f'}
+              onMouseLeave={e => e.currentTarget.style.color = '#7a4f2d'}
+            >Europe</a>
+          </div>
         </div>
 
         {/* Desktop nav */}
@@ -278,7 +285,8 @@ function Hero({ onCartOpen }) {
 }
 
 /* ─── MODAL PRODUIT ── */
-function ProductModal({ product, onClose, onAdd, inCart }) {
+function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
+  const t = T_BJ[lang];
   const [qty, setQty] = useState(1);
   if (!product) return null;
   return (
@@ -299,16 +307,16 @@ function ProductModal({ product, onClose, onAdd, inCart }) {
             <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85, marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>{product.description_short || product.description_long || '—'}</p>
             {product.ingredients && (
               <div style={{ marginBottom: '1.5rem' }}>
-                <p style={{ fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 6 }}>Ingrédients</p>
+                <p style={{ fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 6 }}>{t.ingredients}</p>
                 <p style={{ fontSize: 10, fontWeight: 300, color: 'rgba(59,25,15,0.6)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{product.ingredients}</p>
               </div>
             )}
             <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 26, fontStyle: 'italic', color: '#3b190f', marginBottom: '1.5rem' }}>{formatFCFA(product.price_fcfa)}</p>
-            {inCart && <p style={{ fontSize: 10, letterSpacing: '0.15em', color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.8rem' }}>✓ {inCart.qty} dans le panier</p>}
+            {inCart && <p style={{ fontSize: 10, letterSpacing: '0.15em', color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.8rem' }}>✓ {inCart.qty} {t.inCart}</p>}
             {product.stock > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d' }}>Quantité</span>
+                  <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d' }}>{t.qty}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '0.5px solid rgba(59,25,15,0.15)', padding: '4px 8px' }}>
                     <button onClick={() => setQty(q => Math.max(1, q - 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#3b190f', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                     <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 18, color: '#3b190f', minWidth: 20, textAlign: 'center' }}>{qty}</span>
@@ -318,14 +326,14 @@ function ProductModal({ product, onClose, onAdd, inCart }) {
                 <button onClick={() => { onAdd(product, qty); onClose(); }}
                   style={{ padding: '13px', background: '#3b190f', color: '#fdf6ec', border: 'none', cursor: 'pointer', fontSize: 10, letterSpacing: '0.25em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', transition: 'background 0.3s' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
-                  Ajouter au panier
+                  {t.buy}
                 </button>
               </div>
             ) : (
-              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.35)', textTransform: 'uppercase' }}>Épuisé</p>
+              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.35)', textTransform: 'uppercase' }}>{t.soldout}</p>
             )}
             {product.stock > 0 && product.stock <= 5 && (
-              <p style={{ fontSize: 10, color: '#e67e22', marginTop: '0.8rem', letterSpacing: '0.08em' }}>⚠ Plus que {product.stock} en stock</p>
+              <p style={{ fontSize: 10, color: '#e67e22', marginTop: '0.8rem', letterSpacing: '0.08em' }}>{lang === 'fr' ? `⚠ Plus que ${product.stock} en stock` : `⚠ Only ${product.stock} in stock`}</p>
             )}
           </div>
         </div>
@@ -357,7 +365,7 @@ function Products({ cart, setCart, lang = 'fr' }) {
 
   return (
     <>
-      {modal && <ProductModal product={modal} onClose={() => setModal(null)} onAdd={(p, qty) => { const exists = cart.find(i => i.id === p.id); if (exists) setCart(prev => prev.map(i => i.id === p.id ? { ...i, qty: i.qty + qty } : i)); else setCart(prev => [...prev, { ...p, qty }]); setAdded(p.id); setTimeout(() => setAdded(null), 2000); }} inCart={cart.find(i => i.id === modal?.id)} />}
+      {modal && <ProductModal product={modal} lang={lang} onClose={() => setModal(null)} onAdd={(p, qty) => { const exists = cart.find(i => i.id === p.id); if (exists) setCart(prev => prev.map(i => i.id === p.id ? { ...i, qty: i.qty + qty } : i)); else setCart(prev => [...prev, { ...p, qty }]); setAdded(p.id); setTimeout(() => setAdded(null), 2000); }} inCart={cart.find(i => i.id === modal?.id)} />}
     <section id="products" style={{ padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', background: '#fff' }}>
       <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>
         {lang === 'fr' ? 'Notre collection' : 'Our collection'}
@@ -397,11 +405,11 @@ function Products({ cart, setCart, lang = 'fr' }) {
                         onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = ''} />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, fontSize: 48 }}>🫙</div>
                   }
-                  {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>Épuisé</div>}
-                  {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>Plus que {p.stock} !</div>}
-                  {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} dans le panier</div>}
+                  {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{lang === 'fr' ? 'Épuisé' : 'Sold out'}</div>}
+                  {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{lang === 'fr' ? `Plus que ${p.stock} !` : `Only ${p.stock} left!`}</div>}
+                  {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} {lang === 'fr' ? 'dans le panier' : 'in cart'}</div>}
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.6rem', background: 'linear-gradient(transparent,rgba(20,6,2,0.5))', textAlign: 'center' }}>
-                    <span style={{ fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>Voir les détails →</span>
+                    <span style={{ fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>{lang === 'fr' ? 'Voir les détails →' : 'View details →'}</span>
                   </div>
                 </div>
                 <div style={{ padding: '1.8rem 1.5rem' }}>
@@ -410,9 +418,9 @@ function Products({ cart, setCart, lang = 'fr' }) {
                   <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>{p.description_short?.slice(0, 80)}{p.description_short?.length > 80 ? '…' : ''}</p>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatFCFA(p.price_fcfa)}</p>
                   {p.stock === 0
-                    ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>Épuisé</span>
-                    : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
-                        {isAdded ? '✓ Ajouté →' : inCart ? `× ${inCart.qty} · Ajouter →` : 'Ajouter au panier →'}
+                      ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{lang === 'fr' ? 'Épuisé' : 'Sold out'}</span>
+                      : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
+                          {isAdded ? (lang === 'fr' ? '✓ Ajouté →' : '✓ Added →') : inCart ? `× ${inCart.qty} · ${lang === 'fr' ? 'Ajouter →' : 'Add →'}` : (lang === 'fr' ? 'Ajouter au panier →' : 'Add to cart →')}
                       </button>
                   }
                 </div>

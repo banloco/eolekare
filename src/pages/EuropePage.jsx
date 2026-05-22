@@ -62,13 +62,15 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
           <div style={{ overflow: 'hidden', height: 52, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src="/images/Logo Eolekare .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67 }} />
           </div>
-          <a
-            href="/benin"
-            title="Passer à la boutique Bénin"
-            style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', textDecoration: 'none', borderBottom: '0.5px solid rgba(122,79,45,0.35)', paddingBottom: 1, cursor: 'pointer' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#3b190f'}
-            onMouseLeave={e => e.currentTarget.style.color = '#7a4f2d'}
-          >Europe → Bénin</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: '#3b190f', textTransform: 'uppercase' }}>Europe</span>
+            <span style={{ fontSize: 8, color: 'rgba(59,25,15,0.3)' }}>·</span>
+            <a href="/benin" title="Passer à la boutique Bénin"
+              style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', textDecoration: 'none', borderBottom: '0.5px solid rgba(122,79,45,0.35)', paddingBottom: 1 }}
+              onMouseEnter={e => e.currentTarget.style.color = '#3b190f'}
+              onMouseLeave={e => e.currentTarget.style.color = '#7a4f2d'}
+            >Bénin</a>
+          </div>
         </div>
 
         {/* Desktop */}
@@ -289,7 +291,7 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
             )}
 
             {product.stock > 0 && product.stock <= 5 && (
-              <p style={{ fontSize: 10, color: '#e67e22', marginTop: '0.8rem', letterSpacing: '0.08em' }}>⚠ Plus que {product.stock} en stock</p>
+              <p style={{ fontSize: 10, color: '#e67e22', marginTop: '0.8rem', letterSpacing: '0.08em' }}>{lang === 'fr' ? `Plus que ${product.stock} en stock` : `Only ${product.stock} left`}</p>
             )}
           </div>
         </div>
@@ -328,7 +330,7 @@ function Products({ lang, cartHook }) {
       {modal && <ProductModal product={modal} lang={lang} onClose={() => setModal(null)} onAdd={handleAdd} inCart={cart.find(i => i.id === modal.id)} />}
         <section id="products" style={{ padding: 'clamp(4rem,8vw,7rem) clamp(1.25rem,4vw,3rem)', background: '#fff' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
-        <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '2rem' }}>Nos Beurres</h2>
+        <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '2rem' }}>{lang === 'fr' ? 'Nos Beurres' : 'Our Butters'}</h2>
 
         {/* Filtre par format */}
         {formats.length > 2 && (
@@ -345,8 +347,8 @@ function Products({ lang, cartHook }) {
           </div>
         )}
 
-        {loading && <p style={{ textAlign: 'center', fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>Chargement…</p>}
-        {error && <p style={{ textAlign: 'center', color: '#c0392b', fontSize: 11 }}>Erreur : {error}</p>}
+        {loading && <p style={{ textAlign: 'center', fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>{lang === 'fr' ? 'Chargement…' : 'Loading…'}</p>}
+        {error && <p style={{ textAlign: 'center', color: '#c0392b', fontSize: 11 }}>{lang === 'fr' ? 'Erreur' : 'Error'} : {error}</p>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: '2rem', maxWidth: 1000, margin: '0 auto' }}>
           {visible.map(p => {
             const isAdded = added === p.id;
@@ -368,7 +370,7 @@ function Products({ lang, cartHook }) {
                     </div>
                   )}
                   {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{t.soldout}</div>}
-                  {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>Plus que {p.stock} !</div>}
+                  {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{lang === 'fr' ? `Plus que ${p.stock} !` : `Only ${p.stock} left!`}</div>}
                   {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} {t.inCart}</div>}
                   {/* Lien "voir détails" */}
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.6rem', background: 'linear-gradient(transparent,rgba(20,6,2,0.5))', textAlign: 'center' }}>

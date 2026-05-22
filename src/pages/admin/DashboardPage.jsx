@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts, getAdminStats } from '../../lib/api';
+import { getAllProducts, getAdminStats, getAdminExpenseStats } from '../../lib/api';
 
 function StatCard({ label, value, sub, color = '#3b190f' }) {
   return (
@@ -22,11 +22,12 @@ function fmt(n, currency) {
 export default function DashboardPage() {
   const [products, setProducts] = useState([]);
   const [stats, setStats]       = useState(null);
+  const [expStats, setExpStats] = useState(null);
   const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
-    Promise.all([getAllProducts(), getAdminStats()])
-      .then(([prods, s]) => { setProducts(prods); setStats(s); })
+    Promise.all([getAllProducts(), getAdminStats(), getAdminExpenseStats()])
+      .then(([prods, s, es]) => { setProducts(prods); setStats(s); setExpStats(es); })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -78,11 +79,29 @@ export default function DashboardPage() {
           </div>
 
           {/* Stats revenus */}
-          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
             <StatCard label="CA Aujourd'hui (EUR)" value={fmt(stats?.revenue?.today_eur, 'EUR')} sub="marché international" color="#2d7a2d" />
             <StatCard label="CA Cette semaine (EUR)" value={fmt(stats?.revenue?.week_eur, 'EUR')} sub="marché international" />
             <StatCard label="CA Ce mois (FCFA)"   value={fmt(stats?.revenue?.month_xof, 'XOF')} sub="marché Bénin" />
             <StatCard label="CA Ce mois (EUR)"    value={fmt(stats?.revenue?.month_eur, 'EUR')} sub="marché international" />
+          </div>
+
+          {/* Dépenses + bénéfice ce mois */}
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+            <StatCard label="Dépenses ce mois (FCFA)" value={fmt(expStats?.expenses_fcfa, 'XOF')} sub="charges marché Bénin" color="#c0392b" />
+            <StatCard label="Dépenses ce mois (EUR)"  value={fmt(expStats?.expenses_eur,  'EUR')} sub="charges marché Europe" color="#c0392b" />
+            <StatCard
+              label="Bénéfice net (FCFA)"
+              value={fmt((stats?.revenue?.month_xof ?? 0) - (expStats?.expenses_fcfa ?? 0), 'XOF')}
+              sub="CA − dépenses Bénin"
+              color={(stats?.revenue?.month_xof ?? 0) - (expStats?.expenses_fcfa ?? 0) >= 0 ? '#2d7a2d' : '#c0392b'}
+            />
+            <StatCard
+              label="Bénéfice net (EUR)"
+              value={fmt((stats?.revenue?.month_eur ?? 0) - (expStats?.expenses_eur ?? 0), 'EUR')}
+              sub="CA − dépenses Europe"
+              color={(stats?.revenue?.month_eur ?? 0) - (expStats?.expenses_eur ?? 0) >= 0 ? '#2d7a2d' : '#c0392b'}
+            />
           </div>
 
           {/* Alertes stock */}
