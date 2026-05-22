@@ -8,8 +8,11 @@ const EMPTY = {
   format: '',
   sku: '',
   description_short: '',
+  description_short_en: '',
   description_long: '',
+  description_long_en: '',
   ingredients: '',
+  ingredients_en: '',
   price_fcfa: '',
   price_eur: '',
   stock: '',
@@ -41,20 +44,23 @@ export default function ProductFormPage() {
     if (!isEdit) return;
     getProduct(id)
       .then(p => setForm({
-        name:              p.name || '',
-        format:            p.format || '',
-        sku:               p.sku || '',
-        description_short: p.description_short || '',
-        description_long:  p.description_long || '',
-        ingredients:       p.ingredients || '',
-        price_fcfa:        p.price_fcfa ?? '',
-        price_eur:         p.price_eur ?? '',
-        stock:             p.stock ?? '',
-        stock_alert:       p.stock_alert ?? '5',
-        active:            p.active ?? true,
-        benin_available:   p.benin_available ?? true,
-        intl_available:    p.intl_available ?? true,
-        images:            p.images || [],
+        name:                 p.name || '',
+        format:               p.format || '',
+        sku:                  p.sku || '',
+        description_short:    p.description_short || '',
+        description_short_en: p.description_short_en || '',
+        description_long:     p.description_long || '',
+        description_long_en:  p.description_long_en || '',
+        ingredients:          p.ingredients || '',
+        ingredients_en:       p.ingredients_en || '',
+        price_fcfa:           p.price_fcfa ?? '',
+        price_eur:            p.price_eur ?? '',
+        stock:                p.stock ?? '',
+        stock_alert:          p.stock_alert ?? '5',
+        active:               p.active ?? true,
+        benin_available:      p.benin_available ?? true,
+        intl_available:       p.intl_available ?? true,
+        images:               p.images || [],
       }))
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
@@ -111,12 +117,15 @@ export default function ProductFormPage() {
 
     try {
       const payload = {
-        name:              form.name.trim(),
-        format:            form.format.trim(),
-        sku:               form.sku.trim(),
-        description_short: form.description_short.trim(),
-        description_long:  form.description_long.trim(),
-        ingredients:       form.ingredients.trim(),
+        name:                 form.name.trim(),
+        format:               form.format.trim(),
+        sku:                  form.sku.trim(),
+        description_short:    form.description_short.trim(),
+        description_short_en: form.description_short_en.trim(),
+        description_long:     form.description_long.trim(),
+        description_long_en:  form.description_long_en.trim(),
+        ingredients:          form.ingredients.trim(),
+        ingredients_en:       form.ingredients_en.trim(),
         price_fcfa:        form.price_fcfa !== '' ? Number(form.price_fcfa) : 0,
         price_eur:         form.price_eur  !== '' ? Number(form.price_eur)  : 0,
         stock:             form.stock      !== '' ? Number(form.stock)      : 0,
@@ -231,25 +240,51 @@ export default function ProductFormPage() {
                   />
                 </Field>
               </div>
-              <Field label="Description courte (vitrine)">
+              {/* ── Textes FR ── */}
+              <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#f8cb78', background: '#3b190f', display: 'inline-block', padding: '3px 10px', marginBottom: 2 }}>🇫🇷 Français</p>
+              <Field label="Description courte FR (vitrine)">
                 <textarea value={form.description_short} onChange={e => set('description_short', e.target.value)}
                   placeholder="2-3 phrases percutantes pour la carte produit…"
                   rows={3} style={{ ...inputStyle, resize: 'vertical', fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85 }}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
-              <Field label="Description longue (détail produit)">
+              <Field label="Description longue FR (détail produit)">
                 <textarea value={form.description_long} onChange={e => set('description_long', e.target.value)}
                   placeholder="Description complète : bienfaits, texture, usage, résultats…"
                   rows={6} style={{ ...inputStyle, resize: 'vertical', fontSize: 13, fontWeight: 300, color: 'rgba(59,25,15,0.72)', lineHeight: 1.9 }}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
-              <Field label="Ingrédients">
+              <Field label="Ingrédients FR">
                 <textarea value={form.ingredients} onChange={e => set('ingredients', e.target.value)}
                   placeholder="ex: Beurre de Mangue, Huile de Coco, Vitamine E…"
                   rows={3} style={{ ...inputStyle, resize: 'vertical', fontSize: 10, fontWeight: 300, color: 'rgba(59,25,15,0.6)', lineHeight: 1.7, letterSpacing: '0.04em' }}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
+
+              {/* ── Textes EN ── */}
+              <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#1a3a6b', background: '#dce9ff', display: 'inline-block', padding: '3px 10px', marginBottom: 2, marginTop: 8 }}>🇬🇧 English</p>
+              <Field label="Short description EN (product card)">
+                <textarea value={form.description_short_en} onChange={e => set('description_short_en', e.target.value)}
+                  placeholder="2-3 catchy sentences for the product card…"
+                  rows={3} style={{ ...inputStyle, resize: 'vertical', fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85 }}
+                  onFocus={e => e.target.style.borderColor='#7aadff'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
+              <Field label="Long description EN (product detail)">
+                <textarea value={form.description_long_en} onChange={e => set('description_long_en', e.target.value)}
+                  placeholder="Full description: benefits, texture, use, results…"
+                  rows={6} style={{ ...inputStyle, resize: 'vertical', fontSize: 13, fontWeight: 300, color: 'rgba(59,25,15,0.72)', lineHeight: 1.9 }}
+                  onFocus={e => e.target.style.borderColor='#7aadff'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
+              <Field label="Ingredients EN">
+                <textarea value={form.ingredients_en} onChange={e => set('ingredients_en', e.target.value)}
+                  placeholder="e.g. Mango Butter, Coconut Oil, Vitamin E…"
+                  rows={3} style={{ ...inputStyle, resize: 'vertical', fontSize: 10, fontWeight: 300, color: 'rgba(59,25,15,0.6)', lineHeight: 1.7, letterSpacing: '0.04em' }}
+                  onFocus={e => e.target.style.borderColor='#7aadff'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
             </Section>

@@ -5,6 +5,7 @@ import {
   createExpense,
   updateExpense,
   deleteExpense,
+  exportAdminExpenses,
 } from '../../lib/api';
 
 const CATEGORIES = ['Fournisseur', 'Packaging', 'Site & Tech', 'Publicité', 'Livraison', 'Autre'];
@@ -143,6 +144,7 @@ export default function ExpensesPage() {
   const [loading,  setLoading]  = useState(true);
   const [modal,    setModal]    = useState(null); // null | 'new' | expense object
   const [deleting, setDeleting] = useState(null);
+  const [exporting, setExporting] = useState(false);
   const [filterMarket,   setFilterMarket]   = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterMonth,    setFilterMonth]    = useState('');
@@ -165,6 +167,21 @@ export default function ExpensesPage() {
     .reduce((s, e) => s + (e.amount_fcfa || 0), 0);
   const totalEUR  = expenses.filter(e => e.market === 'international' || e.market === 'both')
     .reduce((s, e) => s + (e.amount_eur || 0), 0);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const params = {};
+      if (filterMarket)   params.market   = filterMarket;
+      if (filterCategory) params.category = filterCategory;
+      if (filterMonth)    params.month    = filterMonth;
+      await exportAdminExpenses(params);
+    } catch (e) {
+      alert('Export impossible : ' + e.message);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const handleSave = async (data) => {
     if (modal && modal !== 'new') {
@@ -220,6 +237,7 @@ export default function ExpensesPage() {
             Suivi des coûts et charges
           </p>
         </div>
+        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
         <button onClick={() => setModal('new')} style={{
           fontSize: 10, letterSpacing: '0.22em', fontWeight: 300, textTransform: 'uppercase',
           color: '#fdf6ec', background: '#3b190f', padding: '12px 28px', border: 'none', cursor: 'pointer',
@@ -230,6 +248,18 @@ export default function ExpensesPage() {
         >
           + Ajouter une dépense
         </button>
+        <button onClick={handleExport} disabled={exporting} style={{
+          fontSize: 10, letterSpacing: '0.22em', fontWeight: 300, textTransform: 'uppercase',
+          color: '#3b190f', background: 'none', padding: '12px 20px',
+          border: '0.5px solid rgba(59,25,15,0.3)', cursor: exporting ? 'not-allowed' : 'pointer',
+          fontFamily: 'Jost, sans-serif', opacity: exporting ? 0.5 : 1,
+        }}
+          onMouseEnter={e => { if (!exporting) e.currentTarget.style.background = 'rgba(59,25,15,0.05)'; }}
+          onMouseLeave={e => e.currentTarget.style.background = 'none'}
+        >
+          {exporting ? 'Export…' : '↓ CSV'}
+        </button>
+        </div>
       </div>
 
       {/* Totaux */}

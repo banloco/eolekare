@@ -13,8 +13,38 @@ const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '2290148654200';
 const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const T_BJ = {
-  fr: { ingredients: 'Ingrédients', buy: 'Ajouter au panier', added: '✓ Ajouté →', soldout: 'Épuisé', qty: 'Quantité', inCart: 'dans le panier', details: 'Voir les détails →', loading: 'Chargement…' },
-  en: { ingredients: 'Ingredients', buy: 'Add to cart', added: '✓ Added →', soldout: 'Sold out', qty: 'Quantity', inCart: 'in cart', details: 'View details →', loading: 'Loading…' },
+  fr: {
+    ingredients: 'Ingrédients', buy: 'Ajouter au panier', added: '✓ Ajouté →', soldout: 'Épuisé', qty: 'Quantité', inCart: 'dans le panier', details: 'Voir les détails →', loading: 'Chargement…',
+    eyebrow: '100% Naturel · Made in 🇧🇯 · Pour tous',
+    tagline: 'Votre skincare aux parfums uniques',
+    discover: 'Découvrir la collection',
+    cart_title: 'Mon panier', summary_title: 'Récapitulatif',
+    article: 'article', articles: 'articles',
+    empty: 'Votre panier est vide', discover_butters: 'Découvrez nos beurres',
+    recap: 'Récapitulatif & paiement',
+    label_name: 'Nom complet *', label_phone: 'Téléphone *', label_address: 'Adresse de livraison (optionnel)',
+    order_btn: 'Commander →', back_cart: '← Modifier le panier',
+    total: 'Total', redirecting: 'Redirection…', pay_prefix: 'Payer ',
+    err_name: 'Veuillez entrer votre nom.', err_phone: 'Veuillez entrer votre téléphone.',
+    nature_strip: 'La nature dans chaque texture',
+    ticker: ['Eolekare', '·', 'Votre skincare aux parfums uniques', '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·'],
+  },
+  en: {
+    ingredients: 'Ingredients', buy: 'Add to cart', added: '✓ Added →', soldout: 'Sold out', qty: 'Quantity', inCart: 'in cart', details: 'View details →', loading: 'Loading…',
+    eyebrow: '100% Natural · Made in 🇧🇯 · For everyone',
+    tagline: 'Your skincare with unique scents',
+    discover: 'Discover the collection',
+    cart_title: 'My cart', summary_title: 'Summary',
+    article: 'item', articles: 'items',
+    empty: 'Your cart is empty', discover_butters: 'Discover our butters',
+    recap: 'Summary & payment',
+    label_name: 'Full name *', label_phone: 'Phone *', label_address: 'Delivery address (optional)',
+    order_btn: 'Order →', back_cart: '← Edit cart',
+    total: 'Total', redirecting: 'Redirecting…', pay_prefix: 'Pay ',
+    err_name: 'Please enter your name.', err_phone: 'Please enter your phone.',
+    nature_strip: 'Nature in every texture',
+    ticker: ['Eolekare', '·', 'Your skincare with unique scents', '·', '100% Natural', '·', 'Made in 🇧🇯', '·', 'For everyone', '·'],
+  },
 };
 
 /* ─── PANIER WHATSAPP ─────────────────────────────────────── */
@@ -118,7 +148,8 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
 }
 
 /* ─── PANIER / CHECKOUT ───────────────────────────────────── */
-function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
+function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove }) {
+  const t = T_BJ[lang];
   const [step, setStep]     = useState('cart'); // 'cart' | 'checkout'
   const [customer, setCustomer] = useState({ name: '', phone: '', address: '' });
   const [busy, setBusy]     = useState(false);
@@ -129,8 +160,8 @@ function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
   const labelStyle = { display: 'block', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 4 };
 
   const handlePay = async () => {
-    if (!customer.name.trim()) { setError('Veuillez entrer votre nom.'); return; }
-    if (!customer.phone.trim()) { setError('Veuillez entrer votre téléphone.'); return; }
+    if (!customer.name.trim()) { setError(t.err_name); return; }
+    if (!customer.phone.trim()) { setError(t.err_phone); return; }
     setError('');
     setBusy(true);
     try {
@@ -158,9 +189,9 @@ function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem 2rem', borderBottom: '0.5px solid rgba(59,25,15,0.1)' }}>
           <div>
             <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, fontWeight: 300, color: '#3b190f' }}>
-              {step === 'cart' ? 'Mon panier' : 'Récapitulatif'}
+              {step === 'cart' ? t.cart_title : t.summary_title}
             </p>
-            {cart.length > 0 && <p style={{ fontSize: 10, letterSpacing: '0.15em', color: '#7a4f2d', textTransform: 'uppercase' }}>{cart.reduce((s, i) => s + i.qty, 0)} article{cart.reduce((s, i) => s + i.qty, 0) > 1 ? 's' : ''}</p>}
+            {cart.length > 0 && <p style={{ fontSize: 10, letterSpacing: '0.15em', color: '#7a4f2d', textTransform: 'uppercase' }}>{cart.reduce((s, i) => s + i.qty, 0)} {cart.reduce((s, i) => s + i.qty, 0) > 1 ? t.articles : t.article}</p>}
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 22, color: '#3b190f' }}>✕</button>
         </div>
@@ -169,8 +200,8 @@ function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 2rem' }}>
           {cart.length === 0 ? (
             <div style={{ textAlign: 'center', paddingTop: '4rem' }}>
-              <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: 'rgba(59,25,15,0.35)', marginBottom: 8 }}>Votre panier est vide</p>
-              <p style={{ fontSize: 10, letterSpacing: '0.15em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>Découvrez nos beurres</p>
+              <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: 'rgba(59,25,15,0.35)', marginBottom: 8 }}>{t.empty}</p>
+              <p style={{ fontSize: 10, letterSpacing: '0.15em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{t.discover_butters}</p>
             </div>
           ) : step === 'cart' ? (
             /* ── ÉTAPE 1 : liste ── */
@@ -200,7 +231,7 @@ function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
           ) : (
             /* ── ÉTAPE 2 : infos client + paiement FedaPay ── */
             <div>
-              <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '1.2rem' }}>Récapitulatif & paiement</p>
+              <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '1.2rem' }}>{t.recap}</p>
               {cart.map(item => (
                 <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.7rem', marginBottom: '0.7rem', borderBottom: '0.5px solid rgba(59,25,15,0.06)' }}>
                   <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{item.name} <span style={{ color: '#7a4f2d', fontSize: 13 }}>×{item.qty}</span></span>
@@ -208,16 +239,16 @@ function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
                 </div>
               ))}
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', paddingTop: '0.3rem' }}>
-                <span style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d' }}>Total</span>
+                <span style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d' }}>{t.total}</span>
                 <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#3b190f' }}>{formatFCFA(total)}</span>
               </div>
 
               <div>
-                <label style={labelStyle}>Nom complet *</label>
+                <label style={labelStyle}>{t.label_name}</label>
                 <input style={inputStyle} value={customer.name} onChange={e => setCustomer(p => ({ ...p, name: e.target.value }))} placeholder="Jean Dupont" />
-                <label style={labelStyle}>Téléphone *</label>
+                <label style={labelStyle}>{t.label_phone}</label>
                 <input style={inputStyle} type="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+229 96 00 00 00" />
-                <label style={labelStyle}>Adresse de livraison (optionnel)</label>
+                <label style={labelStyle}>{t.label_address}</label>
                 <textarea value={customer.address} onChange={e => setCustomer(p => ({ ...p, address: e.target.value }))}
                   placeholder="Quartier, rue, ville…" rows={2}
                   style={{ ...inputStyle, resize: 'none' }} />
@@ -233,24 +264,24 @@ function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
             {step === 'cart' ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.2rem' }}>
-                  <span style={{ fontSize: 11, letterSpacing: '0.2em', color: '#7a4f2d', textTransform: 'uppercase' }}>Total</span>
+                  <span style={{ fontSize: 11, letterSpacing: '0.2em', color: '#7a4f2d', textTransform: 'uppercase' }}>{t.total}</span>
                   <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, color: '#3b190f' }}>{formatFCFA(total)}</span>
                 </div>
                 <button onClick={() => setStep('checkout')}
                   style={{ width: '100%', padding: '14px', background: '#3b190f', color: '#fdf6ec', border: 'none', cursor: 'pointer', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', transition: 'background 0.3s' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
-                  Commander →
+                  {t.order_btn}
                 </button>
               </>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                 <button onClick={handlePay} disabled={busy}
                   style={{ width: '100%', padding: '14px', background: busy ? '#999' : '#3b190f', color: '#fdf6ec', border: 'none', cursor: busy ? 'not-allowed' : 'pointer', fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', transition: 'background 0.3s' }}>
-                  {busy ? 'Redirection…' : `Payer ${formatFCFA(total)} →`}
+                  {busy ? t.redirecting : `${t.pay_prefix}${formatFCFA(total)} →`}
                 </button>
                 <button onClick={() => setStep('cart')}
                   style={{ width: '100%', padding: '11px', background: 'none', border: '0.5px solid rgba(59,25,15,0.2)', color: '#3b190f', cursor: 'pointer', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif' }}>
-                  ← Modifier le panier
+                  {t.back_cart}
                 </button>
               </div>
             )}
@@ -262,21 +293,22 @@ function CartDrawer({ cart, onClose, onUpdate, onRemove }) {
 }
 
 /* ─── HERO ── */
-function Hero({ onCartOpen }) {
+function Hero({ lang = 'fr', onCartOpen }) {
+  const t = T_BJ[lang];
   return (
     <section className="relative flex flex-col items-center justify-center text-center overflow-hidden"
       style={{ minHeight: '100vh', background: '#f8cb78', padding: '8rem 2rem 5rem' }}>
       <FloatingFruits variant="hero" />
       <div className="relative z-[2] flex flex-col items-center">
-        <p style={{ fontSize: 10, letterSpacing: '0.5em', fontWeight: 300, color: '#000', opacity: 0.65, textTransform: 'uppercase', marginBottom: '2rem' }}>100% Naturel · Made in 🇧🇯 · Pour tous</p>
-        <h1 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(72px,11vw,140px)', fontWeight: 300, lineHeight: 0.88, color: '#000', letterSpacing: '0.04em', marginBottom: '0.5rem' }}>EOLEKARE</h1>
-        <p style={{ fontSize: 10, letterSpacing: '0.38em', fontWeight: 300, color: '#000', opacity: 0.55, textTransform: 'uppercase', marginBottom: '1.8rem' }}>by Eoleeg</p>
-        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: '#000', maxWidth: 440, lineHeight: 1.65, marginBottom: '3rem' }}>Votre skincare aux parfums uniques</p>
+        <p style={{ fontSize: 10, letterSpacing: '0.5em', fontWeight: 300, color: '#000', opacity: 0.65, textTransform: 'uppercase', marginBottom: '2rem' }}>{t.eyebrow}</p>
+        <h1 style={{ fontFamily: '"Brown Sugar",cursive', fontSize: 'clamp(72px,11vw,140px)', fontWeight: 300, lineHeight: 0.88, color: '#000', letterSpacing: '0.04em', marginBottom: '0.5rem' }}>EOLEKARE</h1>
+        <p style={{ fontFamily: '"Montserrat",sans-serif', fontSize: 10, letterSpacing: '0.38em', fontWeight: 300, color: '#000', opacity: 0.55, textTransform: 'uppercase', marginBottom: '1.8rem' }}>by Eoleeg</p>
+        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, fontStyle: 'italic', color: '#000', maxWidth: 440, lineHeight: 1.65, marginBottom: '3rem' }}>{t.tagline}</p>
         <div className="flex gap-6 flex-wrap justify-center">
           <a href="#products" style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', transition: 'all 0.3s' }}
             onMouseEnter={e => { e.currentTarget.style.background = '#5a2d12'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
             onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; e.currentTarget.style.transform = ''; }}>
-            Découvrir la collection
+            {t.discover}
           </a>
         </div>
       </div>
@@ -304,11 +336,17 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
           <div style={{ padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {product.format && <p style={{ fontSize: 9, letterSpacing: '0.25em', color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{product.format}</p>}
             <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 30, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>{product.name}</h2>
-            <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85, marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>{product.description_short || product.description_long || '—'}</p>
-            {product.ingredients && (
+            <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85, marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
+              {lang === 'en'
+                ? (product.description_short_en || product.description_long_en || product.description_short || product.description_long || '—')
+                : (product.description_short || product.description_long || '—')}
+            </p>
+            {(lang === 'en' ? (product.ingredients_en || product.ingredients) : product.ingredients) && (
               <div style={{ marginBottom: '1.5rem' }}>
                 <p style={{ fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 6 }}>{t.ingredients}</p>
-                <p style={{ fontSize: 10, fontWeight: 300, color: 'rgba(59,25,15,0.6)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{product.ingredients}</p>
+                <p style={{ fontSize: 10, fontWeight: 300, color: 'rgba(59,25,15,0.6)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                  {lang === 'en' ? (product.ingredients_en || product.ingredients) : product.ingredients}
+                </p>
               </div>
             )}
             <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 26, fontStyle: 'italic', color: '#3b190f', marginBottom: '1.5rem' }}>{formatFCFA(product.price_fcfa)}</p>
@@ -415,7 +453,9 @@ function Products({ cart, setCart, lang = 'fr' }) {
                 <div style={{ padding: '1.8rem 1.5rem' }}>
                   <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format || 'Skincare · Haircare · Corps'}</p>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{p.name}</p>
-                  <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>{p.description_short?.slice(0, 80)}{p.description_short?.length > 80 ? '…' : ''}</p>
+                  <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>
+                    {(() => { const d = lang === 'en' ? (p.description_short_en || p.description_short) : p.description_short; return d ? d.slice(0, 80) + (d.length > 80 ? '…' : '') : ''; })()}
+                  </p>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatFCFA(p.price_fcfa)}</p>
                   {p.stock === 0
                       ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{lang === 'fr' ? 'Épuisé' : 'Sold out'}</span>
@@ -468,7 +508,7 @@ function Order() {
 }
 
 /* ─── FOOTER ── */
-function Footer() {
+function Footer({ lang = 'fr' }) {
   return (
     <footer style={{ background: '#3b190f', padding: '4rem 3rem', textAlign: 'center' }}>
       <div style={{ overflow: 'hidden', height: 52, margin: '0 auto 0.6rem', display: 'inline-block' }}>
@@ -481,7 +521,7 @@ function Footer() {
             onMouseEnter={e => e.currentTarget.style.color = '#f8cb78'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(248,203,120,0.4)'}>{l}</a></li>
         ))}
       </ul>
-      <p style={{ fontSize: 10, color: 'rgba(248,203,120,0.15)' }}>100% Naturel · Made in Bénin · Pour tous · © 2026 Eolekare by Eoleeg</p>
+      <p style={{ fontSize: 10, color: 'rgba(248,203,120,0.15)' }}>{lang === 'fr' ? '100% Naturel · Made in Bénin · Pour tous' : '100% Natural · Made in Benin · For everyone'} · © 2026 Eolekare by Eoleeg</p>
     </footer>
   );
 }
@@ -513,11 +553,11 @@ export default function BeninPage() {
   return (
     <>
       <Nav lang={lang} setLang={setLang} cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
-      {cartOpen && <CartDrawer cart={cart} onClose={() => setCartOpen(false)} onUpdate={updateQty} onRemove={removeItem} />}
+      {cartOpen && <CartDrawer lang={lang} cart={cart} onClose={() => setCartOpen(false)} onUpdate={updateQty} onRemove={removeItem} />}
       <Hero lang={lang} onCartOpen={() => setCartOpen(true)} />
       {/* Double strip */}
       <div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>
-        <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>La nature dans chaque texture</p>
+        <p style={{ fontSize: 10, letterSpacing: '0.42em', fontWeight: 300, color: 'rgba(248,203,120,0.55)', textTransform: 'uppercase', textAlign: 'center', padding: '2rem 0 1.5rem' }}>{T_BJ[lang].nature_strip}</p>
         <div className="img-strip" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: 300, overflow: 'hidden' }}>
           {[1, 2, 3].map(i => (
             <div key={i} style={{ position: 'relative', overflow: 'hidden' }}>
@@ -537,7 +577,7 @@ export default function BeninPage() {
       </div>
       <div style={{ background: '#f8cb78', padding: '1rem 0', overflow: 'hidden' }}>
         <div className="ticker-track" style={{ display: 'flex', gap: '4rem', whiteSpace: 'nowrap' }}>
-          {[...Array(2)].flatMap(() => ['Eolekare', '·', 'Votre skincare aux parfums uniques', '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·']).map((t, i) => (
+          {[...Array(2)].flatMap(() => T_BJ[lang].ticker).map((t, i) => (
             <span key={i} style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, fontStyle: 'italic', letterSpacing: '0.1em', color: '#3b190f', flexShrink: 0 }}>{t}</span>
           ))}
         </div>
@@ -548,7 +588,7 @@ export default function BeninPage() {
       <ReviewsSection lang={lang} />
       <CommunitySection lang={lang} waNumber={WHATSAPP_NUMBER} />
       {/* <Order /> */}
-      <Footer />
+      <Footer lang={lang} />
     </>
   );
 }

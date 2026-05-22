@@ -165,6 +165,22 @@ export async function getAdminExpenseStats() {
   return request('GET', '/admin/expenses/stats');
 }
 
+export async function exportAdminExpenses(params = {}) {
+  const token = getToken();
+  const qs = new URLSearchParams(params).toString();
+  const url = `${BASE_URL}/admin/expenses/export${qs ? '?' + qs : ''}`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'text/csv' },
+  });
+  if (!res.ok) throw new Error('Erreur lors de l\'export');
+  const blob = await res.blob();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `depenses-eolekare-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
 export async function createExpense(data) {
   return request('POST', '/admin/expenses', data);
 }
