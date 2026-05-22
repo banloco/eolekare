@@ -59,8 +59,8 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
     <>
       <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-between items-center" style={{ padding: '0.9rem 1.5rem', background: '#f8cb78' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ overflow: 'hidden', height: 52, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <img src="/images/Logo Eolekare .png" alt="Eolekare" style={{ width: 180, display: 'block', marginTop: -67 }} />
+          <div className="nav-logo-wrap" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img src="/images/Logo Eolekare .png" alt="Eolekare" className="nav-logo-img" />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: '#3b190f', textTransform: 'uppercase' }}>Europe</span>
@@ -99,13 +99,6 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
 
         {/* Mobile */}
         <div className="flex md:hidden items-center gap-3">
-          <div style={{ display: 'flex', gap: 2 }}>
-            {['fr', 'en'].map(l => (
-              <button key={l} onClick={() => setLang(l)} style={{ background: lang === l ? '#3b190f' : 'transparent', color: lang === l ? '#f8cb78' : 'rgba(59,25,15,0.5)', border: '0.5px solid rgba(59,25,15,0.2)', padding: '4px 8px', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif' }}>
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
           <button onClick={onCartOpen} style={{ background: 'none', border: '0.5px solid rgba(59,25,15,0.3)', cursor: 'pointer', color: '#3b190f', padding: '7px 10px', display: 'flex', alignItems: 'center', gap: 5 }}>
             <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
@@ -122,6 +115,13 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
 
       {mobOpen && (
         <div className="mob-menu md:hidden">
+          <div className="mob-lang">
+            {['fr', 'en'].map(l => (
+              <button key={l} onClick={() => setLang(l)} className={lang === l ? 'active' : ''}>
+                {l === 'fr' ? '🇫🇷 FR' : '🇬🇧 EN'}
+              </button>
+            ))}
+          </div>
           {EU_NAV_LINKS(t).map(([h, l]) => (
             <a key={h} href={h} onClick={() => setMobOpen(false)}>{l}</a>
           ))}

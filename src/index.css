@@ -57,9 +57,13 @@
 .grid-2col { display: grid; grid-template-columns: 1fr 1fr; }
 .grid-3col { display: grid; grid-template-columns: repeat(3, 1fr); }
 
+/* Nav logo — responsive */
+.nav-logo-wrap { overflow: hidden; height: 52px; cursor: pointer; }
+.nav-logo-img  { width: 180px; display: block; margin-top: -67px; }
+
 /* Mobile nav dropdown */
 .mob-menu {
-  position: fixed; top: 56px; left: 0; right: 0; z-index: 98;
+  position: fixed; top: 68px; left: 0; right: 0; z-index: 98;
   background: #f8cb78; border-top: 0.5px solid rgba(59,25,15,0.12);
   box-shadow: 0 8px 24px rgba(59,25,15,0.1);
   display: flex; flex-direction: column; padding: 0.5rem 0;
@@ -73,6 +77,16 @@
   transition: background 0.15s;
 }
 .mob-menu a:hover { background: rgba(59,25,15,0.05); }
+
+/* Lang switcher inside mobile menu */
+.mob-lang { display: flex; gap: 6px; padding: 0.8rem 1.5rem; border-bottom: 0.5px solid rgba(59,25,15,0.07); }
+.mob-lang button {
+  background: transparent; color: rgba(59,25,15,0.5);
+  border: 0.5px solid rgba(59,25,15,0.2); padding: 6px 16px;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  cursor: pointer; font-family: 'Jost', sans-serif; transition: all 0.2s;
+}
+.mob-lang button.active { background: #3b190f; color: #f8cb78; }
 
 /* Admin mobile toggle */
 .admin-mob-btn {
@@ -91,6 +105,11 @@
 
 /* ── Mobile breakpoint (< 768px) ── */
 @media (max-width: 767px) {
+  /* Nav logo smaller on mobile */
+  .nav-logo-wrap { height: 32px; }
+  .nav-logo-img  { width: 110px; margin-top: -41px; }
+  .mob-menu { top: 58px; }
+
   /* Grids collapse to 1 column */
   .grid-2col { grid-template-columns: 1fr !important; }
   .grid-3col { grid-template-columns: 1fr !important; }
