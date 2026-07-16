@@ -1,17 +1,17 @@
 import React, { useState, useCallback } from 'react';
 import RelayPicker from '../components/RelayPicker';
-import { createOrder, fedapayCreateTransaction } from '../lib/api';
+import { createOrder, stripeCreateCheckoutSession } from '../lib/api';
 import { formatEUR } from '../lib/format';
 
-// ─── FEDAPAY FORM ──────────────────────────────────────────
-function FedaPayForm({ orderId, totalEur, onError }) {
+// ─── STRIPE FORM ───────────────────────────────────────────
+function StripeForm({ orderId, totalEur, onError }) {
   const [busy, setBusy] = useState(false);
 
   const handlePay = async (e) => {
     e.preventDefault();
     setBusy(true);
     try {
-      const { checkout_url } = await fedapayCreateTransaction(orderId);
+      const { checkout_url } = await stripeCreateCheckoutSession(orderId);
       window.location.href = checkout_url;
     } catch (err) {
       onError(err.message);
@@ -23,7 +23,7 @@ function FedaPayForm({ orderId, totalEur, onError }) {
     <form onSubmit={handlePay}>
       <button type="submit" disabled={busy}
         style={{ width: '100%', padding: 14, background: busy ? '#999' : '#3b190f', color: '#fdf6ec', border: 'none', cursor: busy ? 'not-allowed' : 'pointer', fontSize: 10, letterSpacing: '0.25em', fontWeight: 300, textTransform: 'uppercase', fontFamily: 'Jost,sans-serif' }}>
-        {busy ? 'Redirection…' : `Payer ${formatEUR(totalEur)} par carte / mobile money`}
+        {busy ? 'Redirection…' : `Payer ${formatEUR(totalEur)} par carte`}
       </button>
     </form>
   );
@@ -222,7 +222,7 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                 </p>
               </div>
 
-              <FedaPayForm
+              <StripeForm
                 orderId={createdOrder.id}
                 totalEur={createdOrder.total}
                 onError={(msg) => setFormError(msg)}

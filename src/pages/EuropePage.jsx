@@ -12,9 +12,36 @@ import { formatEUR } from '../lib/format';
 const CART_KEY = 'eolekare_eu_cart';
 
 const T = {
-  fr: { eyebrow:'100% Naturel · Made in 🇧🇯 · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Notre collection', story:'Notre histoire', howto:'L\' utilisation', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé · Shopify', back:'← Retour' },
-  en: { eyebrow:'100% Natural · Made in 🇧🇯 · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Our collection', story:'Our story', howto:'How to use', buy:'Add to cart', added:'Added', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment · Shopify', back:'← Back' },
+  fr: { eyebrow:'100% Naturel · Made in 🇧🇯 · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Notre collection', story:'Notre histoire', howto:'L\' utilisation', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé · Shopify', back:'← Retour',
+    pay_success:'Paiement confirmé ! Merci pour votre commande', pay_failed:'Le paiement a échoué. Vous pouvez réessayer.', pay_cancelled:'Paiement annulé.', pay_error:'Une erreur est survenue pendant le paiement.', pay_ref:'Référence', pay_close:'✕' },
+  en: { eyebrow:'100% Natural · Made in 🇧🇯 · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Our collection', story:'Our story', howto:'How to use', buy:'Add to cart', added:'Added', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment · Shopify', back:'← Back',
+    pay_success:'Payment confirmed! Thank you for your order', pay_failed:'Payment failed. You can try again.', pay_cancelled:'Payment cancelled.', pay_error:'An error occurred during payment.', pay_ref:'Reference', pay_close:'✕' },
 };
+
+/* ─── PAYMENT STATUS BANNER (retour Stripe / FedaPay) ─── */
+function PaymentBanner({ lang, status, reference, onClose }) {
+  if (!status) return null;
+  const t = T[lang];
+  const variants = {
+    success:   { bg: '#e8f5e9', border: '#4caf50', color: '#2e7d32', text: t.pay_success },
+    failed:    { bg: '#fdecea', border: '#e53935', color: '#c0392b', text: t.pay_failed },
+    cancelled: { bg: '#fff8e1', border: '#f5a623', color: '#8a6416', text: t.pay_cancelled },
+    error:     { bg: '#fdecea', border: '#e53935', color: '#c0392b', text: t.pay_error },
+  };
+  const v = variants[status];
+  if (!v) return null;
+
+  return (
+    <div style={{ position: 'fixed', top: 70, left: 0, right: 0, zIndex: 300, display: 'flex', justifyContent: 'center', padding: '0 1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, background: v.bg, border: `0.5px solid ${v.border}`, color: v.color, padding: '12px 20px', maxWidth: 560, width: '100%', boxShadow: '0 4px 20px rgba(59,25,15,0.12)' }}>
+        <p style={{ fontSize: 12, flex: 1 }}>
+          {v.text}{reference && <> — <strong>{t.pay_ref} {reference}</strong></>}
+        </p>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: v.color, fontSize: 14, flexShrink: 0 }}>{t.pay_close}</button>
+      </div>
+    </div>
+  );
+}
 
 /* ─── CART HOOK (localStorage) ─── */
 function useCart() {
@@ -464,8 +491,27 @@ export default function EuropePage() {
   const [lang, setLang]         = useState('fr');
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  // ── Retour Stripe / FedaPay (?payment=success|failed|cancelled|error&ref=...) ──
+  const [payment, setPayment] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('payment');
+    return status ? { status, reference: params.get('ref') } : null;
+  });
   const cartHook = useCart();
   const { products } = useProducts('international');
+
+  useEffect(() => {
+    if (!payment) return;
+    if (payment.status === 'success') cartHook.setCart([]);
+
+    const params = new URLSearchParams(window.location.search);
+    params.delete('payment');
+    params.delete('ref');
+    const qs = params.toString();
+    window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const openCheckout = () => { setCartOpen(false); setCheckoutOpen(true); };
   const closeCheckout = () => setCheckoutOpen(false);
@@ -484,6 +530,7 @@ export default function EuropePage() {
 
   return (
     <>
+      <PaymentBanner lang={lang} status={payment?.status} reference={payment?.reference} onClose={() => setPayment(null)} />
       <Nav lang={lang} setLang={setLang} cartCount={cartHook.count} onCartOpen={() => setCartOpen(true)} />
       {cartOpen && (
         <CartDrawer
