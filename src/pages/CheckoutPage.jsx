@@ -30,19 +30,35 @@ function StripeForm({ orderId, totalEur, onError }) {
 }
 
 // ─── CHECKOUT PAGE ────────────────────────────────────────
+const DELIVERY_MODES = [
+  { value: 'point_relais', icon: '🏪', label: 'Point Relais', delay: '3-5 jours ouvrés' },
+  { value: 'locker',       icon: '📦', label: 'Locker',       delay: '3-5 jours ouvrés' },
+  { value: 'domicile',     icon: '🏠', label: 'À domicile',   delay: '3-5 jours ouvrés' },
+];
+
 export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSuccess: onCheckoutDone }) {
   const [step, setStep]         = useState(1);
-  const [customer, setCustomer] = useState({ name: '', email: '', phone: '', address: '', city: '', zip: '', country: 'FR' });
+  const [customer, setCustomer] = useState({ firstname: '', lastname: '', email: '', phone: '', address: '', city: '', zip: '', country: 'FR' });
+  const [deliveryMode, setDeliveryMode] = useState('point_relais');
   const [relay, setRelay]       = useState(null);
   const [createdOrder, setCreatedOrder] = useState(null);
   const [busy, setBusy]         = useState(false);
   const [formError, setFormError] = useState('');
 
+  const isDomicile = deliveryMode === 'domicile';
+
   // ── Validation client ──
   const validateCustomer = () => {
-    if (!customer.name.trim())  return 'Veuillez entrer votre nom.';
+    if (!customer.firstname.trim()) return 'Veuillez entrer votre prénom.';
+    if (!customer.lastname.trim())  return 'Veuillez entrer votre nom.';
     if (!customer.email.trim() || !/\S+@\S+\.\S+/.test(customer.email)) return 'Email invalide.';
-    if (!relay)                  return 'Veuillez sélectionner un point relais Mondial Relay.';
+    if (isDomicile) {
+      if (!customer.address.trim()) return 'Veuillez entrer votre adresse.';
+      if (!customer.city.trim())    return 'Veuillez entrer votre ville.';
+      if (!customer.zip.trim())     return 'Veuillez entrer votre code postal.';
+    } else if (!relay) {
+      return 'Veuillez sélectionner un point relais Mondial Relay.';
+    }
     return null;
   };
 
@@ -56,17 +72,26 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
     try {
       const payload = {
         market: 'international',
-        customer_name:  customer.name,
+        customer_firstname: customer.firstname,
+        customer_lastname:  customer.lastname,
         customer_email: customer.email,
         customer_phone: customer.phone,
-        shipping_address: `${customer.address}, ${customer.zip} ${customer.city}, ${customer.country}`,
-        relay_id:   relay?.ID,
-        relay_name: relay?.Nom,
-        relay_city: relay?.Ville,
-        relay_country: relay?.Pays,
+        delivery_mode: deliveryMode,
+        shipping_country: customer.country,
         currency: 'EUR',
         items: cart.map(i => ({ product_id: i.id, quantity: i.qty, unit_price: i.price_eur })),
       };
+
+      if (isDomicile) {
+        payload.shipping_address = customer.address;
+        payload.shipping_city   = customer.city;
+        payload.shipping_zip    = customer.zip;
+      } else {
+        payload.relay_id      = relay?.ID;
+        payload.relay_name    = relay?.Nom;
+        payload.relay_city    = relay?.Ville;
+        payload.relay_country = relay?.Pays;
+      }
 
       const order = await createOrder(payload);
       setCreatedOrder(order);
@@ -153,8 +178,12 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                 <div>
-                  <label style={labelStyle}>Nom complet *</label>
-                  <input style={inputStyle} value={customer.name} onChange={e => setCustomer(p => ({ ...p, name: e.target.value }))} placeholder="Jean Dupont" />
+                  <label style={labelStyle}>Prénom *</label>
+                  <input style={inputStyle} value={customer.firstname} onChange={e => setCustomer(p => ({ ...p, firstname: e.target.value }))} placeholder="Jean" />
+                </div>
+                <div>
+                  <label style={labelStyle}>Nom *</label>
+                  <input style={inputStyle} value={customer.lastname} onChange={e => setCustomer(p => ({ ...p, lastname: e.target.value }))} placeholder="Dupont" />
                 </div>
                 <div>
                   <label style={labelStyle}>Email *</label>
@@ -176,21 +205,62 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                 </div>
               </div>
 
-              {/* Mondial Relay */}
+              {/* Mode de livraison */}
               <div style={{ marginTop: '2rem' }}>
-                <p style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '0.5rem' }}>
-                  Point relais Mondial Relay *
+                <p style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '0.8rem' }}>
+                  Mode de livraison *
                 </p>
-                {relay ? (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: '#e8f5e9', border: '0.5px solid #4caf50', marginBottom: '1rem' }}>
-                    <div>
-                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#2e7d32' }}>✓ {relay.Nom}</p>
-                      <p style={{ fontSize: 11, color: '#555' }}>{relay.Adresse1}, {relay.CP} {relay.Ville}</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.6rem' }}>
+                  {DELIVERY_MODES.map(m => {
+                    const active = deliveryMode === m.value;
+                    return (
+                      <button key={m.value} type="button"
+                        onClick={() => { setDeliveryMode(m.value); setRelay(null); setFormError(''); }}
+                        style={{
+                          padding: '14px 8px', textAlign: 'center', cursor: 'pointer', fontFamily: 'Jost,sans-serif',
+                          background: active ? '#3b190f' : '#fff',
+                          border: active ? '0.5px solid #3b190f' : '0.5px solid rgba(59,25,15,0.15)',
+                          color: active ? '#fdf6ec' : '#3b190f',
+                        }}>
+                        <div style={{ fontSize: 22, marginBottom: 4 }}>{m.icon}</div>
+                        <div style={{ fontSize: 10, letterSpacing: '0.08em', marginBottom: 2 }}>{m.label}</div>
+                        <div style={{ fontSize: 9, opacity: 0.65 }}>{m.delay}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Point relais / Locker ou adresse domicile */}
+              <div style={{ marginTop: '2rem' }}>
+                {isDomicile ? (
+                  <>
+                    <p style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '0.5rem' }}>
+                      Adresse de livraison *
+                    </p>
+                    <input style={inputStyle} value={customer.address} onChange={e => setCustomer(p => ({ ...p, address: e.target.value }))} placeholder="12 rue de la Paix" />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                      <input style={inputStyle} value={customer.zip} onChange={e => setCustomer(p => ({ ...p, zip: e.target.value }))} placeholder="Code postal" />
+                      <input style={inputStyle} value={customer.city} onChange={e => setCustomer(p => ({ ...p, city: e.target.value }))} placeholder="Ville" />
                     </div>
-                    <button onClick={() => setRelay(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: 11, textDecoration: 'underline' }}>Changer</button>
-                  </div>
+                  </>
                 ) : (
-                  <RelayPicker onSelect={setRelay} countryCode={customer.country} />
+                  <>
+                    <p style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '0.5rem' }}>
+                      {deliveryMode === 'locker' ? 'Locker Mondial Relay *' : 'Point relais Mondial Relay *'}
+                    </p>
+                    {relay ? (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: '#e8f5e9', border: '0.5px solid #4caf50', marginBottom: '1rem' }}>
+                        <div>
+                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#2e7d32' }}>✓ {relay.Nom}</p>
+                          <p style={{ fontSize: 11, color: '#555' }}>{relay.Adresse1}, {relay.CP} {relay.Ville}</p>
+                        </div>
+                        <button onClick={() => setRelay(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: 11, textDecoration: 'underline' }}>Changer</button>
+                      </div>
+                    ) : (
+                      <RelayPicker onSelect={setRelay} countryCode={customer.country} />
+                    )}
+                  </>
                 )}
               </div>
 
@@ -218,7 +288,7 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                   Commande {createdOrder.reference}
                 </p>
                 <p style={{ fontSize: 11, color: '#7a4f2d', marginTop: 4 }}>
-                  Livraison → {relay?.Nom}, {relay?.Ville}
+                  Livraison → {isDomicile ? `${customer.address}, ${customer.zip} ${customer.city}` : `${relay?.Nom}, ${relay?.Ville}`}
                 </p>
               </div>
 
@@ -247,9 +317,14 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                 </p>
               )}
               <p style={{ fontSize: 12, color: '#7a4f2d', lineHeight: 1.8, maxWidth: 320, margin: '0 auto 2rem' }}>
-                Un email de confirmation vous a été envoyé. Votre colis sera expédié en point relais.
+                Un email de confirmation vous a été envoyé. {isDomicile ? 'Votre colis sera livré à votre adresse.' : 'Votre colis sera expédié en point relais.'}
               </p>
-              {relay && (
+              {isDomicile ? (
+                <div style={{ background: '#f8cb78', padding: '1rem', marginBottom: '2rem', maxWidth: 320, margin: '0 auto 2rem' }}>
+                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#3b190f' }}>{customer.address}</p>
+                  <p style={{ fontSize: 11, color: '#7a4f2d' }}>{customer.zip} {customer.city}</p>
+                </div>
+              ) : relay && (
                 <div style={{ background: '#f8cb78', padding: '1rem', marginBottom: '2rem', maxWidth: 320, margin: '0 auto 2rem' }}>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 16, color: '#3b190f' }}>{relay.Nom}</p>
                   <p style={{ fontSize: 11, color: '#7a4f2d' }}>{relay.Adresse1}, {relay.CP} {relay.Ville}</p>

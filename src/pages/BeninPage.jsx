@@ -26,6 +26,7 @@ const T_BJ = {
     order_btn: 'Commander →', back_cart: '← Modifier le panier',
     total: 'Total', redirecting: 'Redirection…', pay_prefix: 'Payer ',
     err_name: 'Veuillez entrer votre nom.', err_phone: 'Veuillez entrer votre téléphone.',
+    err_phone_indicatif: "Merci d'ajouter l'indicatif de votre pays devant votre numéro (ex : +229 pour le Bénin, +33 pour la France).",
     nature_strip: 'La nature dans chaque texture',
     ticker: ['Eolekare', '·', 'Votre skincare aux parfums uniques', '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·'],
   },
@@ -42,6 +43,7 @@ const T_BJ = {
     order_btn: 'Order →', back_cart: '← Edit cart',
     total: 'Total', redirecting: 'Redirecting…', pay_prefix: 'Pay ',
     err_name: 'Please enter your name.', err_phone: 'Please enter your phone.',
+    err_phone_indicatif: 'Please add your country calling code before your number (e.g. +229 for Benin, +33 for France).',
     nature_strip: 'Nature in every texture',
     ticker: ['Eolekare', '·', 'Your skincare with unique scents', '·', '100% Natural', '·', 'Made in 🇧🇯', '·', 'For everyone', '·'],
   },
@@ -162,6 +164,8 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove }) {
   const handlePay = async () => {
     if (!customer.name.trim()) { setError(t.err_name); return; }
     if (!customer.phone.trim()) { setError(t.err_phone); return; }
+    const phoneDigits = customer.phone.replace(/[\s().-]/g, '');
+    if (!/^\+\d{8,15}$/.test(phoneDigits)) { setError(t.err_phone_indicatif); return; }
     setError('');
     setBusy(true);
     try {
