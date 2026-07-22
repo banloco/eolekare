@@ -39,6 +39,25 @@ function InfoRow({ label, value }) {
   );
 }
 
+/* ─── Lien WhatsApp Click-to-Chat pré-rempli avec le récap de commande ─── */
+function buildOrderWALink(order) {
+  const totalStr = order.currency === 'XOF'
+    ? `${Number(order.total).toLocaleString('fr-FR')} FCFA`
+    : `${Number(order.total).toFixed(2)} €`;
+  const lines = (order.items || []).map(i => `• ${i.product_name} ×${i.quantity}`).join('\n');
+  const address = order.shipping_address
+    ? `${order.shipping_address}, ${order.shipping_zip || ''} ${order.shipping_city || ''}`.trim()
+    : null;
+
+  const message = `Bonjour ${order.customer_name || ''}, ici Eolekare 👋\n\n`
+    + `Concernant votre commande ${order.reference} :\n${lines}\n\n`
+    + `Total : ${totalStr}\n`
+    + (address ? `📍 Adresse : ${address}\n` : '');
+
+  const phoneDigits = (order.customer_phone || '').replace(/\D/g, '');
+  return `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`;
+}
+
 export default function OrderDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -174,6 +193,21 @@ export default function OrderDetailPage() {
             <InfoRow label="Nom" value={order.customer_name} />
             <InfoRow label="Email" value={order.customer_email} />
             <InfoRow label="Téléphone" value={order.customer_phone} />
+            {!isEurope && order.customer_phone && (
+              <a
+                href={buildOrderWALink(order)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: '0.8rem',
+                  padding: '9px 18px', fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase',
+                  fontFamily: 'Jost, sans-serif', color: '#fdf6ec', background: '#25D366',
+                  textDecoration: 'none',
+                }}
+              >
+                💬 Contacter via WhatsApp
+              </a>
+            )}
           </div>
 
           {/* Livraison */}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FloatingFruits from '../components/FloatingFruits';
+import StockNotifyForm from '../components/StockNotifyForm';
 import CheckoutPage from './CheckoutPage';
 import CommunitySection from '../components/CommunitySection';
 import ReviewsSection from '../components/ReviewsSection';
@@ -12,11 +13,16 @@ import { formatEUR } from '../lib/format';
 const CART_KEY = 'eolekare_eu_cart';
 
 const T = {
-  fr: { eyebrow:'100% Naturel · Made in 🇧🇯 · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Notre collection', story:'Notre histoire', howto:'L\' utilisation', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé · Shopify', back:'← Retour',
+  fr: { eyebrow:'100% Naturel · Made in 🇧🇯 · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Notre collection', story:'Notre histoire', howto:'L\' utilisation', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé', back:'← Retour',
     pay_success:'Paiement confirmé ! Merci pour votre commande', pay_failed:'Le paiement a échoué. Vous pouvez réessayer.', pay_cancelled:'Paiement annulé.', pay_error:'Une erreur est survenue pendant le paiement.', pay_ref:'Référence', pay_close:'✕' },
-  en: { eyebrow:'100% Natural · Made in 🇧🇯 · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Our collection', story:'Our story', howto:'How to use', buy:'Add to cart', added:'Added', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment · Shopify', back:'← Back',
+  en: { eyebrow:'100% Natural · Made in 🇧🇯 · For everyone', tagline:'Your skincare with unique scents', discover:'Discover the collection', collection:'Our collection', story:'Our story', howto:'How to use', buy:'Add to cart', added:'Added', soldout:'Sold out', checkout:'Checkout →', nav_cart:'Cart', close:'Close', qty:'Quantity', total:'Total', empty:'Your cart is empty', upsell:'You might also like', details:'View details', inCart:'in cart', modify:'Edit', secure:'Secure payment', back:'← Back',
     pay_success:'Payment confirmed! Thank you for your order', pay_failed:'Payment failed. You can try again.', pay_cancelled:'Payment cancelled.', pay_error:'An error occurred during payment.', pay_ref:'Reference', pay_close:'✕' },
 };
+
+/* ─── Nom produit selon la langue (fallback FR si pas de traduction) ─── */
+function displayName(p, lang) {
+  return lang === 'en' ? (p.name_en || p.name) : p.name;
+}
 
 /* ─── PAYMENT STATUS BANNER (retour Stripe / FedaPay) ─── */
 function PaymentBanner({ lang, status, reference, onClose }) {
@@ -189,10 +195,10 @@ function CartDrawer({ lang, cart, total, onUpdate, onRemove, onClose, products, 
                 {cart.map(item => (
                   <div key={item.id} style={{ display: 'flex', gap: '1rem', paddingBottom: '1.2rem', borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
                     <div style={{ width: 70, height: 70, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
-                      {item.images?.[0] && <img src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                      {item.images?.[0] && <img src={item.images[0]} alt={displayName(item, lang)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName(item, lang)}</p>
                       <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d', marginBottom: 8 }}>{formatEUR(item.price_eur)}</p>
                       {/* Sélecteur quantité */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -216,10 +222,10 @@ function CartDrawer({ lang, cart, total, onUpdate, onRemove, onClose, products, 
                     {upsell.map(p => (
                       <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem', border: '0.5px solid rgba(59,25,15,0.08)', background: '#fff' }}>
                         <div style={{ width: 48, height: 48, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
-                          {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                          {p.images?.[0] && <img src={p.images[0]} alt={displayName(p, lang)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                         </div>
                         <div style={{ flex: 1 }}>
-                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{p.name}</p>
+                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{displayName(p, lang)}</p>
                           <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 13, fontStyle: 'italic', color: '#7a4f2d' }}>{formatEUR(p.price_eur)}</p>
                         </div>
                         <button onClick={() => { onUpdate && null; }} style={{ background: '#3b190f', border: 'none', cursor: 'pointer', color: '#fdf6ec', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', padding: '7px 12px', whiteSpace: 'nowrap' }}
@@ -269,7 +275,7 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
           {/* Image */}
           <div style={{ height: 400, background: '#f8cb78', overflow: 'hidden', position: 'relative' }}>
             {product.images?.[0]
-              ? <img src={product.images[0]} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              ? <img src={product.images[0]} alt={displayName(product, lang)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, opacity: 0.3 }}>🫙</div>
             }
             {product.images?.[1] && (
@@ -281,7 +287,7 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
           {/* Infos */}
           <div style={{ padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {product.format && <p style={{ fontSize: 9, letterSpacing: '0.25em', color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{product.format}</p>}
-            <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 30, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>{product.name}</h2>
+            <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 30, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>{displayName(product, lang)}</h2>
             <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85, marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
               {lang === 'en'
                 ? (product.description_short_en || product.description_long_en || product.description_short || product.description_long || '—')
@@ -320,7 +326,10 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
                 </button>
               </div>
             ) : (
-              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.35)', textTransform: 'uppercase' }}>{t.soldout}</p>
+              <div>
+                <p style={{ fontSize: 10, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.35)', textTransform: 'uppercase', marginBottom: '0.6rem' }}>{t.soldout}</p>
+                <StockNotifyForm productId={product.id} lang={lang} />
+              </div>
             )}
 
             {product.stock > 0 && product.stock <= 5 && (
@@ -393,7 +402,7 @@ function Products({ lang, cartHook }) {
                 {/* Image cliquable → modal */}
                 <div onClick={() => setModal(p)} style={{ height: 240, overflow: 'hidden', background: '#f8cb78', position: 'relative', cursor: 'pointer' }}>
                   {p.images?.[0]
-                    ? <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.6s' }}
+                    ? <img src={p.images[0]} alt={displayName(p, lang)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.6s' }}
                         onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = ''} />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, fontSize: 48 }}>🫙</div>
                   }
@@ -412,13 +421,13 @@ function Products({ lang, cartHook }) {
                 </div>
                 <div style={{ padding: '1.8rem 1.5rem' }}>
                   <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format || 'Skincare · Haircare · Corps'}</p>
-                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{p.name}</p>
+                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{displayName(p, lang)}</p>
                   <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>
                     {(() => { const d = lang === 'en' ? (p.description_short_en || p.description_short) : p.description_short; return d ? d.slice(0, 80) + (d.length > 80 ? '…' : '') : ''; })()}
                   </p>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatEUR(p.price_eur)}</p>
                   {p.stock === 0
-                    ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{t.soldout}</span>
+                    ? <StockNotifyForm productId={p.id} lang={lang} />
                     : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: isAdded ? '#3b190f' : '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
                         {isAdded ? `✓ ${t.added} →` : inCart ? `× ${inCart.qty} · ${t.buy} →` : `${t.buy} →`}
                       </button>

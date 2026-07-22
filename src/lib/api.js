@@ -101,6 +101,18 @@ export async function createOrder(payload) {
   return request('POST', '/orders', payload);
 }
 
+// ── LISTE D'ATTENTE ──────────────────────────────────────
+
+export async function submitWaitlist(payload) {
+  return request('POST', '/waitlist', payload);
+}
+
+// ── ALERTE RETOUR EN STOCK ───────────────────────────────
+
+export async function submitStockNotification(payload) {
+  return request('POST', '/stock-notifications', payload);
+}
+
 // ── COMMANDES ADMIN ──────────────────────────────────────
 
 export async function getAdminOrders(params = {}) {

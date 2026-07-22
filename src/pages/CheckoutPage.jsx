@@ -52,6 +52,9 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
     if (!customer.firstname.trim()) return 'Veuillez entrer votre prénom.';
     if (!customer.lastname.trim())  return 'Veuillez entrer votre nom.';
     if (!customer.email.trim() || !/\S+@\S+\.\S+/.test(customer.email)) return 'Email invalide.';
+    if (!customer.phone.trim()) return 'Veuillez entrer votre numéro de téléphone.';
+    const phoneDigits = customer.phone.replace(/[\s().-]/g, '');
+    if (!/^\+\d{8,15}$/.test(phoneDigits)) return "Le numéro de téléphone doit inclure l'indicatif de votre pays (ex : +33 pour la France).";
     if (isDomicile) {
       if (!customer.address.trim()) return 'Veuillez entrer votre adresse.';
       if (!customer.city.trim())    return 'Veuillez entrer votre ville.';
@@ -190,8 +193,8 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                   <input style={inputStyle} type="email" value={customer.email} onChange={e => setCustomer(p => ({ ...p, email: e.target.value }))} placeholder="jean@exemple.fr" />
                 </div>
                 <div>
-                  <label style={labelStyle}>Téléphone</label>
-                  <input style={inputStyle} type="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+33 6 00 00 00 00" />
+                  <label style={labelStyle}>Téléphone *</label>
+                  <input style={inputStyle} type="tel" required value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+33 6 00 00 00 00" />
                 </div>
                 <div>
                   <label style={labelStyle}>Pays</label>
@@ -290,6 +293,22 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                 <p style={{ fontSize: 11, color: '#7a4f2d', marginTop: 4 }}>
                   Livraison → {isDomicile ? `${customer.address}, ${customer.zip} ${customer.city}` : `${relay?.Nom}, ${relay?.Ville}`}
                 </p>
+              </div>
+
+              {/* Détail du montant avant paiement */}
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', fontSize: 12, color: '#7a4f2d' }}>
+                  <span>Sous-total</span>
+                  <span>{formatEUR(createdOrder.subtotal)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', fontSize: 12, color: '#7a4f2d', borderBottom: '0.5px solid rgba(59,25,15,0.1)' }}>
+                  <span>Livraison Mondial Relay</span>
+                  <span>{formatEUR(createdOrder.shipping_cost)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0 0' }}>
+                  <span style={{ fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a4f2d' }}>Total</span>
+                  <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#3b190f' }}>{formatEUR(createdOrder.total)}</span>
+                </div>
               </div>
 
               <StripeForm

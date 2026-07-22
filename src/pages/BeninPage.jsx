@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FloatingFruits from '../components/FloatingFruits';
+import StockNotifyForm from '../components/StockNotifyForm';
 import CommunitySection from '../components/CommunitySection';
 import ReviewsSection from '../components/ReviewsSection';
 import StorySection from '../components/StorySection';
@@ -14,7 +15,7 @@ const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const T_BJ = {
   fr: {
-    ingredients: 'Ingrédients', buy: 'Ajouter au panier', added: '✓ Ajouté →', soldout: 'Épuisé', qty: 'Quantité', inCart: 'dans le panier', details: 'Voir les détails →', loading: 'Chargement…',
+    ingredients: 'Ingrédients', buy: 'Ajouter au panier', added: '✓ Ajouté →', soldout: 'Épuisé', qty: 'Quantité', inCart: 'dans le panier', details: 'Voir les détails →', loading: 'Chargement…', upsell: 'Vous aimeriez aussi',
     eyebrow: '100% Naturel · Made in 🇧🇯 · Pour tous',
     tagline: 'Votre skincare aux parfums uniques',
     discover: 'Découvrir la collection',
@@ -31,7 +32,7 @@ const T_BJ = {
     ticker: ['Eolekare', '·', 'Votre skincare aux parfums uniques', '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·'],
   },
   en: {
-    ingredients: 'Ingredients', buy: 'Add to cart', added: '✓ Added →', soldout: 'Sold out', qty: 'Quantity', inCart: 'in cart', details: 'View details →', loading: 'Loading…',
+    ingredients: 'Ingredients', buy: 'Add to cart', added: '✓ Added →', soldout: 'Sold out', qty: 'Quantity', inCart: 'in cart', details: 'View details →', loading: 'Loading…', upsell: 'You might also like',
     eyebrow: '100% Natural · Made in 🇧🇯 · For everyone',
     tagline: 'Your skincare with unique scents',
     discover: 'Discover the collection',
@@ -150,13 +151,14 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
 }
 
 /* ─── PANIER / CHECKOUT ───────────────────────────────────── */
-function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove }) {
+function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products = [], onAdd }) {
   const t = T_BJ[lang];
   const [step, setStep]     = useState('cart'); // 'cart' | 'checkout'
   const [customer, setCustomer] = useState({ name: '', phone: '', address: '' });
   const [busy, setBusy]     = useState(false);
   const [error, setError]   = useState('');
   const total = cart.reduce((s, i) => s + i.price_fcfa * i.qty, 0);
+  const upsell = products.filter(p => !cart.find(c => c.id === p.id)).slice(0, 3);
 
   const inputStyle = { width: '100%', padding: '10px 12px', border: '0.5px solid rgba(59,25,15,0.15)', background: '#fff', fontSize: 12, color: '#3b190f', outline: 'none', fontFamily: 'Jost,sans-serif', boxSizing: 'border-box', marginBottom: '0.8rem' };
   const labelStyle = { display: 'block', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 4 };
@@ -209,29 +211,54 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove }) {
             </div>
           ) : step === 'cart' ? (
             /* ── ÉTAPE 1 : liste ── */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              {cart.map(item => (
-                <div key={item.id} style={{ display: 'flex', gap: '1rem', paddingBottom: '1.2rem', borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
-                  <div style={{ width: 64, height: 64, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
-                    {item.images?.[0] && <img src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', marginBottom: 2 }}>{item.name}</p>
-                    <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d' }}>{formatFCFA(item.price_fcfa)}</p>
-                  </div>
-                  {/* Sélecteur quantité */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-                    <button onClick={() => onRemove(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'rgba(59,25,15,0.3)', lineHeight: 1 }}
-                      onMouseEnter={e => e.currentTarget.style.color = '#c0392b'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(59,25,15,0.3)'}>✕</button>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <button onClick={() => onUpdate(item.id, item.qty - 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                      <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', minWidth: 18, textAlign: 'center' }}>{item.qty}</span>
-                      <button onClick={() => onUpdate(item.id, item.qty + 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                {cart.map(item => (
+                  <div key={item.id} style={{ display: 'flex', gap: '1rem', paddingBottom: '1.2rem', borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
+                    <div style={{ width: 64, height: 64, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
+                      {item.images?.[0] && <img src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', marginBottom: 2 }}>{item.name}</p>
+                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d' }}>{formatFCFA(item.price_fcfa)}</p>
+                    </div>
+                    {/* Sélecteur quantité */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                      <button onClick={() => onRemove(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'rgba(59,25,15,0.3)', lineHeight: 1 }}
+                        onMouseEnter={e => e.currentTarget.style.color = '#c0392b'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(59,25,15,0.3)'}>✕</button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button onClick={() => onUpdate(item.id, item.qty - 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                        <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', minWidth: 18, textAlign: 'center' }}>{item.qty}</span>
+                        <button onClick={() => onUpdate(item.id, item.qty + 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+
+              {/* Suggestions */}
+              {upsell.length > 0 && (
+                <div style={{ marginTop: '2rem' }}>
+                  <p style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '1rem' }}>{t.upsell}</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {upsell.map(p => (
+                      <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem', border: '0.5px solid rgba(59,25,15,0.08)', background: '#fff' }}>
+                        <div style={{ width: 48, height: 48, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
+                          {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{p.name}</p>
+                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 13, fontStyle: 'italic', color: '#7a4f2d' }}>{formatFCFA(p.price_fcfa)}</p>
+                        </div>
+                        <button onClick={() => onAdd && onAdd(p)} style={{ fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#3b190f', background: 'none', border: '0.5px solid rgba(59,25,15,0.25)', padding: '6px 10px', cursor: 'pointer', fontFamily: 'Jost,sans-serif' }}>
+                          + {t.buy}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             /* ── ÉTAPE 2 : infos client + paiement FedaPay ── */
             <div>
@@ -372,7 +399,10 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
                 </button>
               </div>
             ) : (
-              <p style={{ fontSize: 10, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.35)', textTransform: 'uppercase' }}>{t.soldout}</p>
+              <div>
+                <p style={{ fontSize: 10, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.35)', textTransform: 'uppercase', marginBottom: '0.6rem' }}>{t.soldout}</p>
+                <StockNotifyForm productId={product.id} lang={lang} />
+              </div>
             )}
             {product.stock > 0 && product.stock <= 5 && (
               <p style={{ fontSize: 10, color: '#e67e22', marginTop: '0.8rem', letterSpacing: '0.08em' }}>{lang === 'fr' ? `⚠ Plus que ${product.stock} en stock` : `⚠ Only ${product.stock} in stock`}</p>
@@ -462,7 +492,7 @@ function Products({ cart, setCart, lang = 'fr' }) {
                   </p>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatFCFA(p.price_fcfa)}</p>
                   {p.stock === 0
-                      ? <span style={{ fontSize: 9, letterSpacing: '0.2em', color: 'rgba(59,25,15,0.3)', textTransform: 'uppercase' }}>{lang === 'fr' ? 'Épuisé' : 'Sold out'}</span>
+                      ? <StockNotifyForm productId={p.id} lang={lang} />
                       : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
                           {isAdded ? (lang === 'fr' ? '✓ Ajouté →' : '✓ Added →') : inCart ? `× ${inCart.qty} · ${lang === 'fr' ? 'Ajouter →' : 'Add →'}` : (lang === 'fr' ? 'Ajouter au panier →' : 'Add to cart →')}
                       </button>
@@ -535,12 +565,21 @@ export default function BeninPage() {
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [lang, setLang] = useState('fr');
+  const { products } = useProducts('benin');
 
   const updateQty = (id, qty) => {
     if (qty <= 0) setCart(prev => prev.filter(i => i.id !== id));
     else setCart(prev => prev.map(i => i.id === id ? { ...i, qty } : i));
   };
   const removeItem = (id) => setCart(prev => prev.filter(i => i.id !== id));
+  const addItem = (p) => {
+    if (p.stock === 0) return;
+    setCart(prev => {
+      const exists = prev.find(i => i.id === p.id);
+      if (exists) return prev.map(i => i.id === p.id ? { ...i, qty: i.qty + 1 } : i);
+      return [...prev, { ...p, qty: 1 }];
+    });
+  };
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
   useSEO({
@@ -557,7 +596,7 @@ export default function BeninPage() {
   return (
     <>
       <Nav lang={lang} setLang={setLang} cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
-      {cartOpen && <CartDrawer lang={lang} cart={cart} onClose={() => setCartOpen(false)} onUpdate={updateQty} onRemove={removeItem} />}
+      {cartOpen && <CartDrawer lang={lang} cart={cart} onClose={() => setCartOpen(false)} onUpdate={updateQty} onRemove={removeItem} products={products} onAdd={addItem} />}
       <Hero lang={lang} onCartOpen={() => setCartOpen(true)} />
       {/* Double strip */}
       <div style={{ display: 'flex', flexDirection: 'column', background: '#3b190f' }}>

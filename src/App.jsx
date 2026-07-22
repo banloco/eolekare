@@ -10,6 +10,7 @@ import EuropePage from './pages/EuropePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import LegalPage from './pages/LegalPage';
+import WaitlistPage from './pages/WaitlistPage';
 
 // Pages admin
 import LoginPage from './pages/admin/LoginPage';
@@ -21,18 +22,21 @@ import OrderDetailPage from './pages/admin/OrderDetailPage';
 import UsersPage from './pages/admin/UsersPage';
 import ExpensesPage from './pages/admin/ExpensesPage';
 
+// Mode liste d'attente pré-lancement : masque tout le site (sauf /admin) derrière WaitlistPage.
+const MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
+
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* ── Vitrine ── */}
-          <Route path="/"        element={<RegionSelector />} />
-          <Route path="/benin"   element={<BeninPage />} />
-          <Route path="/europe"  element={<EuropePage />} />
-          <Route path="/about"   element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/legal"   element={<LegalPage />} />
+          {/* ── Vitrine (masquée derrière la liste d'attente si VITE_MAINTENANCE_MODE=true) ── */}
+          <Route path="/"        element={MAINTENANCE_MODE ? <WaitlistPage /> : <RegionSelector />} />
+          <Route path="/benin"   element={MAINTENANCE_MODE ? <WaitlistPage /> : <BeninPage />} />
+          <Route path="/europe"  element={MAINTENANCE_MODE ? <WaitlistPage /> : <EuropePage />} />
+          <Route path="/about"   element={MAINTENANCE_MODE ? <WaitlistPage /> : <AboutPage />} />
+          <Route path="/contact" element={MAINTENANCE_MODE ? <WaitlistPage /> : <ContactPage />} />
+          <Route path="/legal"   element={MAINTENANCE_MODE ? <WaitlistPage /> : <LegalPage />} />
 
           {/* ── Admin ── */}
           <Route path="/admin" element={<LoginPage />} />

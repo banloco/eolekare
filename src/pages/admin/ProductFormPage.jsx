@@ -5,6 +5,7 @@ import { getProduct, createProduct, updateProduct, uploadImage, deleteImage } fr
 
 const EMPTY = {
   name: '',
+  name_en: '',
   format: '',
   sku: '',
   description_short: '',
@@ -45,6 +46,7 @@ export default function ProductFormPage() {
     getProduct(id)
       .then(p => setForm({
         name:                 p.name || '',
+        name_en:              p.name_en || '',
         format:               p.format || '',
         sku:                  p.sku || '',
         description_short:    p.description_short || '',
@@ -118,6 +120,7 @@ export default function ProductFormPage() {
     try {
       const payload = {
         name:                 form.name.trim(),
+        name_en:              form.name_en.trim(),
         format:               form.format.trim(),
         sku:                  form.sku.trim(),
         description_short:    form.description_short.trim(),
@@ -221,6 +224,12 @@ export default function ProductFormPage() {
               <Field label="Nom du produit *">
                 <input required value={form.name} onChange={e => set('name', e.target.value)}
                   placeholder="ex: Beurre Mangue" style={inputStyle}
+                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+              </Field>
+              <Field label="Nom du produit (anglais)">
+                <input value={form.name_en} onChange={e => set('name_en', e.target.value)}
+                  placeholder="ex: Mango Butter (laisse vide pour reprendre le nom FR)" style={inputStyle}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
