@@ -7,20 +7,20 @@ const PRODUCT_TYPES = ['Mangue 100ml', 'Avocat 100ml', 'Coco 100ml', 'Mangue 500
 
 const inputStyle = {
   width: '100%', padding: '12px 14px', border: '1px solid rgba(255,255,255,0.3)',
-  background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 13, outline: 'none',
+  background: 'rgba(255,255,255,0.1)', color: '#000', fontSize: 13, outline: 'none',
   fontFamily: 'inherit', boxSizing: 'border-box',
 };
 
 const labelStyle = {
   display: 'block', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
-  color: 'rgba(255,255,255,0.6)', marginBottom: 6,
+  color: 'rgba(0,0,0,0.6)', marginBottom: 6,
 };
 
 function ChoiceButton({ active, onClick, children }) {
   return (
     <button type="button" onClick={onClick} style={{
       padding: '10px 16px', fontSize: 12, cursor: 'pointer', border: '1px solid rgba(255,255,255,0.3)',
-      background: active ? '#fff' : 'rgba(255,255,255,0.1)', color: active ? '#3b190f' : '#fff',
+      background: active ? '#fff' : 'rgba(255,255,255,0.1)', color: '#000',
       transition: 'all 0.25s', borderRadius: 3,
     }}>
       {children}
@@ -75,21 +75,21 @@ export default function WaitlistPage() {
 
       <div className="relative z-[3] flex flex-col items-center" style={{ minHeight: '100vh', padding: '4rem 1.5rem' }}>
 
-        <p style={{ fontFamily: '"Brown Sugar",cursive', fontSize: 'clamp(32px,6vw,60px)', fontWeight: 400, letterSpacing: '0.05em', color: '#fff', lineHeight: 1.1, textShadow: '0 2px 20px rgba(59,25,15,0.3)', marginBottom: '0.3rem', textAlign: 'center' }}>
+        <p style={{ fontFamily: '"Brown Sugar",cursive', fontSize: 'clamp(32px,6vw,60px)', fontWeight: 400, letterSpacing: '0.05em', color: '#000', lineHeight: 1.1, textShadow: '0 2px 20px rgba(59,25,15,0.3)', marginBottom: '0.3rem', textAlign: 'center' }}>
           Eolekare
         </p>
-        <p style={{ fontFamily: '"Montserrat",sans-serif', fontSize: 11, letterSpacing: '0.35em', fontWeight: 300, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>by Eoleeg</p>
+        <p style={{ fontFamily: '"Montserrat",sans-serif', fontSize: 11, letterSpacing: '0.35em', fontWeight: 300, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>by Eoleeg</p>
 
-        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(20px,3vw,28px)', fontStyle: 'italic', color: '#fff', maxWidth: 480, lineHeight: 1.5, marginBottom: '0.6rem', textAlign: 'center' }}>
-          Le lancement arrive bientôt
+        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(20px,3vw,28px)', fontStyle: 'italic', color: '#000', maxWidth: 480, lineHeight: 1.5, marginBottom: '0.6rem', textAlign: 'center' }}>
+          Nos stocks partent très vite.
         </p>
-        <p style={{ fontSize: 12, letterSpacing: '0.05em', fontWeight: 300, color: 'rgba(255,255,255,0.65)', maxWidth: 420, lineHeight: 1.7, marginBottom: '2.5rem', textAlign: 'center' }}>
-          Dites-nous ce qui vous intéresse, nous vous prévenons dès l'ouverture.
+        <p style={{ fontSize: 12, letterSpacing: '0.05em', fontWeight: 300, color: 'rgba(0,0,0,0.65)', maxWidth: 420, lineHeight: 1.7, marginBottom: '2.5rem', textAlign: 'center' }}>
+          Précommandez pour être sûr d'avoir le vôtre. Dites-nous ce qui vous intéresse, nous vous prévenons dès l'ouverture.
         </p>
 
         {done ? (
           <div style={{ maxWidth: 420, textAlign: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 4, padding: '2.5rem 2rem' }}>
-            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#fff', lineHeight: 1.6 }}>
+            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#000', lineHeight: 1.6 }}>
               Nous avons bien enregistré vos envies, nous revenons vers vous au plus vite.
             </p>
           </div>
@@ -108,9 +108,9 @@ export default function WaitlistPage() {
               value={form.product_type}
               onChange={(e) => update('product_type')(e.target.value)}
             >
-              <option value="" disabled style={{ color: '#3b190f' }}>Choisissez un produit</option>
+              <option value="" disabled style={{ color: '#000' }}>Choisissez un produit</option>
               {PRODUCT_TYPES.map((p) => (
-                <option key={p} value={p} style={{ color: '#3b190f' }}>{p}</option>
+                <option key={p} value={p} style={{ color: '#000' }}>{p}</option>
               ))}
             </select>
 
@@ -126,7 +126,7 @@ export default function WaitlistPage() {
             {error && <p style={{ color: '#ffb3b3', fontSize: 12, marginBottom: '1rem' }}>{error}</p>}
 
             <button type="submit" disabled={busy} style={{
-              width: '100%', padding: 14, background: busy ? 'rgba(255,255,255,0.4)' : '#fff', color: '#3b190f',
+              width: '100%', padding: 14, background: busy ? 'rgba(255,255,255,0.4)' : '#fff', color: '#000',
               border: 'none', cursor: busy ? 'not-allowed' : 'pointer', fontSize: 11, letterSpacing: '0.25em',
               fontWeight: 500, textTransform: 'uppercase', borderRadius: 3,
             }}>
@@ -135,7 +135,7 @@ export default function WaitlistPage() {
           </form>
         )}
 
-        <p style={{ marginTop: '3rem', fontSize: 9, letterSpacing: '0.18em', fontWeight: 300, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>
+        <p style={{ marginTop: '3rem', fontSize: 9, letterSpacing: '0.18em', fontWeight: 300, color: 'rgba(0,0,0,0.3)', textTransform: 'uppercase' }}>
           © 2026 Eolekare by Eoleeg &nbsp;·&nbsp; Instagram @eolekare
         </p>
       </div>
