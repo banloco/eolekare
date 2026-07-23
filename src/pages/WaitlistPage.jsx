@@ -3,7 +3,7 @@ import FloatingFruits from '../components/FloatingFruits';
 import { useSEO } from '../hooks/useSEO';
 import { submitWaitlist } from '../lib/api';
 
-const PRODUCT_TYPES = ['Mangue 100ml', 'Avocat 100ml', 'Mangue 500ml', 'Avocat 500ml'];
+const PRODUCT_TYPES = ['Mangue 100ml', 'Avocat 100ml', 'Coco 100ml', 'Mangue 500ml', 'Avocat 500ml', 'Coco 500ml', 'Pack découverte'];
 
 const inputStyle = {
   width: '100%', padding: '12px 14px', border: '1px solid rgba(255,255,255,0.3)',
@@ -104,11 +104,16 @@ export default function WaitlistPage() {
             </div>
 
             <label style={labelStyle}>Beurre souhaité</label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.4rem' }}>
+            <select
+              style={{ ...inputStyle, marginBottom: '1.4rem' }}
+              value={form.product_type}
+              onChange={(e) => update('product_type')(e.target.value)}
+            >
+              <option value="" disabled style={{ color: '#3b190f' }}>Choisissez un produit</option>
               {PRODUCT_TYPES.map((p) => (
-                <ChoiceButton key={p} active={form.product_type === p} onClick={() => update('product_type')(p)}>{p}</ChoiceButton>
+                <option key={p} value={p} style={{ color: '#3b190f' }}>{p}</option>
               ))}
-            </div>
+            </select>
 
             <label style={labelStyle}>Prénom</label>
             <input style={{ ...inputStyle, marginBottom: '1.2rem' }} value={form.firstname} onChange={(e) => update('firstname')(e.target.value)} placeholder="Votre prénom" />
