@@ -89,9 +89,8 @@ export default function WaitlistPage() {
 
         {done ? (
           <div style={{ maxWidth: 420, textAlign: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 4, padding: '2.5rem 2rem' }}>
-            <p style={{ fontSize: 32, marginBottom: '1rem' }}>🎉</p>
             <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#fff', lineHeight: 1.6 }}>
-              Nous avons bien enregistré vos souhaits/envies, nous revenons vers vous au plus vite.
+              Nous avons bien enregistré vos envies, nous revenons vers vous au plus vite.
             </p>
           </div>
         ) : (
