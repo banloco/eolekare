@@ -205,6 +205,17 @@ export async function deleteExpense(id) {
   return request('DELETE', `/admin/expenses/${id}`);
 }
 
+// ── LISTE D'ATTENTE ──────────────────────────────────────
+
+export async function getAdminWaitlist(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return request('GET', `/admin/waitlist${qs ? '?' + qs : ''}`);
+}
+
+export async function deleteWaitlistSignup(id) {
+  return request('DELETE', `/admin/waitlist/${id}`);
+}
+
 // ── PAIEMENTS ────────────────────────────────────────────
 
 export async function fedapayCreateTransaction(orderId) {

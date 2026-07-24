@@ -21,6 +21,7 @@ import OrdersPage from './pages/admin/OrdersPage';
 import OrderDetailPage from './pages/admin/OrderDetailPage';
 import UsersPage from './pages/admin/UsersPage';
 import ExpensesPage from './pages/admin/ExpensesPage';
+import AdminWaitlistPage from './pages/admin/WaitlistPage';
 
 // Mode liste d'attente pré-lancement : masque tout le site (sauf /admin) derrière WaitlistPage.
 const MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
@@ -61,6 +62,9 @@ export default function App() {
           } />
           <Route path="/admin/expenses" element={
             <ProtectedRoute><ExpensesPage /></ProtectedRoute>
+          } />
+          <Route path="/admin/waitlist" element={
+            <ProtectedRoute><AdminWaitlistPage /></ProtectedRoute>
           } />
           <Route path="/admin/users" element={
             <ProtectedRoute><UsersPage /></ProtectedRoute>

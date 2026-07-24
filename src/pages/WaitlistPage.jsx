@@ -36,7 +36,7 @@ export default function WaitlistPage() {
     lang: 'fr',
   });
 
-  const [form, setForm] = useState({ zone: '', product_type: '', firstname: '', phone: '', instagram: '' });
+  const [form, setForm] = useState({ zone: '', product_type: '', firstname: '', email: '', phone: '', instagram: '' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
@@ -48,6 +48,7 @@ export default function WaitlistPage() {
     if (!form.zone) { setError('Merci de choisir votre zone (Bénin ou Europe).'); return; }
     if (!form.product_type) { setError('Merci de choisir le beurre qui vous intéresse.'); return; }
     if (!form.firstname.trim()) { setError('Merci de renseigner votre prénom.'); return; }
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) { setError('Merci de renseigner un email valide.'); return; }
     if (!form.phone.trim()) { setError('Merci de renseigner votre numéro de téléphone / WhatsApp.'); return; }
     setError('');
     setBusy(true);
@@ -80,9 +81,11 @@ export default function WaitlistPage() {
         </p>
         <p style={{ fontFamily: '"Montserrat",sans-serif', fontSize: 11, letterSpacing: '0.35em', fontWeight: 300, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>by Eoleeg</p>
 
-        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(20px,3vw,28px)', fontStyle: 'italic', color: '#000', maxWidth: 480, lineHeight: 1.5, marginBottom: '0.6rem', textAlign: 'center' }}>
-          Nos stocks partent très vite.
-        </p>
+        {!done && (
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(20px,3vw,28px)', fontStyle: 'italic', color: '#000', maxWidth: 480, lineHeight: 1.5, marginBottom: '0.6rem', textAlign: 'center' }}>
+            Nos stocks partent très vite.
+          </p>
+        )}
         <p style={{ fontSize: 12, letterSpacing: '0.05em', fontWeight: 300, color: 'rgba(0,0,0,0.65)', maxWidth: 420, lineHeight: 1.7, marginBottom: '2.5rem', textAlign: 'center' }}>
           Précommandez pour être sûr d'avoir le vôtre. Dites-nous ce qui vous intéresse, nous vous prévenons dès l'ouverture.
         </p>
@@ -116,6 +119,9 @@ export default function WaitlistPage() {
 
             <label style={labelStyle}>Prénom</label>
             <input style={{ ...inputStyle, marginBottom: '1.2rem' }} value={form.firstname} onChange={(e) => update('firstname')(e.target.value)} placeholder="Votre prénom" />
+
+            <label style={labelStyle}>Email</label>
+            <input style={{ ...inputStyle, marginBottom: '1.2rem' }} type="email" value={form.email} onChange={(e) => update('email')(e.target.value)} placeholder="vous@exemple.com" />
 
             <label style={labelStyle}>Téléphone / WhatsApp</label>
             <input style={{ ...inputStyle, marginBottom: '1.2rem' }} type="tel" value={form.phone} onChange={(e) => update('phone')(e.target.value)} placeholder="+229 00 00 00 00" />

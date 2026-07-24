@@ -6,6 +6,7 @@ const NAV = [
   { to: '/admin/dashboard', icon: '▦', label: 'Vue d\'ensemble' },
   { to: '/admin/orders',    icon: '◻', label: 'Commandes' },
   { to: '/admin/expenses',  icon: '◻', label: 'Dépenses' },
+  { to: '/admin/waitlist',  icon: '◻', label: "Liste d'attente" },
   { to: '/admin/users',     icon: '◻', label: 'Utilisateurs' },
   { to: '/admin/products',  icon: '◈', label: 'Produits' },
   { to: '/admin/products/new', icon: '+', label: 'Ajouter produit' },
