@@ -19,8 +19,9 @@ const labelStyle = {
 function ChoiceButton({ active, onClick, children }) {
   return (
     <button type="button" onClick={onClick} style={{
-      padding: '10px 16px', fontSize: 12, cursor: 'pointer', border: '1px solid rgba(255,255,255,0.3)',
-      background: active ? '#fff' : 'rgba(255,255,255,0.1)', color: '#000',
+      padding: '10px 16px', fontSize: 12, cursor: 'pointer',
+      border: active ? '2px solid #3b190f' : '1px solid rgba(0,0,0,0.2)',
+      background: '#fff', color: '#000',
       transition: 'all 0.25s', borderRadius: 3,
     }}>
       {children}
@@ -101,13 +102,13 @@ export default function WaitlistPage() {
 
             <label style={labelStyle}>Votre zone</label>
             <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.4rem' }}>
-              <ChoiceButton style={{ background: '#fff'}} active={form.zone === 'benin'} onClick={() => update('zone')('benin')}>Bénin</ChoiceButton>
-              <ChoiceButton style={{ background: '#fff'}} active={form.zone === 'international'} onClick={() => update('zone')('international')}>Europe</ChoiceButton>
+              <ChoiceButton active={form.zone === 'benin'} onClick={() => update('zone')('benin')}>Bénin</ChoiceButton>
+              <ChoiceButton active={form.zone === 'international'} onClick={() => update('zone')('international')}>Europe</ChoiceButton>
             </div>
 
             <label style={labelStyle}>Beurre souhaité</label>
             <select
-              style={{ ...inputStyle, marginBottom: '1.4rem' }}
+              style={{ ...inputStyle, marginBottom: '1.4rem', background: '#fff' }}
               value={form.product_type}
               onChange={(e) => update('product_type')(e.target.value)}
             >
