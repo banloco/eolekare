@@ -86,13 +86,13 @@ export default function WaitlistPage() {
             Nos stocks partent très vite.
           </p>
         )}
-        <p style={{ fontSize: 12, letterSpacing: '0.05em', fontWeight: 300, color: 'rgba(0,0,0,0.65)', maxWidth: 420, lineHeight: 1.7, marginBottom: '2.5rem', textAlign: 'center' }}>
+        <p style={{ fontSize: 12, letterSpacing: '0.05em', fontWeight: 300, color: '#fff', maxWidth: 420, lineHeight: 1.7, marginBottom: '2.5rem', textAlign: 'center' }}>
           Précommandez pour être sûr d'avoir le vôtre. Dites-nous ce qui vous intéresse, nous vous prévenons dès l'ouverture.
         </p>
 
         {done ? (
           <div style={{ maxWidth: 420, textAlign: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 4, padding: '2.5rem 2rem' }}>
-            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#000', lineHeight: 1.6 }}>
+            <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: '#fff', lineHeight: 1.6 }}>
               Nous avons bien enregistré vos envies, nous revenons vers vous au plus vite.
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function WaitlistPage() {
 
             <label style={labelStyle}>Beurre souhaité</label>
             <select
-              style={{ ...inputStyle, marginBottom: '1.4rem' }}
+              style={{ ...inputStyle, background: '#fff', marginBottom: '1.4rem' }}
               value={form.product_type}
               onChange={(e) => update('product_type')(e.target.value)}
             >
