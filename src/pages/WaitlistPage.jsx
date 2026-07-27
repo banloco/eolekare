@@ -82,7 +82,7 @@ export default function WaitlistPage() {
         <p style={{ fontFamily: '"Montserrat",sans-serif', fontSize: 11, letterSpacing: '0.35em', fontWeight: 300, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>by Eoleeg</p>
 
         {!done && (
-          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(20px,3vw,28px)', fontStyle: 'italic', color: '#000', maxWidth: 480, lineHeight: 1.5, marginBottom: '0.6rem', textAlign: 'center' }}>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(20px,3vw,28px)', fontStyle: 'italic', color: '#fff', maxWidth: 480, lineHeight: 1.5, marginBottom: '0.6rem', textAlign: 'center' }}>
             Nos stocks partent très vite.
           </p>
         )}
@@ -100,14 +100,14 @@ export default function WaitlistPage() {
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 420, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 4, padding: '2rem' }}>
 
             <label style={labelStyle}>Votre zone</label>
-            <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.4rem' }}>
+            <div style={{ background: '#fff', display: 'flex', gap: '0.6rem', marginBottom: '1.4rem' }}>
               <ChoiceButton active={form.zone === 'benin'} onClick={() => update('zone')('benin')}>Bénin</ChoiceButton>
               <ChoiceButton active={form.zone === 'international'} onClick={() => update('zone')('international')}>Europe</ChoiceButton>
             </div>
 
             <label style={labelStyle}>Beurre souhaité</label>
             <select
-              style={{ ...inputStyle, background: '#fff', marginBottom: '1.4rem' }}
+              style={{ ...inputStyle, marginBottom: '1.4rem' }}
               value={form.product_type}
               onChange={(e) => update('product_type')(e.target.value)}
             >
