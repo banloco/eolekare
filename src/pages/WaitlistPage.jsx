@@ -100,9 +100,9 @@ export default function WaitlistPage() {
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 420, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 4, padding: '2rem' }}>
 
             <label style={labelStyle}>Votre zone</label>
-            <div style={{ background: '#fff', display: 'flex', gap: '0.6rem', marginBottom: '1.4rem' }}>
-              <ChoiceButton active={form.zone === 'benin'} onClick={() => update('zone')('benin')}>Bénin</ChoiceButton>
-              <ChoiceButton active={form.zone === 'international'} onClick={() => update('zone')('international')}>Europe</ChoiceButton>
+            <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.4rem' }}>
+              <ChoiceButton style={{ background: '#fff'}} active={form.zone === 'benin'} onClick={() => update('zone')('benin')}>Bénin</ChoiceButton>
+              <ChoiceButton style={{ background: '#fff'}} active={form.zone === 'international'} onClick={() => update('zone')('international')}>Europe</ChoiceButton>
             </div>
 
             <label style={labelStyle}>Beurre souhaité</label>
