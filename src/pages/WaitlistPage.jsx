@@ -118,16 +118,16 @@ export default function WaitlistPage() {
             </select>
 
             <label style={labelStyle}>Prénom</label>
-            <input style={{ ...inputStyle, marginBottom: '1.2rem' }} value={form.firstname} onChange={(e) => update('firstname')(e.target.value)} placeholder="Votre prénom" />
+            <input style={{ ...inputStyle, marginBottom: '1.2rem', background: '#fff' }} value={form.firstname} onChange={(e) => update('firstname')(e.target.value)} placeholder="Votre prénom" />
 
             <label style={labelStyle}>Email</label>
-            <input style={{ ...inputStyle, marginBottom: '1.2rem' }} type="email" value={form.email} onChange={(e) => update('email')(e.target.value)} placeholder="vous@exemple.com" />
+            <input style={{ ...inputStyle, marginBottom: '1.2rem', background: '#fff' }} type="email" value={form.email} onChange={(e) => update('email')(e.target.value)} placeholder="vous@exemple.com" />
 
             <label style={labelStyle}>Téléphone / WhatsApp</label>
-            <input style={{ ...inputStyle, marginBottom: '1.2rem' }} type="tel" value={form.phone} onChange={(e) => update('phone')(e.target.value)} placeholder="+229 00 00 00 00" />
+            <input style={{ ...inputStyle, marginBottom: '1.2rem', background: '#fff' }} type="tel" value={form.phone} onChange={(e) => update('phone')(e.target.value)} placeholder="+229 00 00 00 00" />
 
             <label style={labelStyle}>Instagram (optionnel)</label>
-            <input style={{ ...inputStyle, marginBottom: '1.6rem' }} value={form.instagram} onChange={(e) => update('instagram')(e.target.value)} placeholder="@votre_pseudo" />
+            <input style={{ ...inputStyle, marginBottom: '1.6rem', background: '#fff' }} value={form.instagram} onChange={(e) => update('instagram')(e.target.value)} placeholder="@votre_pseudo" />
 
             {error && <p style={{ color: '#ffb3b3', fontSize: 12, marginBottom: '1rem' }}>{error}</p>}
 
