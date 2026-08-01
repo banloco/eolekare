@@ -67,6 +67,18 @@ export default function WaitlistPage() {
     <>
       <style>{`
         html,body{height:100%;overflow:auto;background:#f8cb78}
+        .mode-emploi-btn{
+          position:absolute;
+          top:1.5rem;
+          right:1.5rem;
+        }
+        @media (max-width: 640px){
+          .mode-emploi-btn{
+            position:static;
+            display:inline-block;
+            margin-bottom:1.2rem;
+          }
+        }
       `}</style>
 
       <div className="fixed inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg-hero.jpg')", filter: 'brightness(0.35) saturate(0.6)' }} />
@@ -76,6 +88,10 @@ export default function WaitlistPage() {
       </div>
 
       <div className="relative z-[3] flex flex-col items-center" style={{ minHeight: '100vh', padding: '4rem 1.5rem' }}>
+
+        <a href="/mode-emploi.pdf" target="_blank" rel="noopener noreferrer" className="mode-emploi-btn" style={{ zIndex: 10, padding: '10px 18px', borderRadius: 999, background: '#3b190f', color: '#fff', fontSize: 12, fontFamily: '"Montserrat",sans-serif', fontWeight: 500, letterSpacing: '0.02em', textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 14px rgba(0,0,0,0.25)', transition: 'all 0.25s' }}>
+          Mon mode d'emploi Eolekare →
+        </a>
 
         <p style={{ fontFamily: '"Brown Sugar",cursive', fontSize: 'clamp(32px,6vw,60px)', fontWeight: 400, letterSpacing: '0.05em', color: '#000', lineHeight: 1.1, textShadow: '0 2px 20px rgba(59,25,15,0.3)', marginBottom: '0.3rem', textAlign: 'center' }}>
           Eolekare
