@@ -5,6 +5,7 @@ import CommunitySection from '../components/CommunitySection';
 import ReviewsSection from '../components/ReviewsSection';
 import StorySection from '../components/StorySection';
 import HowToSection from '../components/HowToSection';
+import ImageCarousel from '../components/ImageCarousel';
 import { useSEO } from '../hooks/useSEO';
 import { useProducts } from '../hooks/useProducts';
 import { formatFCFA } from '../lib/format';
@@ -358,11 +359,15 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
       <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 301, background: '#fdf6ec', width: '90%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 32px 80px rgba(0,0,0,0.3)' }}>
         <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1.2rem', background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#3b190f', opacity: 0.45, zIndex: 1 }}>✕</button>
         <div className="grid-2col">
-          <div style={{ height: 400, background: '#f8cb78', overflow: 'hidden', position: 'relative' }}>
-            {product.images?.[0]
-              ? <img src={product.images[0]} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, opacity: 0.3 }}>🫙</div>
-            }
+          <div style={{ height: 400, position: 'relative' }}>
+            <ImageCarousel
+              images={product.images || []}
+              alt={product.name}
+              height={400}
+              objectFit="cover"
+              autoPlay
+              interval={3500}
+            />
           </div>
           <div style={{ padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {product.format && <p style={{ fontSize: 9, letterSpacing: '0.25em', color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{product.format}</p>}
@@ -471,16 +476,20 @@ function Products({ cart, setCart, lang = 'fr' }) {
               <div key={p.id} style={{ background: '#fff', border: '0.5px solid rgba(59,25,15,0.1)', overflow: 'hidden', transition: 'transform 0.4s,box-shadow 0.4s' }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 24px 50px rgba(59,25,15,0.1)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}>
-                <div onClick={() => setModal(p)} style={{ height: 240, overflow: 'hidden', background: '#f8cb78', position: 'relative', cursor: 'pointer' }}>
-                  {p.images?.[0]
-                    ? <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.6s' }}
-                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = ''} />
-                    : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, fontSize: 48 }}>🫙</div>
-                  }
-                  {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{lang === 'fr' ? 'Épuisé' : 'Sold out'}</div>}
-                  {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px' }}>{lang === 'fr' ? `Plus que ${p.stock} !` : `Only ${p.stock} left!`}</div>}
-                  {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px' }}>× {inCart.qty} {lang === 'fr' ? 'dans le panier' : 'in cart'}</div>}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.6rem', background: 'linear-gradient(transparent,rgba(20,6,2,0.5))', textAlign: 'center' }}>
+                {/* Image(s) cliquable(s) → carousel + modal */}
+                <div style={{ position: 'relative' }}>
+                  <ImageCarousel
+                    images={p.images || []}
+                    alt={p.name}
+                    height={240}
+                    objectFit="cover"
+                    onClick={() => setModal(p)}
+                  />
+                  {/* Badges absolus */}
+                  {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? 'Épuisé' : 'Sold out'}</div>}
+                  {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? `Plus que ${p.stock} !` : `Only ${p.stock} left!`}</div>}
+                  {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>× {inCart.qty} {lang === 'fr' ? 'dans le panier' : 'in cart'}</div>}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.6rem', background: 'linear-gradient(transparent,rgba(20,6,2,0.5))', textAlign: 'center', zIndex: 3, pointerEvents: 'none' }}>
                     <span style={{ fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>{lang === 'fr' ? 'Voir les détails →' : 'View details →'}</span>
                   </div>
                 </div>

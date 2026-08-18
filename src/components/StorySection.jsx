@@ -69,7 +69,7 @@ export default function StorySection({ lang = 'fr' }) {
           src="https://www.instagram.com/p/DK-SszQsc60/embed/"
           style={{ width: '100%', height: 560, border: 'none', display: 'block' }}
           loading="lazy"
-          allowTransparency="true"
+          allowtransparency="true"
           scrolling="no"
           title="Eolekare Instagram"
         />
