@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts, updateProduct, deleteProduct } from '../../lib/api';
+import { getAllProducts, updateProduct, deleteProduct, getStockNotifications } from '../../lib/api';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -12,6 +12,8 @@ export default function ProductsPage() {
   const [statusFilter, setStatusFilter] = useState('tous');
   const [deleteId, setDeleteId] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [stockNotifs, setStockNotifs] = useState({}); // { [product_id]: { count, emails } }
+  const [notifModal, setNotifModal] = useState(null); // produit affiché dans le modal
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -21,6 +23,12 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    getStockNotifications()
+      .then(rows => setStockNotifs(Object.fromEntries(rows.map(r => [r.product_id, r]))))
+      .catch(console.error);
+  }, []);
 
   // Filtres
   useEffect(() => {
@@ -155,6 +163,12 @@ export default function ProductsPage() {
                       {p.stock ?? '—'}
                       {p.stock === 0 && ' ⚠'}
                     </span>
+                    {stockNotifs[p.id] && (
+                      <button onClick={() => setNotifModal(stockNotifs[p.id])}
+                        style={{ display: 'block', marginTop: 4, fontSize: 9, letterSpacing: '0.08em', color: '#7a4f2d', background: 'rgba(122,79,45,0.08)', border: 'none', padding: '2px 8px', cursor: 'pointer', fontFamily: 'Jost, sans-serif' }}>
+                        🔔 {stockNotifs[p.id].count} en attente
+                      </button>
+                    )}
                   </td>
                   {/* Toggle actif */}
                   <td style={{ padding: '12px 1.5rem' }}>
@@ -214,6 +228,30 @@ export default function ProductsPage() {
                 {deleting ? 'Suppression…' : 'Supprimer'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Modal alertes retour en stock */}
+      {notifModal && (
+        <div onClick={() => setNotifModal(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(59,25,15,0.5)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#fdf6ec', padding: '2.5rem', maxWidth: 440, width: '100%', maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 24px 60px rgba(0,0,0,0.3)' }}>
+            <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 22, color: '#3b190f', marginBottom: 4 }}>
+              {notifModal.product_name} {notifModal.format && `· ${notifModal.format}`}
+            </p>
+            <p style={{ fontSize: 11, color: '#7a4f2d', marginBottom: '1.5rem' }}>
+              {notifModal.count} personne{notifModal.count > 1 ? 's' : ''} en attente du retour en stock
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: '2rem' }}>
+              {notifModal.emails.map((email, i) => (
+                <a key={i} href={`mailto:${email}`} style={{ fontSize: 12, color: '#3b190f', textDecoration: 'none', padding: '8px 12px', background: '#fff', border: '0.5px solid rgba(59,25,15,0.08)' }}>
+                  {email}
+                </a>
+              ))}
+            </div>
+            <button onClick={() => setNotifModal(null)}
+              style={{ width: '100%', padding: '12px', background: 'none', border: '0.5px solid rgba(59,25,15,0.2)', color: '#3b190f', cursor: 'pointer', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: 'Jost, sans-serif' }}>
+              Fermer
+            </button>
           </div>
         </div>
       )}

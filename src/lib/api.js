@@ -95,6 +95,12 @@ export async function deleteImage(url) {
   return request('DELETE', '/admin/products/delete-image', { url });
 }
 
+// ── ALERTES RETOUR EN STOCK ─────────────────────────────
+
+export async function getStockNotifications() {
+  return request('GET', '/admin/stock-notifications');
+}
+
 // ── COMMANDES ────────────────────────────────────────────
 
 export async function createOrder(payload) {

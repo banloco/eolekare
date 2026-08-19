@@ -7,6 +7,7 @@ const EMPTY = {
   name: '',
   name_en: '',
   format: '',
+  weight_grams: '',
   sku: '',
   description_short: '',
   description_short_en: '',
@@ -48,6 +49,7 @@ export default function ProductFormPage() {
         name:                 p.name || '',
         name_en:              p.name_en || '',
         format:               p.format || '',
+        weight_grams:         p.weight_grams ?? '',
         sku:                  p.sku || '',
         description_short:    p.description_short || '',
         description_short_en: p.description_short_en || '',
@@ -84,6 +86,7 @@ export default function ProductFormPage() {
   const uploadAll = async (productId) => {
     setUploading(true);
     const urls = [...form.images];
+    const errors = [];
     for (let i = 0; i < uploadQueue.length; i++) {
       const item = uploadQueue[i];
       if (item.status !== 'pending') continue;
@@ -93,11 +96,12 @@ export default function ProductFormPage() {
         urls.push(url);
         setUploadQueue(q => q.map((x, j) => j === i ? { ...x, status: 'done' } : x));
       } catch(e) {
+        errors.push(`${item.file.name} : ${e.message}`);
         setUploadQueue(q => q.map((x, j) => j === i ? { ...x, status: 'error' } : x));
       }
     }
     setUploading(false);
-    return urls;
+    return { urls, errors };
   };
 
   const removeExistingImage = async (url) => {
@@ -122,6 +126,7 @@ export default function ProductFormPage() {
         name:                 form.name.trim(),
         name_en:              form.name_en.trim(),
         format:               form.format.trim(),
+        weight_grams:      form.weight_grams !== '' ? Number(form.weight_grams) : null,
         sku:                  form.sku.trim(),
         description_short:    form.description_short.trim(),
         description_short_en: form.description_short_en.trim(),
@@ -140,12 +145,14 @@ export default function ProductFormPage() {
       };
 
       let productId = id;
+      let imageErrors = [];
 
       if (isEdit) {
         // Upload d'abord si nécessaire
         if (uploadQueue.length > 0) {
-          const urls = await uploadAll(id);
+          const { urls, errors } = await uploadAll(id);
           payload.images = urls;
+          imageErrors = errors;
         }
         await updateProduct(id, payload);
         setSuccess('Produit mis à jour avec succès.');
@@ -155,11 +162,19 @@ export default function ProductFormPage() {
         productId = created.id;
         // Puis uploader les images
         if (uploadQueue.length > 0) {
-          const urls = await uploadAll(productId);
+          const { urls, errors } = await uploadAll(productId);
           await updateProduct(productId, { images: urls });
+          imageErrors = errors;
         }
         setSuccess('Produit créé avec succès.');
-        setTimeout(() => navigate(`/admin/products/${productId}`), 1200);
+        // Ne pas rediriger tant que l'utilisateur n'a pas vu l'erreur d'upload
+        if (imageErrors.length === 0) {
+          setTimeout(() => navigate(`/admin/products/${productId}`), 1200);
+        }
+      }
+
+      if (imageErrors.length > 0) {
+        setError(`${imageErrors.length > 1 ? 'Certaines images n\'ont' : 'Une image n\'a'} pas pu être envoyée : ${imageErrors.join(' · ')}`);
       }
     } catch(e) {
       setError(e.message);
@@ -249,6 +264,16 @@ export default function ProductFormPage() {
                   />
                 </Field>
               </div>
+              <Field label="Poids emballé (g)">
+                <input type="number" min="1" value={form.weight_grams} onChange={e => set('weight_grams', e.target.value)}
+                  placeholder="ex: 220 (pot + produit)"
+                  style={inputStyle}
+                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                />
+                <p style={{ fontSize: 10, color: 'rgba(59,25,15,0.4)', marginTop: 4 }}>
+                  Utilisé pour calculer les frais de livraison Mondial Relay. Laissé vide, une estimation est faite à partir du format.
+                </p>
+              </Field>
               {/* ── Textes FR ── */}
               <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#f8cb78', background: '#3b190f', display: 'inline-block', padding: '3px 10px', marginBottom: 2 }}>🇫🇷 Français</p>
               <Field label="Description courte FR (vitrine)">

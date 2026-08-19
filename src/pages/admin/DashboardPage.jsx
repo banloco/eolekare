@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts, getAdminStats, getAdminExpenseStats } from '../../lib/api';
+import { getAllProducts, getAdminStats, getAdminExpenseStats, getStockNotifications } from '../../lib/api';
 
 function StatCard({ label, value, sub, color = '#3b190f' }) {
   return (
@@ -23,11 +23,12 @@ export default function DashboardPage() {
   const [products, setProducts] = useState([]);
   const [stats, setStats]       = useState(null);
   const [expStats, setExpStats] = useState(null);
+  const [stockNotifs, setStockNotifs] = useState([]);
   const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
-    Promise.all([getAllProducts(), getAdminStats(), getAdminExpenseStats()])
-      .then(([prods, s, es]) => { setProducts(prods); setStats(s); setExpStats(es); })
+    Promise.all([getAllProducts(), getAdminStats(), getAdminExpenseStats(), getStockNotifications()])
+      .then(([prods, s, es, sn]) => { setProducts(prods); setStats(s); setExpStats(es); setStockNotifs(sn); })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -36,6 +37,7 @@ export default function DashboardPage() {
   const inactive  = products.filter(p => !p.active).length;
   const lowStock  = products.filter(p => p.stock !== null && p.stock <= 5).length;
   const noStock   = products.filter(p => p.stock === 0).length;
+  const waitingForStock = stockNotifs.reduce((sum, n) => sum + n.count, 0);
 
   return (
     <AdminLayout>
@@ -109,7 +111,8 @@ export default function DashboardPage() {
             <div style={{ background: 'rgba(192,57,43,0.06)', border: '0.5px solid rgba(192,57,43,0.25)', padding: '1rem 1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 20 }}>⚠️</span>
               <p style={{ fontSize: 12, color: '#c0392b', letterSpacing: '0.05em' }}>
-                <strong>{noStock} produit{noStock > 1 ? 's' : ''}</strong> en rupture de stock.{' '}
+                <strong>{noStock} produit{noStock > 1 ? 's' : ''}</strong> en rupture de stock
+                {waitingForStock > 0 && <> · <strong>{waitingForStock}</strong> client{waitingForStock > 1 ? 's' : ''} en attente d'une alerte retour</>}.{' '}
                 <Link to="/admin/products" style={{ color: '#c0392b', textDecoration: 'underline' }}>Gérer les stocks →</Link>
               </p>
             </div>

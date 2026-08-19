@@ -89,8 +89,11 @@ export default function ContactPage() {
 
       <footer style={s.footer}>
         <p style={s.footerText}>EOLEKARE · Cosmétiques naturels · Made in Bénin</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1rem' }}>
-          <Link to="/legal" style={{ ...s.footerText, textDecoration: 'none', margin: 0 }}>Mentions légales</Link>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+          <Link to="/legal?doc=mentions" style={{ ...s.footerText, textDecoration: 'none', margin: 0 }}>Mentions légales</Link>
+          <Link to="/legal?doc=cgv" style={{ ...s.footerText, textDecoration: 'none', margin: 0 }}>CGV</Link>
+          <Link to="/legal?doc=remboursement" style={{ ...s.footerText, textDecoration: 'none', margin: 0 }}>Remboursement</Link>
+          <Link to="/legal?doc=confidentialite" style={{ ...s.footerText, textDecoration: 'none', margin: 0 }}>Confidentialité</Link>
           <Link to="/about" style={{ ...s.footerText, textDecoration: 'none', margin: 0 }}>À propos</Link>
         </div>
       </footer>

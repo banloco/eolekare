@@ -489,6 +489,16 @@ function Footer({ lang }) {
             onMouseEnter={e => e.currentTarget.style.color = '#f8cb78'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(248,203,120,0.4)'}>{l}</a></li>
         ))}
       </ul>
+      <ul className="flex justify-center gap-8 list-none flex-wrap" style={{ marginBottom: '1.5rem' }}>
+        {(lang === 'fr'
+          ? [['mentions', 'Mentions légales'], ['cgv', 'CGV'], ['remboursement', 'Remboursement'], ['confidentialite', 'Confidentialité']]
+          : [['mentions', 'Legal Notice'], ['cgv', 'Terms of Sale'], ['remboursement', 'Refunds'], ['confidentialite', 'Privacy']]
+        ).map(([doc, l]) => (
+          <li key={doc}><a href={`/legal?doc=${doc}&lang=${lang}`}
+            style={{ fontSize: 9, letterSpacing: '0.12em', fontWeight: 300, color: 'rgba(248,203,120,0.22)', textDecoration: 'none' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#f8cb78'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(248,203,120,0.22)'}>{l}</a></li>
+        ))}
+      </ul>
       <p style={{ fontSize: 10, color: 'rgba(248,203,120,0.15)' }}>{lang === 'fr' ? '100% Naturel · Made in Bénin · Pour tous' : '100% Natural · Made in Benin · For everyone'} · © 2026 Eolekare by Eoleeg</p>
     </footer>
   );

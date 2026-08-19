@@ -14,6 +14,11 @@ import { createOrder, fedapayCreateTransaction } from '../lib/api';
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '2290148654200';
 const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
 
+/* ─── Nom produit selon la langue (fallback FR si pas de traduction) ─── */
+function displayName(p, lang) {
+  return lang === 'en' ? (p.name_en || p.name) : p.name;
+}
+
 const T_BJ = {
   fr: {
     ingredients: 'Ingrédients', buy: 'Ajouter au panier', added: '✓ Ajouté →', soldout: 'Épuisé', qty: 'Quantité', inCart: 'dans le panier', details: 'Voir les détails →', loading: 'Chargement…', upsell: 'Vous aimeriez aussi',
@@ -217,10 +222,10 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
                 {cart.map(item => (
                   <div key={item.id} style={{ display: 'flex', gap: '1rem', paddingBottom: '1.2rem', borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
                     <div style={{ width: 64, height: 64, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
-                      {item.images?.[0] && <img src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                      {item.images?.[0] && <img src={item.images[0]} alt={displayName(item, lang)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                     </div>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', marginBottom: 2 }}>{item.name}</p>
+                      <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', marginBottom: 2 }}>{displayName(item, lang)}</p>
                       <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d' }}>{formatFCFA(item.price_fcfa)}</p>
                     </div>
                     {/* Sélecteur quantité */}
@@ -245,10 +250,10 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
                     {upsell.map(p => (
                       <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem', border: '0.5px solid rgba(59,25,15,0.08)', background: '#fff' }}>
                         <div style={{ width: 48, height: 48, background: '#f8cb78', flexShrink: 0, overflow: 'hidden' }}>
-                          {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                          {p.images?.[0] && <img src={p.images[0]} alt={displayName(p, lang)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                         </div>
                         <div style={{ flex: 1 }}>
-                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{p.name}</p>
+                          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{displayName(p, lang)}</p>
                           <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 13, fontStyle: 'italic', color: '#7a4f2d' }}>{formatFCFA(p.price_fcfa)}</p>
                         </div>
                         <button onClick={() => onAdd && onAdd(p)} style={{ fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#3b190f', background: 'none', border: '0.5px solid rgba(59,25,15,0.25)', padding: '6px 10px', cursor: 'pointer', fontFamily: 'Jost,sans-serif' }}>
@@ -266,7 +271,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
               <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: '1.2rem' }}>{t.recap}</p>
               {cart.map(item => (
                 <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.7rem', marginBottom: '0.7rem', borderBottom: '0.5px solid rgba(59,25,15,0.06)' }}>
-                  <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{item.name} <span style={{ color: '#7a4f2d', fontSize: 13 }}>×{item.qty}</span></span>
+                  <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: '#3b190f' }}>{displayName(item, lang)} <span style={{ color: '#7a4f2d', fontSize: 13 }}>×{item.qty}</span></span>
                   <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, fontStyle: 'italic', color: '#3b190f' }}>{formatFCFA(item.price_fcfa * item.qty)}</span>
                 </div>
               ))}
@@ -362,7 +367,7 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
           <div style={{ height: 400, position: 'relative' }}>
             <ImageCarousel
               images={product.images || []}
-              alt={product.name}
+              alt={displayName(product, lang)}
               height={400}
               objectFit="cover"
               autoPlay
@@ -371,7 +376,7 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
           </div>
           <div style={{ padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {product.format && <p style={{ fontSize: 9, letterSpacing: '0.25em', color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{product.format}</p>}
-            <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 30, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>{product.name}</h2>
+            <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 30, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>{displayName(product, lang)}</h2>
             <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.85, marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
               {lang === 'en'
                 ? (product.description_short_en || product.description_long_en || product.description_short || product.description_long || '—')
@@ -480,7 +485,7 @@ function Products({ cart, setCart, lang = 'fr' }) {
                 <div style={{ position: 'relative' }}>
                   <ImageCarousel
                     images={p.images || []}
-                    alt={p.name}
+                    alt={displayName(p, lang)}
                     height={240}
                     objectFit="cover"
                     onClick={() => setModal(p)}
@@ -495,7 +500,7 @@ function Products({ cart, setCart, lang = 'fr' }) {
                 </div>
                 <div style={{ padding: '1.8rem 1.5rem' }}>
                   <p style={{ fontSize: 9, letterSpacing: '0.25em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{p.format || 'Skincare · Haircare · Corps'}</p>
-                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{p.name}</p>
+                  <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, color: '#3b190f', marginBottom: '0.5rem' }}>{displayName(p, lang)}</p>
                   <p style={{ fontSize: 11, fontWeight: 300, color: '#7a4f2d', lineHeight: 1.8, marginBottom: '1.2rem' }}>
                     {(() => { const d = lang === 'en' ? (p.description_short_en || p.description_short) : p.description_short; return d ? d.slice(0, 80) + (d.length > 80 ? '…' : '') : ''; })()}
                   </p>
@@ -562,6 +567,16 @@ function Footer({ lang = 'fr' }) {
           <li key={l}><a href={h} target="_blank" rel="noreferrer"
             style={{ fontSize: 10, letterSpacing: '0.18em', fontWeight: 300, color: 'rgba(248,203,120,0.4)', textDecoration: 'none', textTransform: 'uppercase', transition: 'color 0.3s' }}
             onMouseEnter={e => e.currentTarget.style.color = '#f8cb78'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(248,203,120,0.4)'}>{l}</a></li>
+        ))}
+      </ul>
+      <ul className="flex justify-center gap-8 list-none flex-wrap" style={{ marginBottom: '1.5rem' }}>
+        {(lang === 'fr'
+          ? [['mentions', 'Mentions légales'], ['cgv', 'CGV'], ['remboursement', 'Remboursement'], ['confidentialite', 'Confidentialité']]
+          : [['mentions', 'Legal Notice'], ['cgv', 'Terms of Sale'], ['remboursement', 'Refunds'], ['confidentialite', 'Privacy']]
+        ).map(([doc, l]) => (
+          <li key={doc}><a href={`/legal?doc=${doc}&lang=${lang}`}
+            style={{ fontSize: 9, letterSpacing: '0.12em', fontWeight: 300, color: 'rgba(248,203,120,0.22)', textDecoration: 'none' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#f8cb78'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(248,203,120,0.22)'}>{l}</a></li>
         ))}
       </ul>
       <p style={{ fontSize: 10, color: 'rgba(248,203,120,0.15)' }}>{lang === 'fr' ? '100% Naturel · Made in Bénin · Pour tous' : '100% Natural · Made in Benin · For everyone'} · © 2026 Eolekare by Eoleeg</p>

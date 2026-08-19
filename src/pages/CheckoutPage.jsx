@@ -198,12 +198,21 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                 </div>
                 <div>
                   <label style={labelStyle}>Pays</label>
-                  <select style={inputStyle} value={customer.country} onChange={e => setCustomer(p => ({ ...p, country: e.target.value }))}>
+                  <select style={inputStyle} value={customer.country} onChange={e => {
+                    const country = e.target.value;
+                    setCustomer(p => ({ ...p, country }));
+                    if (country === 'PL' && deliveryMode === 'domicile') { setDeliveryMode('point_relais'); setRelay(null); }
+                  }}>
                     <option value="FR">France</option>
                     <option value="BE">Belgique</option>
                     <option value="ES">Espagne</option>
                     <option value="NL">Pays-Bas</option>
                     <option value="LU">Luxembourg</option>
+                    <option value="DE">Allemagne</option>
+                    <option value="PT">Portugal</option>
+                    <option value="PL">Pologne</option>
+                    <option value="IT">Italie</option>
+                    <option value="AT">Autriche</option>
                   </select>
                 </div>
               </div>
@@ -216,18 +225,20 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.6rem' }}>
                   {DELIVERY_MODES.map(m => {
                     const active = deliveryMode === m.value;
+                    const disabled = m.value === 'domicile' && customer.country === 'PL';
                     return (
-                      <button key={m.value} type="button"
+                      <button key={m.value} type="button" disabled={disabled}
                         onClick={() => { setDeliveryMode(m.value); setRelay(null); setFormError(''); }}
                         style={{
-                          padding: '14px 8px', textAlign: 'center', cursor: 'pointer', fontFamily: 'Jost,sans-serif',
+                          padding: '14px 8px', textAlign: 'center', cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: 'Jost,sans-serif',
                           background: active ? '#3b190f' : '#fff',
                           border: active ? '0.5px solid #3b190f' : '0.5px solid rgba(59,25,15,0.15)',
-                          color: active ? '#fdf6ec' : '#3b190f',
+                          color: active ? '#fdf6ec' : disabled ? 'rgba(59,25,15,0.3)' : '#3b190f',
+                          opacity: disabled ? 0.5 : 1,
                         }}>
                         <div style={{ fontSize: 22, marginBottom: 4 }}>{m.icon}</div>
                         <div style={{ fontSize: 10, letterSpacing: '0.08em', marginBottom: 2 }}>{m.label}</div>
-                        <div style={{ fontSize: 9, opacity: 0.65 }}>{m.delay}</div>
+                        <div style={{ fontSize: 9, opacity: 0.65 }}>{disabled ? 'Indisponible en Pologne' : m.delay}</div>
                       </button>
                     );
                   })}
