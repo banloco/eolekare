@@ -103,6 +103,14 @@
   background: rgba(0,0,0,0.5); z-index: 149;
 }
 
+/* Admin main content : autorise le flex item à rétrécir sous sa largeur de
+   contenu (tableaux larges) et scroller localement plutôt que de faire
+   déborder toute la page. */
+.admin-main {
+  min-width: 0;
+  overflow-x: auto;
+}
+
 /* ── Mobile breakpoint (< 768px) ── */
 @media (max-width: 767px) {
   /* Nav logo smaller on mobile */

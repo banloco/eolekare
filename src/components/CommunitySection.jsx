@@ -53,7 +53,6 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
                   src={src}
                   style={{ width: '100%', height: '100%', border: 'none' }}
                   loading="lazy"
-                  allowTransparency="true"
                   scrolling="no"
                   title={`Instagram post ${i + 1}`}
                 />
