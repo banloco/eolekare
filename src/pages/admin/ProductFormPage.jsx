@@ -153,6 +153,11 @@ export default function ProductFormPage() {
           const { urls, errors } = await uploadAll(id);
           payload.images = urls;
           imageErrors = errors;
+          // Resynchroniser l'état local : sans ça, un second clic sur "Enregistrer"
+          // repartirait de l'ancien form.images (vide) et effacerait l'upload qu'on
+          // vient tout juste de sauvegarder.
+          setForm(f => ({ ...f, images: urls }));
+          setUploadQueue(q => q.filter(x => x.status === 'error'));
         }
         await updateProduct(id, payload);
         setSuccess('Produit mis à jour avec succès.');
@@ -165,6 +170,8 @@ export default function ProductFormPage() {
           const { urls, errors } = await uploadAll(productId);
           await updateProduct(productId, { images: urls });
           imageErrors = errors;
+          setForm(f => ({ ...f, images: urls }));
+          setUploadQueue(q => q.filter(x => x.status === 'error'));
         }
         setSuccess('Produit créé avec succès.');
         // Ne pas rediriger tant que l'utilisateur n'a pas vu l'erreur d'upload
