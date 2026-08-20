@@ -97,10 +97,10 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
             <img src="/images/Logo Eolekare .png" alt="Eolekare" className="nav-logo-img" />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: '#3b190f', textTransform: 'uppercase' }}>Europe</span>
+            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: '#3b190f', textTransform: 'uppercase', borderBottom: '0.5px solid #3b190f', paddingBottom: 1 }}>Europe</span>
             <span style={{ fontSize: 8, color: 'rgba(59,25,15,0.3)' }}>·</span>
             <a href="/benin" title="Passer à la boutique Bénin"
-              style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', textDecoration: 'none', borderBottom: '0.5px solid rgba(122,79,45,0.35)', paddingBottom: 1 }}
+              style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.22em', color: '#7a4f2d', textTransform: 'uppercase', textDecoration: 'none' }}
               onMouseEnter={e => e.currentTarget.style.color = '#3b190f'}
               onMouseLeave={e => e.currentTarget.style.color = '#7a4f2d'}
             >Bénin</a>
