@@ -116,7 +116,7 @@ export default function HowToSection({ lang = 'fr' }) {
         {
           n: '03',
           t: 'Sur la barbe',
-          img: '/images/howto-03.jpg',
+          img: '/images/howto-03.jpeg',
           paras: [
             "Quelques gouttes réchauffées entre les mains. Masse sur la barbe et la peau en dessous pour adoucir, hydrater et discipliner.",
           ],
@@ -143,7 +143,7 @@ export default function HowToSection({ lang = 'fr' }) {
         {
           n: '03',
           t: 'On beard',
-          img: '/images/howto-03.jpg',
+          img: '/images/howto-03.jpeg',
           paras: [
             "A few drops warmed between the hands. Massage into the beard and skin beneath to soften, moisturize and tame.",
           ],
