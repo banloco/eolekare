@@ -272,7 +272,7 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(59,25,15,0.55)' }} />
       <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 301, background: '#fdf6ec', width: '90%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 32px 80px rgba(0,0,0,0.3)' }}>
-        <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1.2rem', background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#3b190f', opacity: 0.45, zIndex: 1 }}>✕</button>
+        <button onClick={onClose} style={{ position: 'absolute', top: '0.8rem', right: '0.8rem', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(253,246,236,0.9)', borderRadius: '50%', border: 'none', fontSize: 18, cursor: 'pointer', color: '#3b190f', boxShadow: '0 2px 10px rgba(59,25,15,0.2)', zIndex: 2 }}>✕</button>
         <div className="grid-2col">
           {/* Images carousel */}
           <div style={{ height: 400, position: 'relative' }}>
