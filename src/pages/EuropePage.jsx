@@ -25,6 +25,13 @@ function displayName(p, lang) {
   return lang === 'en' ? (p.name_en || p.name) : p.name;
 }
 
+/* ─── Parfum de beurre déduit du nom ("Beurre de Mangue" → "Mangue") ─── */
+function getFlavor(name) {
+  const clean = (name || '').replace(/\s*\(.*\)\s*$/, '').trim();
+  const m = /^Beurre d[e']\s*(.+)/i.exec(clean);
+  return m ? m[1].trim() : clean;
+}
+
 /* ─── PAYMENT STATUS BANNER (retour Stripe / FedaPay) ─── */
 function PaymentBanner({ lang, status, reference, onClose }) {
   if (!status) return null;
@@ -169,7 +176,7 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
 function CartDrawer({ lang, cart, total, onUpdate, onRemove, onClose, products, onCheckout }) {
   const t = T[lang];
   // Upsell : produits pas dans le panier
-  const upsell = products.filter(p => !cart.find(c => c.id === p.id)).slice(0, 3);
+  const upsell = products.filter(p => !cart.find(c => c.id === p.id) && p.stock > 0).slice(0, 3);
 
   return (
     <>
@@ -351,9 +358,14 @@ function Products({ lang, cartHook }) {
   const [added, setAdded] = useState(null);
   const [modal, setModal] = useState(null);
   const [format, setFormat] = useState('tous');
+  const [flavor, setFlavor] = useState('tous');
 
   const formats = ['tous', ...Array.from(new Set(products.map(p => p.format).filter(Boolean)))];
-  const visible = format === 'tous' ? products : products.filter(p => p.format === format);
+  const flavors = ['tous', ...Array.from(new Set(products.map(p => getFlavor(p.name)).filter(Boolean)))];
+  const visible = products.filter(p =>
+    (format === 'tous' || p.format === format) &&
+    (flavor === 'tous' || getFlavor(p.name) === flavor)
+  );
 
   useEffect(() => {
     const handler = (e) => { add(e.detail, 1); };
@@ -362,7 +374,7 @@ function Products({ lang, cartHook }) {
   }, [add]);
 
   const handleAdd = (p, qty = 1) => {
-    if (p.stock === 0) return;
+    if (!(p.stock > 0)) return;
     add(p, qty);
     setAdded(p.id);
     setTimeout(() => setAdded(null), 2000);
@@ -375,18 +387,38 @@ function Products({ lang, cartHook }) {
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
         <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '2rem' }}>{lang === 'fr' ? 'Nos Beurres' : 'Our Butters'}</h2>
 
-        {/* Filtre par format */}
-        {formats.length > 2 && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
-            {formats.map(f => (
-              <button key={f} onClick={() => setFormat(f)} style={{
-                padding: '6px 18px', border: '0.5px solid rgba(59,25,15,0.25)', background: format === f ? '#3b190f' : 'transparent',
-                color: format === f ? '#f8cb78' : '#7a4f2d', fontSize: 9, letterSpacing: '0.22em',
-                textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', fontWeight: 300,
-              }}>
-                {f === 'tous' ? (lang === 'fr' ? 'Tous' : 'All') : f}
-              </button>
-            ))}
+        {/* Filtres : parfum + format, regroupés sur une même barre */}
+        {(flavors.length > 2 || formats.length > 2) && (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.4rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+            {flavors.length > 2 && (
+              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {flavors.map(f => (
+                  <button key={f} onClick={() => setFlavor(f)} style={{
+                    padding: '6px 18px', border: '0.5px solid rgba(59,25,15,0.25)', background: flavor === f ? '#3b190f' : 'transparent',
+                    color: flavor === f ? '#f8cb78' : '#7a4f2d', fontSize: 9, letterSpacing: '0.22em',
+                    textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', fontWeight: 300,
+                  }}>
+                    {f === 'tous' ? (lang === 'fr' ? 'Tous' : 'All') : f}
+                  </button>
+                ))}
+              </div>
+            )}
+            {flavors.length > 2 && formats.length > 2 && (
+              <div style={{ width: '0.5px', height: 18, background: 'rgba(59,25,15,0.15)' }} />
+            )}
+            {formats.length > 2 && (
+              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {formats.map(f => (
+                  <button key={f} onClick={() => setFormat(f)} style={{
+                    padding: '6px 18px', border: '0.5px solid rgba(59,25,15,0.25)', background: format === f ? '#3b190f' : 'transparent',
+                    color: format === f ? '#f8cb78' : '#7a4f2d', fontSize: 9, letterSpacing: '0.22em',
+                    textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', fontWeight: 300,
+                  }}>
+                    {f === 'tous' ? (lang === 'fr' ? 'Tous' : 'All') : f}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -410,7 +442,7 @@ function Products({ lang, cartHook }) {
                     onClick={() => setModal(p)}
                   />
                   {/* Badges absolus sur le carousel */}
-                  {p.stock === 0 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{t.soldout}</div>}
+                  {!(p.stock > 0) && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{t.soldout}</div>}
                   {p.stock > 0 && p.stock <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? `Plus que ${p.stock} !` : `Only ${p.stock} left!`}</div>}
                   {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>× {inCart.qty} {t.inCart}</div>}
                   {/* Lien "voir détails" */}
@@ -425,7 +457,7 @@ function Products({ lang, cartHook }) {
                     {(() => { const d = lang === 'en' ? (p.description_short_en || p.description_short) : p.description_short; return d ? d.slice(0, 80) + (d.length > 80 ? '…' : '') : ''; })()}
                   </p>
                   <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 19, color: '#3b190f', fontStyle: 'italic', marginBottom: '1.2rem' }}>{formatEUR(p.price_eur)}</p>
-                  {p.stock === 0
+                  {!(p.stock > 0)
                     ? <StockNotifyForm productId={p.id} lang={lang} />
                     : <button onClick={() => handleAdd(p)} style={{ background: 'none', border: 'none', borderBottom: '1px solid #f8cb78', paddingBottom: 2, cursor: 'pointer', fontSize: 9, letterSpacing: '0.22em', fontWeight: 300, color: isAdded ? '#3b190f' : '#3b190f', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', display: 'inline-block', transition: 'color 0.3s' }}>
                         {isAdded ? `✓ ${t.added} →` : inCart ? `× ${inCart.qty} · ${t.buy} →` : `${t.buy} →`}
