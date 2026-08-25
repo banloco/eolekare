@@ -357,15 +357,10 @@ function Products({ lang, cartHook }) {
   const { cart, add } = cartHook;
   const [added, setAdded] = useState(null);
   const [modal, setModal] = useState(null);
-  const [format, setFormat] = useState('tous');
   const [flavor, setFlavor] = useState('tous');
 
-  const formats = ['tous', ...Array.from(new Set(products.map(p => p.format).filter(Boolean)))];
-  const flavors = ['tous', ...Array.from(new Set(products.map(p => getFlavor(p.name)).filter(Boolean)))];
-  const visible = products.filter(p =>
-    (format === 'tous' || p.format === format) &&
-    (flavor === 'tous' || getFlavor(p.name) === flavor)
-  );
+  const flavors = ['tous', 'Avocat', 'Coco', 'Mangue'];
+  const visible = flavor === 'tous' ? products : products.filter(p => getFlavor(p.name) === flavor);
 
   useEffect(() => {
     const handler = (e) => { add(e.detail, 1); };
@@ -387,40 +382,18 @@ function Products({ lang, cartHook }) {
         <p style={{ fontSize: 10, letterSpacing: '0.4em', fontWeight: 300, color: '#7a4f2d', textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.8rem' }}>{t.collection}</p>
         <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', textAlign: 'center', marginBottom: '2rem' }}>{lang === 'fr' ? 'Nos Beurres' : 'Our Butters'}</h2>
 
-        {/* Filtres : parfum + format, regroupés sur une même barre */}
-        {(flavors.length > 2 || formats.length > 2) && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.4rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
-            {flavors.length > 2 && (
-              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {flavors.map(f => (
-                  <button key={f} onClick={() => setFlavor(f)} style={{
-                    padding: '6px 18px', border: '0.5px solid rgba(59,25,15,0.25)', background: flavor === f ? '#3b190f' : 'transparent',
-                    color: flavor === f ? '#f8cb78' : '#7a4f2d', fontSize: 9, letterSpacing: '0.22em',
-                    textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', fontWeight: 300,
-                  }}>
-                    {f === 'tous' ? (lang === 'fr' ? 'Tous' : 'All') : f}
-                  </button>
-                ))}
-              </div>
-            )}
-            {flavors.length > 2 && formats.length > 2 && (
-              <div style={{ width: '0.5px', height: 18, background: 'rgba(59,25,15,0.15)' }} />
-            )}
-            {formats.length > 2 && (
-              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {formats.map(f => (
-                  <button key={f} onClick={() => setFormat(f)} style={{
-                    padding: '6px 18px', border: '0.5px solid rgba(59,25,15,0.25)', background: format === f ? '#3b190f' : 'transparent',
-                    color: format === f ? '#f8cb78' : '#7a4f2d', fontSize: 9, letterSpacing: '0.22em',
-                    textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', fontWeight: 300,
-                  }}>
-                    {f === 'tous' ? (lang === 'fr' ? 'Tous' : 'All') : f}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {/* Filtre par parfum */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+          {flavors.map(f => (
+            <button key={f} onClick={() => setFlavor(f)} style={{
+              padding: '6px 18px', border: '0.5px solid rgba(59,25,15,0.25)', background: flavor === f ? '#3b190f' : 'transparent',
+              color: flavor === f ? '#f8cb78' : '#7a4f2d', fontSize: 9, letterSpacing: '0.22em',
+              textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Jost,sans-serif', fontWeight: 300,
+            }}>
+              {f === 'tous' ? (lang === 'fr' ? 'Tous' : 'All') : f}
+            </button>
+          ))}
+        </div>
 
         {loading && <p style={{ textAlign: 'center', fontFamily: '"Cormorant Garamond",serif', fontSize: 18, fontStyle: 'italic', color: 'rgba(59,25,15,0.4)' }}>{lang === 'fr' ? 'Chargement…' : 'Loading…'}</p>}
         {error && <p style={{ textAlign: 'center', color: '#c0392b', fontSize: 11 }}>{lang === 'fr' ? 'Erreur' : 'Error'} : {error}</p>}
