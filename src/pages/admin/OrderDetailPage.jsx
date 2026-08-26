@@ -41,20 +41,28 @@ function InfoRow({ label, value }) {
 
 /* ─── Lien WhatsApp Click-to-Chat pré-rempli avec le récap de commande ─── */
 function buildOrderWALink(order) {
-  const totalStr = order.currency === 'XOF'
-    ? `${Number(order.total).toLocaleString('fr-FR')} FCFA`
-    : `${Number(order.total).toFixed(2)} €`;
+  const phoneDigits = (order.customer_phone || '').replace(/\D/g, '');
+
+  if (order.currency === 'XOF') {
+    const totalStr = `${Number(order.total).toLocaleString('fr-FR')} FCFA`;
+    const lines = (order.items || []).map(i => `* ${i.product_name} ×${i.quantity}`).join('\n');
+    const message = `Bonjour ${order.customer_name || ''}, merci pour votre commande sur Eolekare 🥑🥥🥭 !\n\n`
+      + `Récapitulatif de la commande n° ${order.reference} :\n${lines}\n\n`
+      + `Total : ${totalStr}\n\n`
+      + `Dès que votre commande sera prête, notre livreur vous contactera directement pour convenir de l'heure et du lieu de livraison. Le règlement de la livraison se fera directement avec lui, à la remise du colis.\n\n`
+      + `Merci encore pour votre confiance,\nL'équipe Eolekare 🥑🥥🥭`;
+    return `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`;
+  }
+
+  const totalStr = `${Number(order.total).toFixed(2)} €`;
   const lines = (order.items || []).map(i => `• ${i.product_name} ×${i.quantity}`).join('\n');
   const address = order.shipping_address
     ? `${order.shipping_address}, ${order.shipping_zip || ''} ${order.shipping_city || ''}`.trim()
     : null;
-
   const message = `Bonjour ${order.customer_name || ''}, ici Eolekare 👋\n\n`
     + `Concernant votre commande ${order.reference} :\n${lines}\n\n`
     + `Total : ${totalStr}\n`
     + (address ? `📍 Adresse : ${address}\n` : '');
-
-  const phoneDigits = (order.customer_phone || '').replace(/\D/g, '');
   return `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`;
 }
 
