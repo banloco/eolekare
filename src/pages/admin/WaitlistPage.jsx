@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getAdminWaitlist, deleteWaitlistSignup } from '../../lib/api';
 
@@ -40,6 +41,22 @@ export default function WaitlistPage() {
 
   const waNumber = (phone) => (phone || '').replace(/[^\d+]/g, '');
 
+  const handleExportExcel = () => {
+    const rows = signups.map(s => ({
+      Date: new Date(s.created_at).toLocaleDateString('fr-FR'),
+      Zone: zoneLabel(s.zone),
+      'Produit souhaité': s.product_type,
+      Prénom: s.firstname,
+      Email: s.email || '',
+      Téléphone: s.phone || '',
+      Instagram: s.instagram || '',
+    }));
+    const sheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, sheet, 'Liste d\'attente');
+    XLSX.writeFile(workbook, `liste-attente-eolekare-${new Date().toISOString().slice(0, 10)}.xlsx`);
+  };
+
   const filterStyle = {
     padding: '7px 12px', border: '0.5px solid rgba(59,25,15,0.2)', background: '#fff',
     fontSize: 11, color: '#3b190f', cursor: 'pointer', fontFamily: 'Jost, sans-serif', outline: 'none',
@@ -57,6 +74,15 @@ export default function WaitlistPage() {
             Demandes enregistrées avant le lancement
           </p>
         </div>
+        <button
+          onClick={handleExportExcel}
+          disabled={signups.length === 0}
+          style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '12px 24px', border: 'none', cursor: signups.length === 0 ? 'not-allowed' : 'pointer', opacity: signups.length === 0 ? 0.5 : 1 }}
+          onMouseEnter={e => { if (signups.length) e.currentTarget.style.background = '#5a2d12'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#3b190f'; }}
+        >
+          ↓ Exporter Excel
+        </button>
       </div>
 
       {/* Total */}
