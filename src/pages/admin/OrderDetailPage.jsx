@@ -247,6 +247,32 @@ export default function OrderDetailPage() {
                   ? `${Number(order.shipping_cost).toLocaleString('fr-FR')} FCFA`
                   : `${Number(order.shipping_cost).toFixed(2)} €`
             } />
+            {isEurope && (
+              order.mondialrelay_tracking_number ? (
+                <>
+                  <InfoRow label="N° expédition" value={order.mondialrelay_tracking_number} />
+                  {order.mondialrelay_label_url && (
+                    <a
+                      href={order.mondialrelay_label_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: '0.8rem',
+                        padding: '9px 18px', fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase',
+                        fontFamily: 'Jost, sans-serif', color: '#fdf6ec', background: '#3b190f',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      📦 Voir l'étiquette Mondial Relay
+                    </a>
+                  )}
+                </>
+              ) : ['confirmed', 'processing', 'shipped', 'delivered'].includes(order.status) && (
+                <p style={{ fontSize: 11, color: 'rgba(59,25,15,0.45)', marginTop: '0.6rem', fontStyle: 'italic' }}>
+                  Aucune étiquette créée automatiquement — à créer manuellement sur le portail Mondial Relay.
+                </p>
+              )
+            )}
           </div>
 
           {/* Notes */}

@@ -93,6 +93,7 @@ export default function CheckoutPage({ cart, cartTotal, cartCount, onClose, onSu
         payload.relay_id      = relay?.ID;
         payload.relay_name    = relay?.Nom;
         payload.relay_city    = relay?.Ville;
+        payload.relay_zip     = relay?.CP;
         payload.relay_country = relay?.Pays;
       }
 
