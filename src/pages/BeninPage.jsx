@@ -36,10 +36,11 @@ const T_BJ = {
     article: 'article', articles: 'articles',
     empty: 'Votre panier est vide', discover_butters: 'Découvrez nos beurres',
     recap: 'Récapitulatif & paiement',
-    label_name: 'Nom complet *', label_phone: 'Téléphone *', label_address: 'Adresse de livraison (optionnel)',
+    label_name: 'Nom complet *', label_phone: 'Téléphone *', label_address: 'Adresse de livraison *',
     order_btn: 'Commander →', back_cart: '← Modifier le panier',
     total: 'Total', redirecting: 'Redirection…', pay_prefix: 'Payer ',
     err_name: 'Veuillez entrer votre nom.', err_phone: 'Veuillez entrer votre téléphone.',
+    err_address: 'Veuillez entrer votre adresse de livraison.',
     err_phone_indicatif: "Merci d'ajouter l'indicatif de votre pays devant votre numéro (ex : +229 pour le Bénin, +33 pour la France).",
     nature_strip: 'La nature dans chaque texture',
     ticker: ['Eolekare', '·', 'Votre skincare aux parfums uniques', '·', '100% Naturel', '·', 'Made in 🇧🇯', '·', 'Pour tous', '·'],
@@ -54,10 +55,11 @@ const T_BJ = {
     article: 'item', articles: 'items',
     empty: 'Your cart is empty', discover_butters: 'Discover our butters',
     recap: 'Summary & payment',
-    label_name: 'Full name *', label_phone: 'Phone *', label_address: 'Delivery address (optional)',
+    label_name: 'Full name *', label_phone: 'Phone *', label_address: 'Delivery address *',
     order_btn: 'Order →', back_cart: '← Edit cart',
     total: 'Total', redirecting: 'Redirecting…', pay_prefix: 'Pay ',
     err_name: 'Please enter your name.', err_phone: 'Please enter your phone.',
+    err_address: 'Please enter your delivery address.',
     err_phone_indicatif: 'Please add your country calling code before your number (e.g. +229 for Benin, +33 for France).',
     nature_strip: 'Nature in every texture',
     ticker: ['Eolekare', '·', 'Your skincare with unique scents', '·', '100% Natural', '·', 'Made in 🇧🇯', '·', 'For everyone', '·'],
@@ -207,6 +209,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
     if (!customer.phone.trim()) { setError(t.err_phone); return; }
     const phoneDigits = customer.phone.replace(/[\s().-]/g, '');
     if (!/^\+\d{8,15}$/.test(phoneDigits)) { setError(t.err_phone_indicatif); return; }
+    if (!customer.address.trim()) { setError(t.err_address); return; }
     setError('');
     setBusy(true);
     try {
@@ -317,7 +320,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
                 <label style={labelStyle}>{t.label_name}</label>
                 <input style={inputStyle} value={customer.name} onChange={e => setCustomer(p => ({ ...p, name: e.target.value }))} placeholder="Jean Dupont" />
                 <label style={labelStyle}>{t.label_phone}</label>
-                <input style={inputStyle} type="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+229 96 00 00 00" />
+                <input style={inputStyle} type="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+000 00 00 00 00" />
                 <label style={labelStyle}>{t.label_address}</label>
                 <textarea value={customer.address} onChange={e => setCustomer(p => ({ ...p, address: e.target.value }))}
                   placeholder="Quartier, rue, ville…" rows={2}
@@ -464,7 +467,7 @@ function Products({ cart, setCart, lang = 'fr' }) {
   const [flavor, setFlavor] = useState('tous');
   const [modal, setModal]   = useState(null);
 
-  const flavors = ['tous', 'Avocat', 'Coco', 'Mangue'];
+  const flavors = ['tous', 'Avocat', 'Coco', 'Mangue', 'Pack Découverte'];
   const visible = flavor === 'tous' ? products : products.filter(p => getFlavor(p.name) === flavor);
 
   const handleAdd = (p) => {

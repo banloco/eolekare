@@ -359,7 +359,7 @@ function Products({ lang, cartHook }) {
   const [modal, setModal] = useState(null);
   const [flavor, setFlavor] = useState('tous');
 
-  const flavors = ['tous', 'Avocat', 'Coco', 'Mangue'];
+  const flavors = ['tous', 'Avocat', 'Coco', 'Mangue', 'Pack Découverte'];
   const visible = flavor === 'tous' ? products : products.filter(p => getFlavor(p.name) === flavor);
 
   useEffect(() => {

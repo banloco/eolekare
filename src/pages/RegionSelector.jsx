@@ -59,7 +59,6 @@ export default function RegionSelector() {
             <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:26,fontWeight:300,color:'#fff',letterSpacing:'0.1em',marginBottom:'0.4rem'}}>Bénin</p>
             <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne</p>
             <div style={{display:'flex',alignItems:'center',gap:6,marginTop:'1rem',background:'rgba(37,211,102,0.15)',border:'0.5px solid rgba(37,211,102,0.35)',borderRadius:3,padding:'5px 12px'}}>
-              <span style={{fontSize:14}}>💬</span>
               <span style={{fontSize:9,letterSpacing:'0.18em',color:'rgba(255,255,255,0.7)',textTransform:'uppercase'}}>Paiement sécurisé</span>
             </div>
             <p style={{marginTop:'1rem',fontSize:9,letterSpacing:'0.2em',fontWeight:300,color:'rgba(255,255,255,0.4)',textTransform:'uppercase',borderTop:'0.5px solid rgba(255,255,255,0.2)',paddingTop:'0.8rem',width:'100%',textAlign:'center'}}>
@@ -78,11 +77,10 @@ export default function RegionSelector() {
             <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:26,fontWeight:300,color:'#fff',letterSpacing:'0.1em',marginBottom:'0.4rem'}}>Europe</p>
             <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne<br/>Livraison Mondial Relay</p>
             <div style={{display:'flex',alignItems:'center',gap:6,marginTop:'1rem',background:'rgba(150,191,99,0.15)',border:'0.5px solid rgba(150,191,99,0.35)',borderRadius:3,padding:'5px 12px'}}>
-              <span style={{fontSize:14}}>🛒</span>
               <span style={{fontSize:9,letterSpacing:'0.18em',color:'rgba(255,255,255,0.7)',textTransform:'uppercase'}}>Paiement sécurisé</span>
             </div>
             <p style={{marginTop:'1rem',fontSize:9,letterSpacing:'0.2em',fontWeight:300,color:'rgba(255,255,255,0.4)',textTransform:'uppercase',borderTop:'0.5px solid rgba(255,255,255,0.2)',paddingTop:'0.8rem',width:'100%',textAlign:'center'}}>
-              Tracking · EUR · CB / PayPal
+              Stripe · EUR
             </p>
           </Card>
         </div>
