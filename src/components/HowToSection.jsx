@@ -163,6 +163,29 @@ export default function HowToSection({ lang = 'fr' }) {
           <HowToCard key={step.n} {...step} />
         ))}
       </div>
+
+      <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+        <a
+          href="/mode-emploi.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-block',
+            padding: '10px 22px',
+            borderRadius: 999,
+            background: '#f8cb78',
+            color: '#3b190f',
+            fontSize: 12,
+            fontFamily: '"Montserrat",sans-serif',
+            fontWeight: 500,
+            letterSpacing: '0.05em',
+            textDecoration: 'none',
+            transition: 'all 0.25s',
+          }}
+        >
+          {lang === 'fr' ? "Ton mode d'emploi" : 'Your Eolekare guide'} →
+        </a>
+      </div>
     </section>
   );
 }
