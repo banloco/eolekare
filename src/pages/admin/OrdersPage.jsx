@@ -152,7 +152,7 @@ export default function OrdersPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
-                {['Référence', 'Client', 'Marché', 'Articles', 'Total', 'Statut', 'Date'].map(h => (
+                {['Référence', 'Client', 'Marché', 'Articles', 'Produit', 'Format', 'Total', 'Statut', 'Date'].map(h => (
                   <th key={h} style={{ padding: '12px 1.5rem', textAlign: 'left', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(59,25,15,0.4)', fontWeight: 300 }}>
                     {h}
                   </th>
@@ -184,6 +184,12 @@ export default function OrdersPage() {
                   </td>
                   <td style={{ padding: '14px 1.5rem', fontSize: 12, color: '#7a4f2d' }}>
                     {order.items?.length ?? '—'} art.
+                  </td>
+                  <td style={{ padding: '14px 1.5rem', fontSize: 12, color: '#3b190f' }}>
+                    {(order.items || []).map(i => i.product_name).join(', ') || '—'}
+                  </td>
+                  <td style={{ padding: '14px 1.5rem', fontSize: 12, color: '#7a4f2d' }}>
+                    {(order.items || []).map(i => i.format).filter(Boolean).join(', ') || '—'}
                   </td>
                   <td style={{ padding: '14px 1.5rem' }}>
                     <span style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 16, color: '#3b190f' }}>
