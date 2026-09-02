@@ -49,7 +49,9 @@ function buildOrderWALink(order) {
     const message = `Bonjour ${order.customer_name || ''}, merci pour votre commande sur Eolekare 🥑🥥🥭 !\n\n`
       + `Récapitulatif de la commande n° ${order.reference} :\n${lines}\n\n`
       + `Total : ${totalStr}\n\n`
-      + `Dès que votre commande sera prête, notre livreur vous contactera directement pour convenir de l'heure et du lieu de livraison. Le règlement de la livraison se fera directement avec lui, à la remise du colis.\n\n`
+      + `📞 Numéro à contacter : ${order.customer_phone || ''}\n`
+      + `📍 Adresse de livraison : ${order.shipping_address || ''}\n\n`
+      + `Dès que votre commande sera prête, notre livreur vous contactera directement au numéro indiqué pour convenir de l'heure et du lieu de livraison. Le règlement de la livraison se fera directement avec lui, à la remise du colis.\n\n`
       + `Merci encore pour votre confiance,\nL'équipe Eolekare 🥑🥥🥭`;
     return `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`;
   }
