@@ -323,7 +323,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
                 <input style={inputStyle} type="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+000 00 00 00 00" />
                 <label style={labelStyle}>{t.label_address}</label>
                 <textarea value={customer.address} onChange={e => setCustomer(p => ({ ...p, address: e.target.value }))}
-                  placeholder="Quartier, rue, ville…" rows={2}
+                  placeholder="Quartier, ville, région…" rows={2}
                   style={{ ...inputStyle, resize: 'none' }} />
               </div>
               {error && <p style={{ color: '#c0392b', fontSize: 11, marginBottom: '0.8rem' }}>{error}</p>}
