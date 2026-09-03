@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import FloatingFruits from '../components/FloatingFruits';
 import StockNotifyForm from '../components/StockNotifyForm';
 import CommunitySection from '../components/CommunitySection';
@@ -13,6 +13,24 @@ import { createOrder, fedapayCreateTransaction } from '../lib/api';
 
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '2290148654200';
 const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
+
+/* ─── Panier persistant (localStorage) — cohérent avec la vitrine Europe ─── */
+const BJ_CART_KEY = 'eolekare_bj_cart';
+
+function usePersistedCart() {
+  const [cart, setRaw] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(BJ_CART_KEY)) || []; }
+    catch { return []; }
+  });
+  const setCart = useCallback((update) => {
+    setRaw(prev => {
+      const next = typeof update === 'function' ? update(prev) : update;
+      try { localStorage.setItem(BJ_CART_KEY, JSON.stringify(next)); } catch { /* quota / mode privé */ }
+      return next;
+    });
+  }, []);
+  return [cart, setCart];
+}
 
 /* ─── Nom produit selon la langue (fallback FR si pas de traduction) ─── */
 function displayName(p, lang) {
@@ -88,18 +106,6 @@ function PaymentBanner({ lang, status, reference, onClose }) {
         <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: v.color, fontSize: 14, flexShrink: 0 }}>{t.pay_close}</button>
       </div>
     </div>
-  );
-}
-
-/* ─── PANIER WHATSAPP ─────────────────────────────────────── */
-function buildWAMessage(cart, address) {
-  const lines = cart.map(i => `• ${i.name} x${i.qty} — ${formatFCFA(i.price_fcfa * i.qty)}`).join('\n');
-  const total = cart.reduce((s, i) => s + i.price_fcfa * i.qty, 0);
-  return encodeURIComponent(
-    `Bonjour Eolekare ! 👋\n\nJe souhaite commander :\n\n${lines}\n\n` +
-    `*Total : ${formatFCFA(total)}*\n\n` +
-    (address ? `📍 Adresse de livraison : ${address}\n\n` : '') +
-    `Merci ! 🙏`
   );
 }
 
@@ -270,7 +276,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
                         onMouseEnter={e => e.currentTarget.style.color = '#c0392b'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(59,25,15,0.3)'}>✕</button>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <button onClick={() => onUpdate(item.id, item.qty - 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                        <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', minWidth: 18, textAlign: 'center' }}>{item.qty}</span>
+                        <span style={{ fontFamily: 'Jost,sans-serif', fontSize: 13, fontWeight: 400, color: '#3b190f', minWidth: 18, textAlign: 'center', fontVariantNumeric: 'tabular-nums' }}>{item.qty}</span>
                         <button onClick={() => onUpdate(item.id, item.qty + 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
@@ -434,7 +440,7 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
                   <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d' }}>{t.qty}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '0.5px solid rgba(59,25,15,0.15)', padding: '4px 8px' }}>
                     <button onClick={() => setQty(q => Math.max(1, q - 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#3b190f', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                    <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 18, color: '#3b190f', minWidth: 20, textAlign: 'center' }}>{qty}</span>
+                    <span style={{ fontFamily: 'Jost,sans-serif', fontSize: 14, fontWeight: 400, color: '#3b190f', minWidth: 20, textAlign: 'center', fontVariantNumeric: 'tabular-nums' }}>{qty}</span>
                     <button onClick={() => setQty(q => q + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#3b190f', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                   </div>
                 </div>
@@ -461,8 +467,7 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
 }
 
 /* ─── PRODUCTS ── */
-function Products({ cart, setCart, lang = 'fr' }) {
-  const { products, loading, error } = useProducts('benin');
+function Products({ cart, setCart, lang = 'fr', products = [], loading = false, error = null }) {
   const [added, setAdded]   = useState(null);
   const [flavor, setFlavor] = useState('tous');
   const [modal, setModal]   = useState(null);
@@ -558,37 +563,6 @@ function Products({ cart, setCart, lang = 'fr' }) {
 
 
 
-/* ─── ORDER ── */
-function Order() {
-  return (
-    <section id="order" style={{ background: '#faeacc', padding: 'clamp(4rem,8vw,6rem) clamp(1.25rem,4vw,3rem)', textAlign: 'center' }}>
-      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>Commandez maintenant</h2>
-      <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', maxWidth: 500, margin: '0 auto 3rem' }}>
-        Livraison en Europe & à l'international. Pour l'Afrique de l'ouest, contactez-nous directement.
-      </p>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
-        {[
-          { icon: 'W', label: 'WhatsApp', val: '+229 0148654200' },
-          { icon: '@', label: 'Instagram', val: '@eolekare' },
-          { icon: 'T', label: 'TikTok', val: '@eolekare' },
-          { icon: '$', label: 'Paiement', val: 'revolut.me/eole15vp4' },
-        ].map(m => (
-          <div key={m.label} style={{ textAlign: 'center', minWidth: 120 }}>
-            <div style={{ width: 56, height: 56, border: '0.5px solid rgba(59,25,15,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.8rem', fontFamily: '"Cormorant Garamond",serif', fontSize: 22, color: '#3b190f' }}>{m.icon}</div>
-            <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 4 }}>{m.label}</p>
-            <p style={{ fontSize: 11, fontWeight: 300, color: '#3b190f' }}>{m.val}</p>
-          </div>
-        ))}
-      </div>
-      <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer"
-        style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', textDecoration: 'none', display: 'inline-block', transition: 'background 0.3s' }}
-        onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
-        Commander sur WhatsApp
-      </a>
-    </section>
-  );
-}
-
 /* ─── FOOTER ── */
 function Footer({ lang = 'fr' }) {
   return (
@@ -620,10 +594,10 @@ function Footer({ lang = 'fr' }) {
 
 /* ─── PAGE ── */
 export default function BeninPage() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = usePersistedCart();
   const [cartOpen, setCartOpen] = useState(false);
   const [lang, setLang] = useState('fr');
-  const { products } = useProducts('benin');
+  const { products, loading, error } = useProducts('benin');
 
   // ── Retour FedaPay (?payment=success|failed|error&ref=...) ──
   const [payment, setPayment] = useState(() => {
@@ -634,6 +608,7 @@ export default function BeninPage() {
 
   useEffect(() => {
     if (!payment) return;
+    if (payment.status === 'success') setCart([]);
     const params = new URLSearchParams(window.location.search);
     params.delete('payment');
     params.delete('ref');
@@ -701,12 +676,11 @@ export default function BeninPage() {
           ))}
         </div>
       </div>
-      <Products cart={cart} setCart={setCart} lang={lang} />
+      <Products cart={cart} setCart={setCart} lang={lang} products={products} loading={loading} error={error} />
       <StorySection lang={lang} />
       <HowToSection lang={lang} />
       <ReviewsSection lang={lang} />
       <CommunitySection lang={lang} waNumber={WHATSAPP_NUMBER} />
-      {/* <Order /> */}
       <Footer lang={lang} />
     </>
   );

@@ -17,8 +17,10 @@ export function useSEO({ title, description, url, image, lang = 'fr', type = 'we
     document.title = title;
     document.documentElement.lang = lang;
 
-    const ogImage = image || 'https://eolekare.com/images/og-image.jpg';
-    const canonical = url || window.location.href;
+    // Domaine canonique : toujours la version www (apex → www via redirection Vercel).
+    const toWww = (u) => (u || '').replace(/:\/\/eolekare\.com/, '://www.eolekare.com');
+    const ogImage = toWww(image) || 'https://www.eolekare.com/images/og-image.jpg';
+    const canonical = toWww(url) || window.location.href;
 
     /* ── Helper: upsert a <meta> tag ── */
     const setMeta = (attr, attrVal, content) => {

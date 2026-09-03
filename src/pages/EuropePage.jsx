@@ -211,7 +211,7 @@ function CartDrawer({ lang, cart, total, onUpdate, onRemove, onClose, products, 
                       {/* Sélecteur quantité */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <button onClick={() => onUpdate(item.id, item.qty - 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                        <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 17, color: '#3b190f', minWidth: 18, textAlign: 'center' }}>{item.qty}</span>
+                        <span style={{ fontFamily: 'Jost,sans-serif', fontSize: 13, fontWeight: 400, color: '#3b190f', minWidth: 18, textAlign: 'center', fontVariantNumeric: 'tabular-nums' }}>{item.qty}</span>
                         <button onClick={() => onUpdate(item.id, item.qty + 1)} style={{ width: 26, height: 26, border: '0.5px solid rgba(59,25,15,0.2)', background: 'none', cursor: 'pointer', fontSize: 14, color: '#3b190f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                         <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 14, fontStyle: 'italic', color: '#7a4f2d', marginLeft: 'auto' }}>{formatEUR(item.price_eur * item.qty)}</span>
                       </div>
@@ -323,7 +323,7 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
                   <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7a4f2d' }}>{t.qty}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '0.5px solid rgba(59,25,15,0.15)', padding: '4px 8px' }}>
                     <button onClick={() => setQty(q => Math.max(1, q - 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#3b190f', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                    <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 18, color: '#3b190f', minWidth: 20, textAlign: 'center' }}>{qty}</span>
+                    <span style={{ fontFamily: 'Jost,sans-serif', fontSize: 14, fontWeight: 400, color: '#3b190f', minWidth: 20, textAlign: 'center', fontVariantNumeric: 'tabular-nums' }}>{qty}</span>
                     <button onClick={() => setQty(q => q + 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#3b190f', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                   </div>
                 </div>
@@ -351,9 +351,8 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
 }
 
 /* ─── PRODUCTS ─── */
-function Products({ lang, cartHook }) {
+function Products({ lang, cartHook, products = [], loading = false, error = null }) {
   const t = T[lang];
-  const { products, loading, error } = useProducts('international');
   const { cart, add } = cartHook;
   const [added, setAdded] = useState(null);
   const [modal, setModal] = useState(null);
@@ -447,39 +446,6 @@ function Products({ lang, cartHook }) {
 }
 
 
-/* ─── ORDER ─── */
-function Order({ lang, onCartOpen }) {
-  return (
-    <section id="order" style={{ background: '#faeacc', padding: 'clamp(4rem,8vw,6rem) clamp(1.25rem,4vw,3rem)', textAlign: 'center' }}>
-      <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 50, fontWeight: 300, color: '#3b190f', marginBottom: '0.8rem' }}>
-        {lang === 'fr' ? 'Commandez maintenant' : 'Order now'}
-      </h2>
-      <p style={{ fontSize: 12, fontWeight: 300, color: '#7a4f2d', maxWidth: 500, margin: '0 auto 3rem' }}>
-        {lang === 'fr' ? 'Livraison en Europe via Mondial Relay. Paiement sécurisé par carte bancaire.' : 'Delivery in Europe via Mondial Relay. Secure payment by credit card.'}
-      </p>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
-        {[
-          { icon: '🛒', label: lang === 'fr' ? 'En ligne' : 'Online', val: lang === 'fr' ? 'Via le panier' : 'Via cart' },
-          { icon: 'W', label: 'WhatsApp', val: '+229 0148654200' },
-          { icon: '@', label: 'Instagram', val: '@eolekare' },
-          { icon: '🚚', label: 'Mondial Relay', val: lang === 'fr' ? "Toute l'Europe" : 'All Europe' },
-        ].map(m => (
-          <div key={m.label} style={{ textAlign: 'center', minWidth: 120 }}>
-            <div style={{ width: 56, height: 56, border: '0.5px solid rgba(59,25,15,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.8rem', fontFamily: '"Cormorant Garamond",serif', fontSize: 22, color: '#3b190f' }}>{m.icon}</div>
-            <p style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7a4f2d', marginBottom: 4 }}>{m.label}</p>
-            <p style={{ fontSize: 11, fontWeight: 300, color: '#3b190f' }}>{m.val}</p>
-          </div>
-        ))}
-      </div>
-      <button onClick={onCartOpen}
-        style={{ fontSize: 10, letterSpacing: '0.28em', fontWeight: 300, textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '15px 42px', border: 'none', cursor: 'pointer', fontFamily: 'Jost,sans-serif', transition: 'background 0.3s' }}
-        onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'} onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}>
-        {lang === 'fr' ? 'Commander →' : 'Order →'}
-      </button>
-    </section>
-  );
-}
-
 /* ─── FOOTER ─── */
 function Footer({ lang }) {
   return (
@@ -522,7 +488,7 @@ export default function EuropePage() {
     return status ? { status, reference: params.get('ref') } : null;
   });
   const cartHook = useCart();
-  const { products } = useProducts('international');
+  const { products, loading, error } = useProducts('international');
 
   useEffect(() => {
     if (!payment) return;
@@ -572,6 +538,7 @@ export default function EuropePage() {
           cart={cartHook.cart}
           cartTotal={cartHook.total}
           cartCount={cartHook.count}
+          lang={lang}
           onClose={closeCheckout}
           onSuccess={onCheckoutDone}
         />
@@ -630,12 +597,11 @@ export default function EuropePage() {
         </div>
       </div>
 
-      <Products lang={lang} cartHook={cartHook} />
+      <Products lang={lang} cartHook={cartHook} products={products} loading={loading} error={error} />
       <StorySection lang={lang} />
       <HowToSection lang={lang} />
       <ReviewsSection lang={lang} />
       <CommunitySection lang={lang} />
-      {/* <Order lang={lang} onCartOpen={() => setCartOpen(true)} /> */}
       <Footer lang={lang} />
     </>
   );

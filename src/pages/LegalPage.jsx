@@ -39,12 +39,12 @@ const CONTENT = {
           SIRET : 933 699 969 00012<br />
           Adresse : 240 avenue des Grésillons, 92600 Asnières-sur-Seine, France<br />
           Email : {mailLink}<br />
-          Téléphone : +229 48 65 42 00
+          Téléphone : +229 01 48 65 42 00
         </p>
       ) },
       { h2: 'Directrice de la publication', body: <p style={s.p}>Eole Gauthé, fondatrice d'Eolekare.</p> },
       { h2: 'Hébergement', body: (
-        <p style={s.p}>Le site eolekare.com est hébergé par <strong>Netlify, Inc.</strong> (frontend) et <strong>Hetzner Online GmbH</strong> (API backend).</p>
+        <p style={s.p}>Le site eolekare.com est hébergé par <strong>Vercel Inc.</strong> (frontend — 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis) et <strong>Hetzner Online GmbH</strong> (API backend — Industriestr. 25, 91710 Gunzenhausen, Allemagne).</p>
       ) },
       { h2: 'Développement du site', body: <p style={s.p}>Site développé par Fortuné (développeur indépendant).</p> },
       { h2: 'Propriété intellectuelle', body: (
@@ -71,12 +71,12 @@ const CONTENT = {
           SIRET: 933 699 969 00012<br />
           Address: 240 avenue des Grésillons, 92600 Asnières-sur-Seine, France<br />
           Email: {mailLink}<br />
-          Phone: +229 48 65 42 00
+          Phone: +229 01 48 65 42 00
         </p>
       ) },
       { h2: 'Publication director', body: <p style={s.p}>Eole Gauthé, founder of Eolekare.</p> },
       { h2: 'Hosting', body: (
-        <p style={s.p}>The website eolekare.com is hosted by <strong>Netlify, Inc.</strong> (frontend) and <strong>Hetzner Online GmbH</strong> (API backend).</p>
+        <p style={s.p}>The website eolekare.com is hosted by <strong>Vercel Inc.</strong> (frontend — 340 S Lemon Ave #4133, Walnut, CA 91789, USA) and <strong>Hetzner Online GmbH</strong> (backend API — Industriestr. 25, 91710 Gunzenhausen, Germany).</p>
       ) },
       { h2: 'Website development', body: <p style={s.p}>Website developed by Fortuné (independent developer).</p> },
       { h2: 'Intellectual property', body: (
@@ -159,7 +159,7 @@ const CONTENT = {
         </p>
       ) },
       { h2: 'Article 9 — Service client', body: (
-        <p style={s.p}>Pour toute question relative à une commande : {mailLink} / +229 48 65 42 00</p>
+        <p style={s.p}>Pour toute question relative à une commande : {mailLink} / +229 01 48 65 42 00</p>
       ) },
       { h2: 'Article 10 — Droit applicable', body: (
         <p style={s.p}>
@@ -229,7 +229,7 @@ const CONTENT = {
         </p>
       ) },
       { h2: 'Article 9 — Customer service', body: (
-        <p style={s.p}>For any question regarding an order: {mailLink} / +229 48 65 42 00</p>
+        <p style={s.p}>For any question regarding an order: {mailLink} / +229 01 48 65 42 00</p>
       ) },
       { h2: 'Article 10 — Governing law', body: (
         <p style={s.p}>

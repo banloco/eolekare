@@ -11,7 +11,27 @@ const inputStyle = {
   boxSizing: 'border-box',
 };
 
-export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
+const T = {
+  fr: {
+    cp_placeholder: 'Code postal (ex : 75001)',
+    search: 'Rechercher',
+    cp_invalid: 'Entrez un code postal valide.',
+    server_error: 'Erreur serveur',
+    load_error: 'Impossible de charger les points relais.',
+    none: 'Aucun point relais trouvé pour ce code postal.',
+  },
+  en: {
+    cp_placeholder: 'Postal code (e.g. 75001)',
+    search: 'Search',
+    cp_invalid: 'Enter a valid postal code.',
+    server_error: 'Server error',
+    load_error: 'Could not load pickup points.',
+    none: 'No pickup point found for this postal code.',
+  },
+};
+
+export default function RelayPicker({ onSelect, countryCode = 'FR', lang = 'fr' }) {
+  const t = T[lang] || T.fr;
   const [cp, setCp]           = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +42,7 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (cp.trim().length < 4) { setError('Entrez un code postal valide.'); return; }
+    if (cp.trim().length < 4) { setError(t.cp_invalid); return; }
     setError('');
     setLoading(true);
     setSearched(false);
@@ -32,11 +52,11 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
         headers: { Accept: 'application/json' },
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Erreur serveur');
+      if (!res.ok) throw new Error(data.message || t.server_error);
       setResults(data);
       setSearched(true);
     } catch (err) {
-      setError(err.message || 'Impossible de charger les points relais.');
+      setError(err.message || t.load_error);
     } finally {
       setLoading(false);
     }
@@ -50,7 +70,7 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
           style={{ ...inputStyle, flex: 1 }}
           value={cp}
           onChange={e => setCp(e.target.value)}
-          placeholder="Code postal (ex : 75001)"
+          placeholder={t.cp_placeholder}
           maxLength={10}
         />
         <button
@@ -58,7 +78,7 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
           disabled={loading}
           style={{ padding: '10px 16px', background: loading ? '#999' : '#3b190f', color: '#fdf6ec', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', fontFamily: 'Jost,sans-serif', whiteSpace: 'nowrap' }}
         >
-          {loading ? '…' : 'Rechercher'}
+          {loading ? '…' : t.search}
         </button>
       </form>
 
@@ -85,7 +105,7 @@ export default function RelayPicker({ onSelect, countryCode = 'FR' }) {
       )}
 
       {searched && results.length === 0 && !error && (
-        <p style={{ fontSize: 11, color: '#7a4f2d', fontStyle: 'italic' }}>Aucun point relais trouvé pour ce code postal.</p>
+        <p style={{ fontSize: 11, color: '#7a4f2d', fontStyle: 'italic' }}>{t.none}</p>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin
 
-Sitemap: https://eolekare.com/sitemap.xml
+Sitemap: https://www.eolekare.com/sitemap.xml

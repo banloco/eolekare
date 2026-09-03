@@ -64,6 +64,7 @@ export default function LoginPage() {
             </label>
             <input
               type="email"
+              name="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
@@ -90,6 +91,7 @@ export default function LoginPage() {
             <div style={{ position: 'relative' }}>
               <input
                 type={showPwd ? 'text' : 'password'}
+                name="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required

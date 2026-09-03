@@ -42,9 +42,9 @@ export default function RegionSelector() {
 
       <div className="page-inner relative z-[3] h-screen flex flex-col items-center justify-center text-center" style={{padding:'2rem'}}>
 
-        <p style={{fontFamily:'"Brown Sugar",cursive',fontSize:'clamp(36px,6vw,72px)',fontWeight:400,letterSpacing:'0.05em',color:'#fff',lineHeight:1.1,textShadow:'0 2px 20px rgba(59,25,15,0.3)',marginBottom:'0.3rem'}}>
+        <h1 style={{fontFamily:'"Brown Sugar",cursive',fontSize:'clamp(36px,6vw,72px)',fontWeight:400,letterSpacing:'0.05em',color:'#fff',lineHeight:1.1,textShadow:'0 2px 20px rgba(59,25,15,0.3)',margin:'0 0 0.3rem'}}>
           Eolekare
-        </p>
+        </h1>
         <p style={{fontFamily:'"Montserrat",sans-serif',fontSize:11,letterSpacing:'0.35em',fontWeight:300,color:'rgba(255,255,255,0.6)',textTransform:'uppercase',marginBottom:'2rem'}}>by Eoleeg</p>
         <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:'clamp(16px,2.5vw,22px)',fontStyle:'italic',color:'rgba(255,255,255,0.85)',maxWidth:420,lineHeight:1.6,marginBottom:'0.8rem'}}>
           Votre skincare aux parfums uniques
@@ -86,7 +86,8 @@ export default function RegionSelector() {
         </div>
 
         <p className="absolute bottom-8" style={{fontSize:9,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.3)',textTransform:'uppercase'}}>
-          © 2026 Eolekare by Eoleeg &nbsp;·&nbsp; Instagram @eolekare
+          © 2026 Eolekare by Eoleeg &nbsp;·&nbsp;
+          <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer" style={{color:'inherit',textDecoration:'none'}}>Instagram @eolekare</a>
         </p>
       </div>
     </>
