@@ -341,6 +341,14 @@ export default function OrderDetailPage() {
           {/* Totaux */}
           <div style={{ borderTop: '0.5px solid rgba(59,25,15,0.1)', marginTop: '1rem', paddingTop: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: 11, color: 'rgba(59,25,15,0.5)' }}>Sous-total</span>
+              <span style={{ fontSize: 13, color: '#3b190f' }}>
+                {order.currency === 'XOF'
+                  ? `${Number(order.subtotal).toLocaleString('fr-FR')} FCFA`
+                  : `${Number(order.subtotal).toFixed(2)} €`}
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span style={{ fontSize: 11, color: 'rgba(59,25,15,0.5)' }}>Frais de port</span>
               <span style={{ fontSize: 13, color: '#3b190f' }}>
                 {Number(order.shipping_cost) === 0
@@ -351,11 +359,11 @@ export default function OrderDetailPage() {
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '0.5px solid rgba(59,25,15,0.1)', paddingTop: '0.8rem', marginTop: '0.5rem' }}>
-              <span style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 18, color: '#3b190f' }}>Total (hors livraison)</span>
+              <span style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 18, color: '#3b190f' }}>Total</span>
               <span style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 22, color: '#3b190f', fontWeight: 400 }}>
                 {order.currency === 'XOF'
-                  ? `${Number(order.subtotal).toLocaleString('fr-FR')} FCFA`
-                  : `${Number(order.subtotal).toFixed(2)} €`}
+                  ? `${Number(order.total).toLocaleString('fr-FR')} FCFA`
+                  : `${Number(order.total).toFixed(2)} €`}
               </span>
             </div>
           </div>

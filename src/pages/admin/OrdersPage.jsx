@@ -194,8 +194,8 @@ export default function OrdersPage() {
                   <td style={{ padding: '14px 1.5rem' }}>
                     <span style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 16, color: '#3b190f' }}>
                       {order.currency === 'XOF'
-                        ? `${Number(order.total).toLocaleString('fr-FR')} FCFA`
-                        : `${Number(order.total).toFixed(2)} €`}
+                        ? `${Number(order.subtotal).toLocaleString('fr-FR')} FCFA`
+                        : `${Number(order.subtotal).toFixed(2)} €`}
                     </span>
                   </td>
                   <td style={{ padding: '14px 1.5rem' }}>
