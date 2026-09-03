@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts, updateProduct, deleteProduct, getStockNotifications } from '../../lib/api';
+import { getAllProducts, updateProduct, deleteProduct, getStockNotifications, reorderProducts } from '../../lib/api';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -14,6 +14,8 @@ export default function ProductsPage() {
   const [deleting, setDeleting] = useState(false);
   const [stockNotifs, setStockNotifs] = useState({}); // { [product_id]: { count, emails } }
   const [notifModal, setNotifModal] = useState(null); // produit affiché dans le modal
+  const [dragIndex, setDragIndex] = useState(null);
+  const [savingOrder, setSavingOrder] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -51,6 +53,28 @@ export default function ProductsPage() {
       await updateProduct(id, { active: !current });
       setProducts(ps => ps.map(p => p.id === id ? { ...p, active: !current } : p));
     } catch(e) { console.error(e); }
+  };
+
+  // Réordonner (drag & drop) : uniquement possible sans filtre actif, sinon
+  // l'index affiché ne correspondrait plus à l'ordre réel des produits.
+  const canReorder = !search.trim() && marketFilter === 'tous' && statusFilter === 'tous';
+
+  const handleDrop = async (dropIndex) => {
+    if (dragIndex === null || dragIndex === dropIndex) { setDragIndex(null); return; }
+    const reordered = [...products];
+    const [moved] = reordered.splice(dragIndex, 1);
+    reordered.splice(dropIndex, 0, moved);
+    setProducts(reordered);
+    setDragIndex(null);
+    setSavingOrder(true);
+    try {
+      await reorderProducts(reordered.map(p => p.id));
+    } catch (e) {
+      console.error(e);
+      load(); // resynchronise avec le serveur en cas d'échec
+    } finally {
+      setSavingOrder(false);
+    }
   };
 
   const confirmDelete = async () => {
@@ -108,6 +132,12 @@ export default function ProductsPage() {
         </span>
       </div>
 
+      <p style={{ fontSize: 10, letterSpacing: '0.08em', color: 'rgba(59,25,15,0.4)', marginBottom: '1rem' }}>
+        {canReorder
+          ? (savingOrder ? 'Enregistrement de l\'ordre…' : '⠿ Glisse-dépose les lignes pour changer l\'ordre d\'affichage sur le site.')
+          : 'Réinitialise les filtres pour pouvoir réordonner les produits.'}
+      </p>
+
       {/* Table */}
       <div style={{ background: '#fff', border: '0.5px solid rgba(59,25,15,0.08)' }}>
         {loading ? (
@@ -118,18 +148,31 @@ export default function ProductsPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '0.5px solid rgba(59,25,15,0.08)' }}>
+                <th style={{ width: 32 }}></th>
                 {['Produit', 'Format', 'Prix Bénin', 'Prix Europe', 'Stock', 'Statut', 'Actions'].map(h => (
                   <th key={h} style={{ padding: '10px 1.5rem', textAlign: 'left', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(59,25,15,0.4)', fontWeight: 300 }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {filtered.map(p => (
+              {filtered.map((p, index) => (
                 <tr key={p.id}
-                  style={{ borderBottom: '0.5px solid rgba(59,25,15,0.04)', transition: 'background 0.15s' }}
+                  draggable={canReorder}
+                  onDragStart={() => setDragIndex(index)}
+                  onDragOver={e => canReorder && e.preventDefault()}
+                  onDrop={() => canReorder && handleDrop(index)}
+                  onDragEnd={() => setDragIndex(null)}
+                  style={{
+                    borderBottom: '0.5px solid rgba(59,25,15,0.04)',
+                    transition: 'background 0.15s',
+                    opacity: dragIndex === index ? 0.4 : 1,
+                  }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(248,203,120,0.04)'}
                   onMouseLeave={e => e.currentTarget.style.background = ''}
                 >
+                  <td style={{ padding: '12px 0 12px 1rem', textAlign: 'center', color: canReorder ? 'rgba(59,25,15,0.3)' : 'rgba(59,25,15,0.1)', cursor: canReorder ? 'grab' : 'default', fontSize: 14 }}>
+                    ⠿
+                  </td>
                   {/* Produit */}
                   <td style={{ padding: '12px 1.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

@@ -65,6 +65,11 @@ export async function deleteProduct(id) {
   return request('DELETE', `/admin/products/${id}`);
 }
 
+/** Réordonne les produits pour l'affichage vitrine (ordre complet des IDs). */
+export async function reorderProducts(orderedIds) {
+  return request('PATCH', '/admin/products/reorder', { order: orderedIds });
+}
+
 // ── IMAGES ──────────────────────────────────────────────
 
 export async function uploadImage(file, productId) {
