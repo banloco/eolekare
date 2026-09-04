@@ -92,7 +92,12 @@ export default function OrdersPage() {
           </p>
         </div>
         <button
-          onClick={() => exportAdminOrders({ status: filters.status, market: filters.market })}
+          onClick={() => {
+            const params = {};
+            if (filters.status) params.status = filters.status;
+            if (filters.market) params.market = filters.market;
+            exportAdminOrders(params).catch(e => alert('Export impossible : ' + e.message));
+          }}
           style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#fdf6ec', background: '#3b190f', padding: '12px 24px', border: 'none', cursor: 'pointer' }}
           onMouseEnter={e => e.currentTarget.style.background = '#5a2d12'}
           onMouseLeave={e => e.currentTarget.style.background = '#3b190f'}
