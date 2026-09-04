@@ -28,7 +28,14 @@ export default function ProductsPage() {
 
   useEffect(() => {
     getStockNotifications()
-      .then(rows => setStockNotifs(Object.fromEntries(rows.map(r => [r.product_id, r]))))
+      .then(rows => {
+        const byProduct = {};
+        rows.forEach(r => {
+          byProduct[r.product_id] = byProduct[r.product_id] || {};
+          byProduct[r.product_id][r.market || 'any'] = r;
+        });
+        setStockNotifs(byProduct);
+      })
       .catch(console.error);
   }, []);
 
@@ -44,7 +51,7 @@ export default function ProductsPage() {
     if (marketFilter === 'intl')  list = list.filter(p => p.intl_available);
     if (statusFilter === 'actif') list = list.filter(p => p.active);
     if (statusFilter === 'inactif') list = list.filter(p => !p.active);
-    if (statusFilter === 'stock') list = list.filter(p => p.stock <= (p.stock_alert ?? 5));
+    if (statusFilter === 'stock') list = list.filter(p => p.stock_benin <= (p.stock_alert ?? 5) || p.stock_international <= (p.stock_alert ?? 5));
     setFiltered(list);
   }, [products, search, marketFilter, statusFilter]);
 
@@ -202,15 +209,23 @@ export default function ProductsPage() {
                   </td>
                   {/* Stock */}
                   <td style={{ padding: '12px 1.5rem' }}>
-                    <span style={{ fontSize: 13, fontWeight: 300, color: p.stock === 0 ? '#c0392b' : p.stock <= 5 ? '#e67e22' : '#2d7a2d' }}>
-                      {p.stock ?? '—'}
-                      {p.stock === 0 && ' ⚠'}
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <span style={{ fontSize: 12, fontWeight: 300, color: p.stock_benin === 0 ? '#c0392b' : p.stock_benin <= (p.stock_alert ?? 5) ? '#e67e22' : '#2d7a2d' }}>
+                        🇧🇯 {p.stock_benin ?? '—'}{p.stock_benin === 0 && ' ⚠'}
+                      </span>
+                      <span style={{ fontSize: 12, fontWeight: 300, color: p.stock_international === 0 ? '#c0392b' : p.stock_international <= (p.stock_alert ?? 5) ? '#e67e22' : '#2d7a2d' }}>
+                        🇪🇺 {p.stock_international ?? '—'}{p.stock_international === 0 && ' ⚠'}
+                      </span>
+                    </div>
                     {stockNotifs[p.id] && (
-                      <button onClick={() => setNotifModal(stockNotifs[p.id])}
-                        style={{ display: 'block', marginTop: 4, fontSize: 9, letterSpacing: '0.08em', color: '#7a4f2d', background: 'rgba(122,79,45,0.08)', border: 'none', padding: '2px 8px', cursor: 'pointer', fontFamily: 'Jost, sans-serif' }}>
-                        🔔 {stockNotifs[p.id].count} en attente
-                      </button>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4 }}>
+                        {['benin', 'international', 'any'].filter(m => stockNotifs[p.id][m]).map(m => (
+                          <button key={m} onClick={() => setNotifModal(stockNotifs[p.id][m])}
+                            style={{ fontSize: 9, letterSpacing: '0.08em', color: '#7a4f2d', background: 'rgba(122,79,45,0.08)', border: 'none', padding: '2px 8px', cursor: 'pointer', fontFamily: 'Jost, sans-serif', textAlign: 'left' }}>
+                            🔔 {m === 'benin' ? '🇧🇯' : m === 'international' ? '🇪🇺' : ''} {stockNotifs[p.id][m].count} en attente
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </td>
                   {/* Toggle actif */}
@@ -280,6 +295,7 @@ export default function ProductsPage() {
           <div onClick={e => e.stopPropagation()} style={{ background: '#fdf6ec', padding: '2.5rem', maxWidth: 440, width: '100%', maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 24px 60px rgba(0,0,0,0.3)' }}>
             <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 22, color: '#3b190f', marginBottom: 4 }}>
               {notifModal.product_name} {notifModal.format && `· ${notifModal.format}`}
+              {notifModal.market && ` · ${notifModal.market === 'benin' ? '🇧🇯 Bénin' : '🇪🇺 Europe'}`}
             </p>
             <p style={{ fontSize: 11, color: '#7a4f2d', marginBottom: '1.5rem' }}>
               {notifModal.count} personne{notifModal.count > 1 ? 's' : ''} en attente du retour en stock

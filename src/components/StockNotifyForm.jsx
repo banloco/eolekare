@@ -6,7 +6,7 @@ const T = {
   en: { placeholder: 'Your email', cta: 'Notify me', sending: 'Sending…', done: "Thanks, we'll email you as soon as it's back!", error: 'Error, please try again.' },
 };
 
-export default function StockNotifyForm({ productId, lang = 'fr' }) {
+export default function StockNotifyForm({ productId, market, lang = 'fr' }) {
   const t = T[lang] || T.fr;
   const [email, setEmail]   = useState('');
   const [status, setStatus] = useState('idle'); // idle | busy | done | error
@@ -17,7 +17,7 @@ export default function StockNotifyForm({ productId, lang = 'fr' }) {
     if (!email.trim()) return;
     setStatus('busy');
     try {
-      await submitStockNotification({ product_id: productId, email });
+      await submitStockNotification({ product_id: productId, email, market });
       setStatus('done');
     } catch {
       setStatus('error');

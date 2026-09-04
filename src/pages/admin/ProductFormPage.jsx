@@ -17,7 +17,8 @@ const EMPTY = {
   ingredients_en: '',
   price_fcfa: '',
   price_eur: '',
-  stock: '',
+  stock_benin: '',
+  stock_international: '',
   stock_alert: '5',
   active: true,
   benin_available: true,
@@ -59,7 +60,8 @@ export default function ProductFormPage() {
         ingredients_en:       p.ingredients_en || '',
         price_fcfa:           p.price_fcfa ?? '',
         price_eur:            p.price_eur ?? '',
-        stock:                p.stock ?? '',
+        stock_benin:          p.stock_benin ?? '',
+        stock_international:  p.stock_international ?? '',
         stock_alert:          p.stock_alert ?? '5',
         active:               p.active ?? true,
         benin_available:      p.benin_available ?? true,
@@ -136,7 +138,8 @@ export default function ProductFormPage() {
         ingredients_en:       form.ingredients_en.trim(),
         price_fcfa:        form.price_fcfa !== '' ? Number(form.price_fcfa) : 0,
         price_eur:         form.price_eur  !== '' ? Number(form.price_eur)  : 0,
-        stock:             form.stock      !== '' ? Number(form.stock)      : 0,
+        stock_benin:        form.stock_benin        !== '' ? Number(form.stock_benin)        : 0,
+        stock_international: form.stock_international !== '' ? Number(form.stock_international) : 0,
         stock_alert:       form.stock_alert !== '' ? Number(form.stock_alert) : null,
         active:            form.active,
         benin_available:   form.benin_available,
@@ -413,21 +416,34 @@ export default function ProductFormPage() {
 
             {/* Stock */}
             <Section title="Stock">
-              <Field label="Quantité disponible">
-                <input type="number" min="0" value={form.stock} onChange={e => set('stock', e.target.value)}
-                  placeholder="0" style={inputStyle}
-                  onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
-                />
-              </Field>
-              <Field label="Seuil alerte stock bas">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <Field label="🇧🇯 Stock Bénin">
+                  <input type="number" min="0" value={form.stock_benin} onChange={e => set('stock_benin', e.target.value)}
+                    placeholder="0" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                  />
+                </Field>
+                <Field label="🇪🇺 Stock Europe">
+                  <input type="number" min="0" value={form.stock_international} onChange={e => set('stock_international', e.target.value)}
+                    placeholder="0" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
+                  />
+                </Field>
+              </div>
+              <Field label="Seuil alerte stock bas (les deux marchés)">
                 <input type="number" min="0" value={form.stock_alert} onChange={e => set('stock_alert', e.target.value)}
                   placeholder="5" style={inputStyle}
                   onFocus={e => e.target.style.borderColor='#f8cb78'} onBlur={e => e.target.style.borderColor='rgba(59,25,15,0.15)'}
                 />
               </Field>
-              {form.stock !== '' && form.stock_alert !== '' && Number(form.stock) <= Number(form.stock_alert) && (
+              {form.stock_benin !== '' && form.stock_alert !== '' && Number(form.stock_benin) <= Number(form.stock_alert) && (
                 <p style={{ fontSize: 10, color: '#e67e22', letterSpacing: '0.08em', marginTop: 4 }}>
-                  ⚠ Stock faible — pense à réapprovisionner
+                  ⚠ Stock Bénin faible — pense à réapprovisionner
+                </p>
+              )}
+              {form.stock_international !== '' && form.stock_alert !== '' && Number(form.stock_international) <= Number(form.stock_alert) && (
+                <p style={{ fontSize: 10, color: '#e67e22', letterSpacing: '0.08em', marginTop: 4 }}>
+                  ⚠ Stock Europe faible — pense à réapprovisionner
                 </p>
               )}
             </Section>

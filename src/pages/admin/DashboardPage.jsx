@@ -35,8 +35,8 @@ export default function DashboardPage() {
 
   const active    = products.filter(p => p.active).length;
   const inactive  = products.filter(p => !p.active).length;
-  const lowStock  = products.filter(p => p.stock !== null && p.stock <= 5).length;
-  const noStock   = products.filter(p => p.stock === 0).length;
+  const lowStock  = products.filter(p => (p.stock_benin ?? 0) <= (p.stock_alert ?? 5) || (p.stock_international ?? 0) <= (p.stock_alert ?? 5)).length;
+  const noStock   = products.filter(p => p.stock_benin === 0 || p.stock_international === 0).length;
   const waitingForStock = stockNotifs.reduce((sum, n) => sum + n.count, 0);
 
   return (
@@ -201,9 +201,14 @@ export default function DashboardPage() {
                       {p.price_eur ? `${Number(p.price_eur).toFixed(2)} €` : '—'}
                     </td>
                     <td style={{ padding: '14px 2rem' }}>
-                      <span style={{ fontSize: 11, fontWeight: 300, color: p.stock === 0 ? '#c0392b' : p.stock <= 5 ? '#e67e22' : '#2d7a2d' }}>
-                        {p.stock ?? '—'}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <span style={{ fontSize: 11, fontWeight: 300, color: p.stock_benin === 0 ? '#c0392b' : p.stock_benin <= 5 ? '#e67e22' : '#2d7a2d' }}>
+                          🇧🇯 {p.stock_benin ?? '—'}
+                        </span>
+                        <span style={{ fontSize: 11, fontWeight: 300, color: p.stock_international === 0 ? '#c0392b' : p.stock_international <= 5 ? '#e67e22' : '#2d7a2d' }}>
+                          🇪🇺 {p.stock_international ?? '—'}
+                        </span>
+                      </div>
                     </td>
                     <td style={{ padding: '14px 2rem' }}>
                       <span style={{ fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 300, padding: '3px 10px', background: p.active ? 'rgba(45,122,45,0.1)' : 'rgba(122,79,45,0.1)', color: p.active ? '#2d7a2d' : '#7a4f2d' }}>
