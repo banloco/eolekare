@@ -455,7 +455,7 @@ function Footer({ lang }) {
       </div>
       <p style={{ fontSize: 9, letterSpacing: '0.32em', color: 'rgba(248,203,120,0.28)', textTransform: 'uppercase', marginBottom: '2rem' }}>by Eoleeg · Europe</p>
       <ul className="flex justify-center gap-12 list-none flex-wrap" style={{ marginBottom: '2rem' }}>
-        {[['https://instagram.com/eolekare', 'Instagram @eolekare'], ['https://tiktok.com/@eolekare', 'TikTok @eolekare']].map(([h, l]) => (
+        {[['https://instagram.com/eolekare', 'Instagram'], ['https://tiktok.com/@eolekare', 'TikTok']].map(([h, l]) => (
           <li key={l}><a href={h} target="_blank" rel="noreferrer" style={{ fontSize: 10, letterSpacing: '0.18em', fontWeight: 300, color: 'rgba(248,203,120,0.4)', textDecoration: 'none', textTransform: 'uppercase', transition: 'color 0.3s' }}
             onMouseEnter={e => e.currentTarget.style.color = '#f8cb78'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(248,203,120,0.4)'}>{l}</a></li>
         ))}

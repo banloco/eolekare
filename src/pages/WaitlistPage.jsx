@@ -167,7 +167,7 @@ export default function WaitlistPage() {
 
         <p style={{ marginTop: '3rem', fontSize: 9, letterSpacing: '0.18em', fontWeight: 300, color: 'rgba(0,0,0,0.3)', textTransform: 'uppercase' }}>
           © 2026 Eolekare by Eoleeg &nbsp;·&nbsp;
-          <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Instagram @eolekare</a>
+          <a href="https://instagram.com/eolekare" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Instagram</a>
         </p>
       </div>
     </>
