@@ -41,46 +41,23 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
         {BEHOLD_FEED_ID ? (
           <BeholdWidget feedId={BEHOLD_FEED_ID} />
         ) : (
-          <div className="grid-instagram" style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '1rem', maxWidth: 1000, margin: '0 auto', overflowX: 'auto' }}>
-            {/*
-              Instagram n'affiche correctement son embed qu'à partir de ~326px de large ;
-              en dessous, certains posts (carrousels, reels) se réorganisent mal. On le rend
-              à sa taille native (340px) puis on le réduit en CSS pour tenir dans la carte.
-
-              La hauteur totale d'un embed varie beaucoup selon le post (photo carrée,
-              carrousel, reel…) : trop courte, on affiche le bandeau "Voir sur Instagram" /
-              likes / commentaire ; trop haute, on coupe l'image. `visibleNative` est la
-              hauteur (mesurée à 340px de large, avant réduction) juste au-dessus de ce
-              bandeau pour CE post précis — à re-mesurer si on change l'un des liens.
-            */}
+          <div className="grid-instagram" style={{ display: 'flex', flexDirection: 'row', gap: '1rem', maxWidth: 1000, margin: '0 auto', overflowX: 'auto' }}>
             {[
-              { src: 'https://www.instagram.com/p/Daf2UJ2MR4v/embed/', visibleNative: 482 },
-              { src: 'https://www.instagram.com/reel/DQXDxt1jJPK/embed/', visibleNative: 482 },
-              { src: 'https://www.instagram.com/p/DblXoPKDCyF/embed/', visibleNative: 284 },
-              { src: 'https://www.instagram.com/reel/DcOyqvis6W5/embed/', visibleNative: 248 },
-            ].map(({ src, visibleNative }, i) => {
-              const scale = 220 / 340;
-              return (
-                <div key={i} style={{ flex: '0 0 220px', height: Math.round(visibleNative * scale), overflow: 'hidden', background: '#f0e8d8', position: 'relative' }}>
-                  <iframe
-                    src={src}
-                    style={{
-                      width: 340,
-                      height: 700,
-                      border: 'none',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      transform: `scale(${scale})`,
-                      transformOrigin: 'top left',
-                    }}
-                    loading="lazy"
-                    scrolling="no"
-                    title={`Instagram post ${i + 1}`}
-                  />
-                </div>
-              );
-            })}
+              'https://www.instagram.com/p/Daf2UJ2MR4v/embed/',
+              'https://www.instagram.com/reel/DQXDxt1jJPK/embed/',
+              'https://www.instagram.com/p/DblXoPKDCyF/embed/',
+              'https://www.instagram.com/reel/DcOyqvis6W5/embed/',
+            ].map((src, i) => (
+              <div key={i} style={{ flex: '0 0 220px', aspectRatio: '9/16', overflow: 'hidden', background: '#f0e8d8' }}>
+                <iframe
+                  src={src}
+                  style={{ width: '100%', height: '100%', border: 'none' }}
+                  loading="lazy"
+                  scrolling="no"
+                  title={`Instagram post ${i + 1}`}
+                />
+              </div>
+            ))}
           </div>
         )}
       </div>
