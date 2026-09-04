@@ -31,37 +31,38 @@ function ChoiceButton({ active, onClick, children }) {
 
 export default function WaitlistPage() {
   useSEO({
-    title: 'Eolekare — Bientôt disponible',
-    description: "Le lancement d'Eolekare arrive bientôt. Inscrivez-vous pour être averti en priorité.",
+    title: 'Eolekare — Rendez-vous le 05/09/2026',
+    description: "Eolekare arrive le 05/09/2026. Rendez-vous sur eolekare.com.",
     url: 'https://eolekare.com/',
     lang: 'fr',
   });
 
-  const [form, setForm] = useState({ zone: '', product_type: '', firstname: '', email: '', phone: '', instagram: '' });
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-  const [done, setDone] = useState(false);
+  // ── Formulaire liste d'attente désactivé le temps du lancement (05/09/2026) ──
+  // const [form, setForm] = useState({ zone: '', product_type: '', firstname: '', email: '', phone: '', instagram: '' });
+  // const [busy, setBusy] = useState(false);
+  // const [error, setError] = useState('');
+  // const [done, setDone] = useState(false);
 
-  const update = (field) => (value) => setForm((f) => ({ ...f, [field]: value }));
+  // const update = (field) => (value) => setForm((f) => ({ ...f, [field]: value }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.zone) { setError('Merci de choisir votre zone (Bénin ou Europe).'); return; }
-    if (!form.product_type) { setError('Merci de choisir le beurre qui vous intéresse.'); return; }
-    if (!form.firstname.trim()) { setError('Merci de renseigner votre prénom.'); return; }
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) { setError('Merci de renseigner un email valide.'); return; }
-    if (!form.phone.trim()) { setError('Merci de renseigner votre numéro de téléphone / WhatsApp.'); return; }
-    setError('');
-    setBusy(true);
-    try {
-      await submitWaitlist(form);
-      setDone(true);
-    } catch (err) {
-      setError(err.message || "Une erreur est survenue, merci de réessayer.");
-    } finally {
-      setBusy(false);
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!form.zone) { setError('Merci de choisir votre zone (Bénin ou Europe).'); return; }
+  //   if (!form.product_type) { setError('Merci de choisir le beurre qui vous intéresse.'); return; }
+  //   if (!form.firstname.trim()) { setError('Merci de renseigner votre prénom.'); return; }
+  //   if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) { setError('Merci de renseigner un email valide.'); return; }
+  //   if (!form.phone.trim()) { setError('Merci de renseigner votre numéro de téléphone / WhatsApp.'); return; }
+  //   setError('');
+  //   setBusy(true);
+  //   try {
+  //     await submitWaitlist(form);
+  //     setDone(true);
+  //   } catch (err) {
+  //     setError(err.message || "Une erreur est survenue, merci de réessayer.");
+  //   } finally {
+  //     setBusy(false);
+  //   }
+  // };
 
   return (
     <>
@@ -87,7 +88,7 @@ export default function WaitlistPage() {
         <FloatingFruits variant="selector" />
       </div>
 
-      <div className="relative z-[3] flex flex-col items-center" style={{ minHeight: '100vh', padding: '4rem 1.5rem' }}>
+      <div className="relative z-[3] flex flex-col items-center" style={{ minHeight: '100vh', padding: '4rem 1.5rem', justifyContent: 'center' }}>
 
         <a href="/mode-emploi.pdf" target="_blank" rel="noopener noreferrer" className="mode-emploi-btn" style={{ zIndex: 10, padding: '10px 18px', borderRadius: 999, background: '#3b190f', color: '#fff', fontSize: 12, fontFamily: '"Montserrat",sans-serif', fontWeight: 500, letterSpacing: '0.02em', textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 14px rgba(0,0,0,0.25)', transition: 'all 0.25s' }}>
           Mon mode d'emploi Eolekare →
@@ -96,8 +97,13 @@ export default function WaitlistPage() {
         <p style={{ fontFamily: '"Brown Sugar",cursive', fontSize: 'clamp(32px,6vw,60px)', fontWeight: 400, letterSpacing: '0.05em', color: '#000', lineHeight: 1.1, textShadow: '0 2px 20px rgba(59,25,15,0.3)', marginBottom: '0.3rem', textAlign: 'center' }}>
           Eolekare
         </p>
-        <p style={{ fontFamily: '"Montserrat",sans-serif', fontSize: 11, letterSpacing: '0.35em', fontWeight: 300, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>by Eoleeg</p>
+        <p style={{ fontFamily: '"Montserrat",sans-serif', fontSize: 11, letterSpacing: '0.35em', fontWeight: 300, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', marginBottom: '2.5rem' }}>by Eoleeg</p>
 
+        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(28px,5vw,44px)', fontStyle: 'italic', color: '#fff', maxWidth: 480, lineHeight: 1.4, textAlign: 'center', textShadow: '0 2px 20px rgba(59,25,15,0.3)' }}>
+          Rendez-vous le 05/09/2026
+        </p>
+
+        {/*
         {!done && (
           <p style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 'clamp(20px,3vw,28px)', fontStyle: 'italic', color: '#fff', maxWidth: 480, lineHeight: 1.5, marginBottom: '0.6rem', textAlign: 'center' }}>
             Nos stocks partent très vite.
@@ -157,6 +163,7 @@ export default function WaitlistPage() {
             </button>
           </form>
         )}
+        */}
 
         <p style={{ marginTop: '3rem', fontSize: 9, letterSpacing: '0.18em', fontWeight: 300, color: 'rgba(0,0,0,0.3)', textTransform: 'uppercase' }}>
           © 2026 Eolekare by Eoleeg &nbsp;·&nbsp;
