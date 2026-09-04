@@ -44,8 +44,8 @@ export default function CommunitySection({ lang = 'fr', waNumber = null }) {
           <div className="grid-instagram" style={{ display: 'flex', flexDirection: 'row', gap: '1rem', maxWidth: 1000, margin: '0 auto', overflowX: 'auto' }}>
             {[
               'https://www.instagram.com/p/Daf2UJ2MR4v/embed/',
-              'https://www.instagram.com/reel/DQXDxt1jJPK/embed/',
               'https://www.instagram.com/p/DblXoPKDCyF/embed/',
+              'https://www.instagram.com/reel/DQXDxt1jJPK/embed/',
               'https://www.instagram.com/reel/DcOyqvis6W5/embed/',
             ].map((src, i) => (
               <div key={i} style={{ flex: '0 0 220px', aspectRatio: '9/16', overflow: 'hidden', background: '#f0e8d8' }}>
