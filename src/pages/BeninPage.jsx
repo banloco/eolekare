@@ -14,6 +14,9 @@ import { createOrder, fedapayCreateTransaction } from '../lib/api';
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '2290148654200';
 const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
 
+// Masqué pour le lancement (demande utilisateur 2026-09-05) — repasser à true pour réafficher aux visiteurs
+const SHOW_LOW_STOCK_BADGES = false;
+
 /* ─── Panier persistant (localStorage) — cohérent avec la vitrine Europe ─── */
 const BJ_CART_KEY = 'eolekare_bj_cart';
 
@@ -456,7 +459,7 @@ function ProductModal({ product, lang = 'fr', onClose, onAdd, inCart }) {
                 <StockNotifyForm productId={product.id} lang={lang} market="benin" />
               </div>
             )}
-            {product.stock_benin > 0 && product.stock_benin <= 5 && (
+            {SHOW_LOW_STOCK_BADGES && product.stock_benin > 0 && product.stock_benin <= 5 && (
               <p style={{ fontSize: 10, color: '#e67e22', marginTop: '0.8rem', letterSpacing: '0.08em' }}>{lang === 'fr' ? `⚠ Plus que ${product.stock_benin} en stock` : `⚠ Only ${product.stock_benin} in stock`}</p>
             )}
           </div>
@@ -531,7 +534,7 @@ function Products({ cart, setCart, lang = 'fr', products = [], loading = false, 
                   />
                   {/* Badges absolus */}
                   {!(p.stock_benin > 0) && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? 'Épuisé' : 'Sold out'}</div>}
-                  {p.stock_benin > 0 && p.stock_benin <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? `Plus que ${p.stock_benin} !` : `Only ${p.stock_benin} left!`}</div>}
+                  {SHOW_LOW_STOCK_BADGES && p.stock_benin > 0 && p.stock_benin <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? `Plus que ${p.stock_benin} !` : `Only ${p.stock_benin} left!`}</div>}
                   {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>× {inCart.qty} {lang === 'fr' ? 'dans le panier' : 'in cart'}</div>}
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.6rem', background: 'linear-gradient(transparent,rgba(20,6,2,0.5))', textAlign: 'center', zIndex: 3, pointerEvents: 'none' }}>
                     <span style={{ fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>{lang === 'fr' ? 'Voir les détails →' : 'View details →'}</span>

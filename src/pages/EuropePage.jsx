@@ -13,6 +13,9 @@ import { formatEUR } from '../lib/format';
 
 const CART_KEY = 'eolekare_eu_cart';
 
+// Masqué pour le lancement (demande utilisateur 2026-09-05) — repasser à true pour réafficher aux visiteurs
+const SHOW_LOW_STOCK_BADGES = false;
+
 const T = {
   fr: { eyebrow:'100% Naturel · Made in 🇧🇯 · Pour tous', tagline:'Votre skincare aux parfums uniques', discover:'Découvrir la collection', collection:'Notre collection', story:'Notre histoire', howto:'L\' utilisation', buy:'Ajouter au panier', added:'Ajouté', soldout:'Épuisé', checkout:'Commander →', nav_cart:'Panier', close:'Fermer', qty:'Quantité', total:'Total', empty:'Votre panier est vide', upsell:'Vous aimerez aussi', details:'Voir les détails', inCart:'dans le panier', modify:'Modifier', secure:'Paiement sécurisé', back:'← Retour',
     pay_success:'Paiement confirmé ! Merci pour votre commande', pay_failed:'Le paiement a échoué. Vous pouvez réessayer.', pay_cancelled:'Paiement annulé.', pay_error:'Une erreur est survenue pendant le paiement.', pay_ref:'Référence', pay_close:'✕' },
@@ -340,7 +343,7 @@ function ProductModal({ product, lang, onClose, onAdd, inCart }) {
               </div>
             )}
 
-            {product.stock_international > 0 && product.stock_international <= 5 && (
+            {SHOW_LOW_STOCK_BADGES && product.stock_international > 0 && product.stock_international <= 5 && (
               <p style={{ fontSize: 10, color: '#e67e22', marginTop: '0.8rem', letterSpacing: '0.08em' }}>{lang === 'fr' ? `Plus que ${product.stock_international} en stock` : `Only ${product.stock_international} left`}</p>
             )}
           </div>
@@ -415,7 +418,7 @@ function Products({ lang, cartHook, products = [], loading = false, error = null
                   />
                   {/* Badges absolus sur le carousel */}
                   {!(p.stock_international > 0) && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(59,25,15,0.8)', color: '#f8cb78', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{t.soldout}</div>}
-                  {p.stock_international > 0 && p.stock_international <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? `Plus que ${p.stock_international} !` : `Only ${p.stock_international} left!`}</div>}
+                  {SHOW_LOW_STOCK_BADGES && p.stock_international > 0 && p.stock_international <= 5 && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(200,80,0,0.85)', color: '#fff', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>{lang === 'fr' ? `Plus que ${p.stock_international} !` : `Only ${p.stock_international} left!`}</div>}
                   {inCart && <div style={{ position: 'absolute', top: 12, left: 12, background: '#3b190f', color: '#f8cb78', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', zIndex: 3, pointerEvents: 'none' }}>× {inCart.qty} {t.inCart}</div>}
                   {/* Lien "voir détails" */}
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.6rem', background: 'linear-gradient(transparent,rgba(20,6,2,0.5))', textAlign: 'center', zIndex: 3, pointerEvents: 'none' }}>

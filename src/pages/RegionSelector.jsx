@@ -35,7 +35,7 @@ export default function RegionSelector() {
       `}</style>
 
       <div className="fixed inset-0 z-0 bg-cover bg-center" style={{backgroundImage:"url('/bg-hero.jpg')",filter:'brightness(0.35) saturate(0.6)'}}/>
-      <div className="fixed inset-0 z-[1]" style={{background:'linear-gradient(135deg,rgba(248,203,120,0.88) 0%,rgba(59,25,15,0.75) 100%)'}}/>
+      <div className="fixed inset-0 z-[1]" style={{background:'linear-gradient(135deg,rgba(248,203,120,1) 0%,rgba(59,25,15,0.95) 100%)'}}/>
       <div className="fixed inset-0 z-[2] pointer-events-none overflow-hidden">
         <FloatingFruits variant="selector"/>
       </div>
