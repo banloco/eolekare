@@ -329,7 +329,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
                 <label style={labelStyle}>{t.label_name}</label>
                 <input style={inputStyle} value={customer.name} onChange={e => setCustomer(p => ({ ...p, name: e.target.value }))} placeholder="Jean Dupont" />
                 <label style={labelStyle}>{t.label_phone}</label>
-                <input style={inputStyle} type="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+000 00 00 00 00" />
+                <input style={inputStyle} type="tel" autoComplete="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+000 00 00 00 00" />
                 <label style={labelStyle}>{t.label_address}</label>
                 <textarea value={customer.address} onChange={e => setCustomer(p => ({ ...p, address: e.target.value }))}
                   placeholder="Quartier, ville, région…" rows={2}

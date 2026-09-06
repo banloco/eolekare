@@ -259,7 +259,7 @@ export default function CheckoutPage({ cart, cartTotal, onClose, lang = 'fr' }) 
                 </div>
                 <div>
                   <label style={labelStyle}>{t.phone}</label>
-                  <input style={inputStyle} type="tel" required value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder={t.ph_phone} />
+                  <input style={inputStyle} type="tel" autoComplete="tel" required value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder={t.ph_phone} />
                 </div>
                 <div>
                   <label style={labelStyle}>{t.country}</label>
