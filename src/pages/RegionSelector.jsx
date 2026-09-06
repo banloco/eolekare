@@ -49,7 +49,7 @@ export default function RegionSelector() {
         <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:'clamp(16px,2.5vw,22px)',fontStyle:'italic',color:'rgba(255,255,255,0.85)',maxWidth:420,lineHeight:1.6,marginBottom:'0.8rem'}}>
           Votre skincare aux parfums uniques
         </p>
-        <p style={{fontSize:11,letterSpacing:'0.25em',fontWeight:300,color:'rgba(255,255,255,0.5)',textTransform:'uppercase',marginBottom:'3.5rem'}}>
+        <p style={{fontSize:11,letterSpacing:'0.25em',fontWeight:300,color:'rgb(255, 255, 255, 0.85)',textTransform:'uppercase',marginBottom:'3.5rem'}}>
           100% Naturel · Made in 🇧🇯 · Pour tous
         </p>
 
@@ -57,7 +57,7 @@ export default function RegionSelector() {
           <Card to="/benin">
             {/* <div style={{fontSize:52,marginBottom:'1rem',lineHeight:1}}>🇧🇯</div> */}
             <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:26,fontWeight:300,color:'#fff',letterSpacing:'0.1em',marginBottom:'0.4rem'}}>Bénin</p>
-            <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne</p>
+            <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne<br/>Momo</p>
             <div style={{display:'flex',alignItems:'center',gap:6,marginTop:'1rem',background:'rgba(37,211,102,0.15)',border:'0.5px solid rgba(37,211,102,0.35)',borderRadius:3,padding:'5px 12px'}}>
               <span style={{fontSize:9,letterSpacing:'0.18em',color:'rgba(255,255,255,0.7)',textTransform:'uppercase'}}>Paiement sécurisé</span>
             </div>
@@ -75,12 +75,12 @@ export default function RegionSelector() {
           <Card to="/europe">
             {/* <div style={{fontSize:52,marginBottom:'1rem',lineHeight:1}}>🇪🇺</div> */}
             <p style={{fontFamily:'"Cormorant Garamond",serif',fontSize:26,fontWeight:300,color:'#fff',letterSpacing:'0.1em',marginBottom:'0.4rem'}}>Europe</p>
-            <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne<br/>Livraison Mondial Relay</p>
+            <p style={{fontSize:10,letterSpacing:'0.18em',fontWeight:300,color:'rgba(255,255,255,0.55)',textTransform:'uppercase',lineHeight:1.6,textAlign:'center'}}>Commandez en ligne<br/>Stripe</p>
             <div style={{display:'flex',alignItems:'center',gap:6,marginTop:'1rem',background:'rgba(150,191,99,0.15)',border:'0.5px solid rgba(150,191,99,0.35)',borderRadius:3,padding:'5px 12px'}}>
               <span style={{fontSize:9,letterSpacing:'0.18em',color:'rgba(255,255,255,0.7)',textTransform:'uppercase'}}>Paiement sécurisé</span>
             </div>
             <p style={{marginTop:'1rem',fontSize:9,letterSpacing:'0.2em',fontWeight:300,color:'rgba(255,255,255,0.4)',textTransform:'uppercase',borderTop:'0.5px solid rgba(255,255,255,0.2)',paddingTop:'0.8rem',width:'100%',textAlign:'center'}}>
-              Stripe · EUR
+              Livraison Mondial Relay · EUR
             </p>
           </Card>
         </div>
