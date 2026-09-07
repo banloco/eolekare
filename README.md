@@ -1,16 +1,33 @@
-# React + Vite
+# Eolekare — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend React du site e-commerce [Eolekare](https://eolekare.com) — beurres de mangue, avocat et coco 100% naturels, fabriqués au Bénin. Deux vitrines : Bénin (FCFA) et Europe/International (EUR).
 
-Currently, two official plugins are available:
+Consomme l'API Laravel du dépôt séparé [`banloco/eolekare-project`](https://github.com/banloco/eolekare-project).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+- React 18 + Vite, React Router v6, Tailwind CSS
+- Paiements côté client : PayPal (Europe, prévu), FedaPay/Stripe déclenchés via l'API backend
+- Feed Instagram via Behold.so
+- Pas de state manager global : `AuthContext` + `LangContext` (i18n FR/EN), panier en `localStorage`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Documentation
 
-## Expanding the ESLint configuration
+Voir `CLAUDE.md` pour le guide complet (structure, variables d'environnement, conventions).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Démarrage local
+
+```bash
+npm install
+npm run dev       # Vite dev server
+npm run build
+npm run lint
+```
+
+## Déploiement
+
+Déployé sur Vercel (`vercel.json`), auto-deploy sur push vers `main`.
+
+## License
+
+Propriétaire — tous droits réservés.
