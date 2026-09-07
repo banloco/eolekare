@@ -157,6 +157,7 @@ export default function CheckoutPage({ cart, cartTotal, onClose, lang = 'fr' }) 
       } else {
         payload.relay_id      = relay?.ID;
         payload.relay_name    = relay?.Nom;
+        payload.relay_address = relay?.Adresse1;
         payload.relay_city    = relay?.Ville;
         payload.relay_zip     = relay?.CP;
         payload.relay_country = relay?.Pays;
