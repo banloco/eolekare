@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getAllProducts, getAdminStats, getAdminExpenseStats, getStockNotifications } from '../../lib/api';
+import { getAllProducts, getAdminStats, getStockNotifications } from '../../lib/api';
 
-function StatCard({ label, value, sub, color = '#3b190f' }) {
-  return (
-    <div style={{ background: '#fff', padding: '1.8rem 2rem', border: '0.5px solid rgba(59,25,15,0.08)', flex: 1 }}>
+function StatCard({ label, value, sub, color = '#3b190f', to }) {
+  const card = (
+    <div style={{ background: '#fff', padding: '1.8rem 2rem', border: '0.5px solid rgba(59,25,15,0.08)', flex: 1, height: '100%', transition: 'background 0.15s' }}>
       <p style={{ fontSize: 9, letterSpacing: '0.25em', color: '#7a4f2d', textTransform: 'uppercase', marginBottom: '0.8rem' }}>{label}</p>
       <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 42, fontWeight: 300, color, lineHeight: 1, marginBottom: '0.3rem' }}>{value}</p>
       {sub && <p style={{ fontSize: 10, color: 'rgba(59,25,15,0.4)', letterSpacing: '0.1em' }}>{sub}</p>}
     </div>
+  );
+  if (!to) return card;
+  return (
+    <Link
+      to={to}
+      style={{ flex: 1, display: 'flex', textDecoration: 'none' }}
+      onMouseEnter={e => { e.currentTarget.firstChild.style.background = 'rgba(248,203,120,0.09)'; }}
+      onMouseLeave={e => { e.currentTarget.firstChild.style.background = '#fff'; }}
+    >
+      {card}
+    </Link>
   );
 }
 
@@ -22,13 +33,12 @@ function fmt(n, currency) {
 export default function DashboardPage() {
   const [products, setProducts] = useState([]);
   const [stats, setStats]       = useState(null);
-  const [expStats, setExpStats] = useState(null);
   const [stockNotifs, setStockNotifs] = useState([]);
   const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
-    Promise.all([getAllProducts(), getAdminStats(), getAdminExpenseStats(), getStockNotifications()])
-      .then(([prods, s, es, sn]) => { setProducts(prods); setStats(s); setExpStats(es); setStockNotifs(sn); })
+    Promise.all([getAllProducts(), getAdminStats(), getStockNotifications()])
+      .then(([prods, s, sn]) => { setProducts(prods); setStats(s); setStockNotifs(sn); })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -74,36 +84,24 @@ export default function DashboardPage() {
 
           {/* Stats commandes */}
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-            <StatCard label="Commandes totales"  value={stats?.orders?.total ?? '…'} sub={<Link to="/admin/orders" style={{ color: '#7a4f2d', textDecoration: 'none' }}>Voir tout →</Link>} />
-            <StatCard label="En attente"         value={stats?.orders?.pending ?? '…'} sub="à confirmer" color={(stats?.orders?.pending ?? 0) > 0 ? '#e67e22' : '#3b190f'} />
-            <StatCard label="Aujourd'hui"        value={stats?.orders?.today ?? 0}  sub="nouvelles commandes" />
-            <StatCard label="Ce mois"            value={stats?.orders?.month ?? 0}  sub="commandes" />
+            <StatCard label="Commandes totales"  value={stats?.orders?.total ?? '…'}     sub="toutes commandes · voir tout →" to="/admin/orders" />
+            <StatCard label="Confirmées"         value={stats?.orders?.confirmed ?? '…'} sub="payées & livrées · voir le détail →" color="#2d7a2d" to="/admin/orders?status=paid" />
+            <StatCard label="Annulées"           value={stats?.orders?.cancelled ?? '…'} sub="paiement échoué ou abandonné" color="#c0392b" />
+            <StatCard label="En attente"         value={stats?.orders?.pending ?? '…'}   sub="à confirmer" color={(stats?.orders?.pending ?? 0) > 0 ? '#e67e22' : '#3b190f'} />
           </div>
 
-          {/* Stats revenus */}
+          {/* CA Europe (EUR) — uniquement les commandes payées (confirmées → livrées) */}
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-            <StatCard label="CA Aujourd'hui (EUR)" value={fmt(stats?.revenue?.today_eur, 'EUR')} sub="marché international" color="#2d7a2d" />
-            <StatCard label="CA Cette semaine (EUR)" value={fmt(stats?.revenue?.week_eur, 'EUR')} sub="marché international" />
-            <StatCard label="CA Ce mois (FCFA)"   value={fmt(stats?.revenue?.month_xof, 'XOF')} sub="marché Bénin" />
-            <StatCard label="CA Ce mois (EUR)"    value={fmt(stats?.revenue?.month_eur, 'EUR')} sub="marché international" />
+            <StatCard label="CA Aujourd'hui (EUR)"   value={fmt(stats?.revenue?.today_eur, 'EUR')} sub="commandes confirmées · Europe" color="#2d7a2d" />
+            <StatCard label="CA Cette semaine (EUR)" value={fmt(stats?.revenue?.week_eur,  'EUR')} sub="commandes confirmées · Europe" color="#2d7a2d" />
+            <StatCard label="CA Ce mois (EUR)"       value={fmt(stats?.revenue?.month_eur, 'EUR')} sub="commandes confirmées · Europe" color="#2d7a2d" />
           </div>
 
-          {/* Dépenses + bénéfice ce mois */}
+          {/* CA Bénin (FCFA) — uniquement les commandes payées (confirmées → livrées) */}
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-            <StatCard label="Dépenses ce mois (FCFA)" value={fmt(expStats?.expenses_fcfa, 'XOF')} sub="charges marché Bénin" color="#c0392b" />
-            <StatCard label="Dépenses ce mois (EUR)"  value={fmt(expStats?.expenses_eur,  'EUR')} sub="charges marché Europe" color="#c0392b" />
-            <StatCard
-              label="Bénéfice net (FCFA)"
-              value={fmt((stats?.revenue?.month_xof ?? 0) - (expStats?.expenses_fcfa ?? 0), 'XOF')}
-              sub="CA − dépenses Bénin"
-              color={(stats?.revenue?.month_xof ?? 0) - (expStats?.expenses_fcfa ?? 0) >= 0 ? '#2d7a2d' : '#c0392b'}
-            />
-            <StatCard
-              label="Bénéfice net (EUR)"
-              value={fmt((stats?.revenue?.month_eur ?? 0) - (expStats?.expenses_eur ?? 0), 'EUR')}
-              sub="CA − dépenses Europe"
-              color={(stats?.revenue?.month_eur ?? 0) - (expStats?.expenses_eur ?? 0) >= 0 ? '#2d7a2d' : '#c0392b'}
-            />
+            <StatCard label="CA Aujourd'hui (FCFA)"   value={fmt(stats?.revenue?.today_xof, 'XOF')} sub="commandes confirmées · Bénin" color="#2d7a2d" />
+            <StatCard label="CA Cette semaine (FCFA)" value={fmt(stats?.revenue?.week_xof,  'XOF')} sub="commandes confirmées · Bénin" color="#2d7a2d" />
+            <StatCard label="CA Ce mois (FCFA)"       value={fmt(stats?.revenue?.month_xof, 'XOF')} sub="commandes confirmées · Bénin" color="#2d7a2d" />
           </div>
 
           {/* Alertes stock */}

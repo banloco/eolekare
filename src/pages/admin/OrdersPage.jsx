@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getAdminOrders, exportAdminOrders } from '../../lib/api';
 
@@ -54,9 +54,14 @@ function MarketBadge({ market }) {
 
 export default function OrdersPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ status: '', market: '', page: 1 });
+  const [filters, setFilters] = useState({
+    status: searchParams.get('status') || '',
+    market: searchParams.get('market') || '',
+    page: 1,
+  });
 
   const load = useCallback(() => {
     setLoading(true);
@@ -114,6 +119,7 @@ export default function OrdersPage() {
           style={selectStyle}
         >
           <option value="">Tous les statuts</option>
+          <option value="paid">Payées &amp; livrées</option>
           {Object.entries(STATUS_LABELS).map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
           ))}
