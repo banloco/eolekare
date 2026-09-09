@@ -57,10 +57,11 @@ const T_BJ = {
     article: 'article', articles: 'articles',
     empty: 'Votre panier est vide', discover_butters: 'Découvrez nos beurres',
     recap: 'Récapitulatif & paiement',
-    label_name: 'Nom complet *', label_phone: 'Téléphone *', label_address: 'Adresse de livraison *',
+    label_name: 'Nom complet *', label_phone: 'Téléphone *', label_email: 'Email *', label_address: 'Adresse de livraison *',
     order_btn: 'Commander →', back_cart: '← Modifier le panier',
     total: 'Total', redirecting: 'Redirection…', pay_prefix: 'Payer ',
     err_name: 'Veuillez entrer votre nom.', err_phone: 'Veuillez entrer votre téléphone.',
+    err_email: 'Veuillez entrer un email valide.',
     err_address: 'Veuillez entrer votre adresse de livraison.',
     err_phone_indicatif: "Merci d'ajouter l'indicatif de votre pays devant votre numéro (ex : +229 pour le Bénin, +33 pour la France).",
     nature_strip: 'La nature dans chaque texture',
@@ -76,10 +77,11 @@ const T_BJ = {
     article: 'item', articles: 'items',
     empty: 'Your cart is empty', discover_butters: 'Discover our butters',
     recap: 'Summary & payment',
-    label_name: 'Full name *', label_phone: 'Phone *', label_address: 'Delivery address *',
+    label_name: 'Full name *', label_phone: 'Phone *', label_email: 'Email *', label_address: 'Delivery address *',
     order_btn: 'Order →', back_cart: '← Edit cart',
     total: 'Total', redirecting: 'Redirecting…', pay_prefix: 'Pay ',
     err_name: 'Please enter your name.', err_phone: 'Please enter your phone.',
+    err_email: 'Please enter a valid email.',
     err_address: 'Please enter your delivery address.',
     err_phone_indicatif: 'Please add your country calling code before your number (e.g. +229 for Benin, +33 for France).',
     nature_strip: 'Nature in every texture',
@@ -204,7 +206,7 @@ function Nav({ lang, setLang, cartCount, onCartOpen }) {
 function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products = [], onAdd }) {
   const t = T_BJ[lang];
   const [step, setStep]     = useState('cart'); // 'cart' | 'checkout'
-  const [customer, setCustomer] = useState({ name: '', phone: '', address: '' });
+  const [customer, setCustomer] = useState({ name: '', phone: '', email: '', address: '' });
   const [busy, setBusy]     = useState(false);
   const [error, setError]   = useState('');
   const total = cart.reduce((s, i) => s + i.price_fcfa * i.qty, 0);
@@ -218,6 +220,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
     if (!customer.phone.trim()) { setError(t.err_phone); return; }
     const phoneDigits = customer.phone.replace(/[\s().-]/g, '');
     if (!/^\+\d{8,15}$/.test(phoneDigits)) { setError(t.err_phone_indicatif); return; }
+    if (!/\S+@\S+\.\S+/.test(customer.email.trim())) { setError(t.err_email); return; }
     if (!customer.address.trim()) { setError(t.err_address); return; }
     setError('');
     setBusy(true);
@@ -226,6 +229,7 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
         market:          'benin',
         customer_name:   customer.name,
         customer_phone:  customer.phone,
+        customer_email:  customer.email.trim(),
         shipping_address: customer.address || null,
         items:           cart.map(i => ({ product_id: i.id, quantity: i.qty })),
       });
@@ -330,6 +334,8 @@ function CartDrawer({ lang = 'fr', cart, onClose, onUpdate, onRemove, products =
                 <input style={inputStyle} value={customer.name} onChange={e => setCustomer(p => ({ ...p, name: e.target.value }))} placeholder="Jean Dupont" />
                 <label style={labelStyle}>{t.label_phone}</label>
                 <input style={inputStyle} type="tel" autoComplete="tel" value={customer.phone} onChange={e => setCustomer(p => ({ ...p, phone: e.target.value }))} placeholder="+000 00 00 00 00" />
+                <label style={labelStyle}>{t.label_email}</label>
+                <input style={inputStyle} type="email" autoComplete="email" value={customer.email} onChange={e => setCustomer(p => ({ ...p, email: e.target.value }))} placeholder="jean@exemple.com" />
                 <label style={labelStyle}>{t.label_address}</label>
                 <textarea value={customer.address} onChange={e => setCustomer(p => ({ ...p, address: e.target.value }))}
                   placeholder="Quartier, ville, région…" rows={2}
