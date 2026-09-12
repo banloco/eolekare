@@ -229,7 +229,9 @@ export default function OrderDetailPage() {
                   order.delivery_mode === 'locker' ? 'Locker Mondial Relay' : 'Point Relais Mondial Relay'
                 } />
                 <InfoRow label="Relais" value={order.relay_name} />
+                <InfoRow label="Adresse" value={order.relay_address} />
                 <InfoRow label="Ville" value={order.relay_city} />
+                <InfoRow label="Code postal" value={order.relay_zip} />
                 <InfoRow label="Pays" value={order.relay_country?.toUpperCase()} />
                 <InfoRow label="Code relais" value={order.relay_id} />
               </>
